@@ -1,0 +1,21 @@
+{
+  "name": "normalize-css",
+  "repo": "necolas/normalize.css",
+  "version": "2.1.3",
+  "styles": [
+    "normalize.css"
+  ],
+  "author": {
+    "name": "Nicolas Gallagher"
+  },
+  "license": "MIT",
+  "gitHead": "dafaf9ee60ff76173954aca755c78a6912a0ee6c",
+  "readme": "# normalize.css v2\n\nNormalize.css is a customisable CSS file that makes browsers render all\nelements more consistently and in line with modern standards.\n\nThe project relies on researching the differences between default browser\nstyles in order to precisely target only the styles that need or benefit from\nnormalizing.\n\n[Check out the demo](http://necolas.github.io/normalize.css/latest/test.html)\n\n## Install\n\nDownload from the [project page](http://necolas.github.io/normalize.css/).\n\nInstall with [Bower](http://bower.io/): `bower install --save normalize-css`\n\nInstall with [Component(1)](http://component.io/): `component install necolas/normalize.css`\n\n## What does it do?\n\n* Preserves useful defaults, unlike many CSS resets.\n* Normalizes styles for a wide range of elements.\n* Corrects bugs and common browser inconsistencies.\n* Improves usability with subtle improvements.\n* Explains what code does using detailed comments.\n\n## How to use it\n\nNo other styles should come before Normalize.css.\n\nIt is recommended that you include the `normalize.css` file as untouched\nlibrary code.\n\n## Browser support\n\n* Google Chrome\n* Mozilla Firefox 4+\n* Apple Safari 5+\n* Opera 12+\n* Internet Explorer 8+\n\n[Normalize.css v1 provides legacy browser\nsupport](https://github.com/necolas/normalize.css/tree/v1) (IE 6+, Safari 4+),\nbut is no longer actively developed.\n\n## Contributing\n\nPlease read the CONTRIBUTING.md\n\n## Acknowledgements\n\nNormalize.css is a project by [Nicolas Gallagher](https://github.com/necolas),\nco-created with [Jonathan Neal](https://github.com/jonathantneal).\n",
+  "readmeFilename": "README.md",
+  "_id": "normalize-css@2.1.3",
+  "description": "Normalize.css is a customisable CSS file that makes browsers render all elements more consistently and in line with modern standards.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/necolas/normalize.css.git"
+  }
+}

@@ -1,0 +1,51 @@
+nav, #start-message { margin: 10px; }
+select { margin-left: 10px; }
+.CodeMirror {
+  border-top: 1px solid black;
+}
+.CodeMirror-fullscreen { top: 45px; }
+.script-view { display: none; }
+.var-name { font-weight: bold; color: darkblue; }
+.var-val { color: green; }
+.var-assignment { color: gray; }
+.cm-log-start, .cm-log-end { color: transparent; }
+.cm-log-start {
+  border-top: 1px solid lightblue;
+  border-left: 1px solid lightblue;
+  border-bottom: 1px solid lightblue;
+  -webkit-border-radius: 5px 0px 0px 5px;
+  border-radius: 5px 0px 0px 5px;
+}
+.cm-log-end {
+  border-top: 1px solid lightblue;
+  border-right: 1px solid lightblue;
+  border-bottom: 1px solid lightblue;
+  -webkit-border-radius: 0px 10px 10px 0px;
+  border-radius: 0px 10px 10px 0px;
+}
+.cm-log {
+  color: blue;
+  border-top: 1px solid lightblue;
+  border-bottom: 1px solid lightblue;
+}
+.cm-log-start, .cm-log-end, .cm-log { 
+  cursor: pointer;
+  background-color: rgba(173, 216, 230, .25);
+}
+.widget {
+  color: blue;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid lightblue;
+  -webkit-border-radius: 10px;
+  border-radius: 5px;
+  z-index: 2;
+  margin-top : 0.25em;
+  margin-left: 1.25em;
+  max-height: 318px;
+  overflow-y: auto;
+}
+.widget-inner {
+  background-color: rgba(173, 216, 230, .25);
+  padding: 5px;
+}

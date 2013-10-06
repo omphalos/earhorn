@@ -1,0 +1,8 @@
+{
+  "name": "esprima",
+  "version": "1.0.4",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ariya/esprima.git"
+  }
+}
