@@ -28,8 +28,9 @@ select { margin-left: 10px; }
   border-top: 1px solid lightblue;
   border-bottom: 1px solid lightblue;
 }
-.cm-log-start, .cm-log-end, .cm-log { 
+.cm-log-start, .cm-log-end, .cm-log, .widget-inner { 
   cursor: pointer;
+  font-size: 0.8em;
   background-color: rgba(173, 216, 230, .25);
 }
 .widget {
@@ -44,8 +45,10 @@ select { margin-left: 10px; }
   margin-left: 1.25em;
   max-height: 318px;
   overflow-y: auto;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
-.widget-inner {
-  background-color: rgba(173, 216, 230, .25);
-  padding: 5px;
-}
+.widget-inner { padding: 0.5em; }
+.widget-label.Function { color: green; }
+.widget-label.Object { color: brown; }
+.widget-label.Array { color: gray; }

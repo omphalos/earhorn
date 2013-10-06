@@ -30,19 +30,54 @@
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
     }
     
+    var instrumentedExpressions = [
+      'NewExpression',
+      'CallExpression',
+      'AssignmentOperator',
+      'ConditionalExpression',
+      'LogicalExpression',
+      'UpdateExpression',
+      'UnaryExpression',
+      'PostfixExpression',
+      'BinaryExpression'
+      // TODO function arguments
+      // TODO CatchClause
+      // TODO ForStatement
+      // TODO ForInSTatement
+    ]
+    
+    var instrumentedParentTypes = [
+      'ExpressionStatement',
+      'SequenceExpression',
+      'ReturnStatement',
+      'BinaryExpression',
+      'ThrowStatement'
+    ]
+    
+    var skippedMemberExpressionParents = [
+      'AssignmentExpression',
+      'UnaryExpression',
+      'UpdateExpression',
+      'CallExpression'
+    ]
+    
     // Wrap Identifiers with calls to our logger, eh$(...)
     var instrumentedCode = falafel(body, { loc: true, raw: true }, function(node) {
-      
+     
+      if(!node.parent || node.type === 'Literal') return
+       
       if(
-        node.type === 'Identifier' &&
-        node.parent &&
-        node.parent.type &&
-        node.parent.type !== 'NewExpression' &&
-        node.parent.type !== 'UpdateExpression' &&
-        node.parent.type !== 'FunctionExpression' &&
-        node.parent.type !== 'MemberExpression' &&
-        (node.parent.type !== 'CallExpression' || node.parent.callee !== node) &&
-        (isExpression(node.parent.type) || node.parent.type === 'ExpressionStatement')) {
+        (node.parent.type === 'CallExpression' && node !== node.parent.callee) ||
+        (node.parent.type === 'IfStatement' && node === node.parent.test) ||
+        (node.parent.type === 'WhileStatement' && node === node.parent.test) ||
+        (node.parent.type === 'DoWhileStatement' && node === node.parent.test) ||
+        (node.parent.type === 'SwitchCase' && node === node.parent.test) ||
+        (node.parent.type === 'SwitchStatement' && node === node.parent.discriminant) ||
+        instrumentedExpressions.indexOf(node.type) >= 0 ||
+        (node.type !== 'MemberExpression' &&
+          instrumentedParentTypes.indexOf(node.parent.type) >= 0) ||
+        (node.type === 'MemberExpression' && 
+          skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
           
         // console.log(node)
         node.update('eh$("' +
@@ -62,9 +97,9 @@ console.log(instrumentedCode)
   }
   
   earhorn$.maxElements = 3
-  earhorn$.maxKeys = 100
+  earhorn$.maxKeys = 200
   earhorn$.depth = 2
-  earhorn$.maxStringLength = 20
+  earhorn$.maxStringLength = 50
   
   function makeSerializable(obj, depth) {
     
@@ -77,7 +112,7 @@ console.log(instrumentedCode)
     var type = Object.prototype.toString.call(obj)
 
     if(type === '[object Function]')
-      return { type: 'Function' }
+      return { type: 'Function', name: obj.name }
       
     if(type === '[object Number]')
       return { type: 'Number', value: obj }

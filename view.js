@@ -59,14 +59,11 @@ var editor = CodeMirror($('#editor')[0], {
 var widget
 editor.on('mousedown', function(editor, evt) {
 
-  if(!selectedScriptLog) return
-  if(evt.toElement.className === 'cm-log-start' ||
-    evt.toElement.className === 'cm-log-end') {
-    // TODO: get cm-log instead of aborting
-    evt.codemirrorIgnore = true
+  if($(evt.toElement).closest('.widget').length)
     return
-  }  
-  if(evt.toElement.className !== 'cm-log') return
+
+  if(!selectedScriptLog || evt.toElement.className !== 'cm-log')
+    return removeWidget()
 
   var location = editor.coordsChar({
     top: evt.clientY,
@@ -74,7 +71,7 @@ editor.on('mousedown', function(editor, evt) {
   })
   
   var line = selectedScriptLog[location.line + 1]
-  if(!line) return
+  if(!line) return removeWidget()
     
   //////////////////////
   // Resolve the column.
@@ -97,18 +94,17 @@ editor.on('mousedown', function(editor, evt) {
     sort(function(x, y){ return +x > +y })
     
   var column = columns[indexOfClickedElement]
-
   evt.codemirrorIgnore = true
-
+  
   if(widget) {
-    widget.el.remove()
-    if(
-      widget.line === location.line && 
-      widget.column === column) {
-      widget = null
-      return
-    }
+    var forThisLocation = 
+      widget.line === location.line && widget.column === column
+    removeWidget()
+    if(forThisLocation) return
   }
+
+  if(!selectedScriptLog[location.line + 1])
+    return
 
   widget = {
     el: $('<div class="widget"></div>'),
@@ -122,6 +118,12 @@ editor.on('mousedown', function(editor, evt) {
 
   updateWidgetHtml()
 })
+
+function removeWidget() {
+  if(!widget) return
+  widget.el.remove()
+  widget = null
+}
 
 function updateWidgetHtml() {
   
@@ -140,18 +142,29 @@ function updateWidgetHtml() {
 function buildWidgetHtml(log) {
 
   var html = '\n'
-  html += '<div class="widget-inner">\n'
+  html += '<div class="widget-inner ' + log.type + '">\n'
 
   if(log.type === 'Object') {
     
-    Object.keys(log.properties).forEach(function(p) {
+    var propertyKeys = Object.keys(log.properties)
+    
+    propertyKeys.sort().forEach(function(p) {
       html += buildWidgetLineItem(log.properties, p)
     })
+      
+    if(!propertyKeys.length)
+      html += log.type
+    
+    if(!log.complete)
+      html += '<div><span>...<span></div>'
     
   } else if(log.type === 'Array') {
     
     for(var e = 0; e < log.elements.length; e++)
       html += buildWidgetLineItem(log.elements, e)
+      
+    if(!log.elements.length)
+      html += log.type
     
   } else html += log.type
 
@@ -160,10 +173,15 @@ function buildWidgetHtml(log) {
 }
 
 function buildWidgetLineItem(rows, rowName) {
-  html  = '<div>\n'
-  html += '<span>' + rowName + '</span>\n'
-  html += '<span>: </span>\n'
-  html += '<span>' + getLogText(rows[rowName]) + '</span>\n'
+  
+  var value = rows[rowName]
+  
+  html = '<div title="' + value.type + '">\n'
+  html += '<span class="widget-label ' + value.type + '">' + 
+    rowName + (value.type === 'Function' ? '()' : '') + '</span>\n'
+  html += '<span class="widget-separator">: </span>\n'  
+  html += '<span class="widget-value ' + value.type + '">' + 
+    getLogText(value) + '</span>\n'
   html += '</div>\n'
   return html
 }
@@ -310,7 +328,10 @@ function getLogText(log) {
   if(log.type === 'String')
     return '"' + log.value + '"' + (log.clipped ? '...' : '')
     
-  if(log.value)
+  if(log.type === 'Function')
+    return log.name || log.type
+    
+  if(typeof log.value !== 'undefined')
     return log.value
       
   if(log.type === 'Array')
