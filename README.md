@@ -12,6 +12,8 @@ Check out the [demo](http://omphalos.github.io/earhorn/).  In a separate window,
 
 ![sample.png](https://raw.github.com/omphalos/earhorn/master/sample.png)
 
+The variables should update in real-time.
+
 Caveats
 =======
 This thing is super experimental and barely works.  Have fun :)
