@@ -58,7 +58,8 @@
       'AssignmentExpression',
       'UnaryExpression',
       'UpdateExpression',
-      'CallExpression'
+      'CallExpression',
+      'NewExpression'
     ]
     
     // Wrap Identifiers with calls to our logger, eh$(...)

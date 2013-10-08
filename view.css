@@ -1,14 +1,17 @@
 nav, #start-message { margin: 10px; }
 select { margin-left: 10px; }
-.CodeMirror {
-  border-top: 1px solid black;
-}
-.CodeMirror-fullscreen { top: 45px; }
+.CodeMirror { border-top: 1px solid black; }
+.CodeMirror-fullscreen { top: 100px; }
 .script-view { display: none; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
 .var-assignment { color: gray; }
-
+.bookmark {
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
 .bookmark, .widget-inner {
   background-color: rgba(173, 216, 230, .25); 
   padding: 0 0.5em;

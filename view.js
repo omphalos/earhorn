@@ -4,7 +4,7 @@
 
 var options = JSON.parse(
   localStorage.earhornOptions ||
-  '{ "historyLen": "1", "interval": "0" }')
+  '{ "historyLen": "1", "interval": "0", "formatDigits": "2" }')
 
 var editor = CodeMirror($('#editor')[0], {
   mode:  'text/javascript',
@@ -93,6 +93,9 @@ function buildWidgetHtml(varLog) {
     
     for(var e = 0; e < varLog.elements.length; e++)
       html += buildWidgetLineItem(varLog.elements, e)
+      
+    if(varLog.elements.length < varLog.length)
+      html += '<div>...</div>'
       
     if(!varLog.elements.length)
       html += varLog.type
@@ -239,11 +242,17 @@ function getLogText(log) {
   if(log.type === 'String')
     return '"' + log.value + '"' + (log.clipped ? '...' : '')
     
+  if(log.type === 'Number') {
+    if(!log.value || !options.formatDigits) return log.value
+    var exp = Math.pow(10, options.formatDigits)
+    return Math.round(log.value * exp) / exp
+  }
+    
   if(log.type === 'Function')
     return log.name || log.type
     
   if(typeof log.value !== 'undefined')
-    return log.value
+    return '' + log.value
       
   if(log.type === 'Array')
     return 'Array(' + log.length + ')'
