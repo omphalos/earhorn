@@ -24,27 +24,29 @@ editor.on('mousedown', function(editor, evt) {
     return removeWidget()
 
   var $el = $(evt.toElement)
-    , column = +$el.attr('data-column')
-    , line = +$el.attr('data-line')
+    , startLine = +$el.attr('data-start-line')
+    , startColumn = +$el.attr('data-start-column')
+    , endLine = +$el.attr('data-end-line')
+    , endColumn = +$el.attr('data-end-column')
+    , start = { line: startLine, column: startColumn }
+    , end = { line: endLine, column: endColumn }
+    , loc = { start: start, end: end }
+    , key = JSON.stringify(loc)
 
   evt.codemirrorIgnore = true
   
   if(widget) {
-    var isForThisLocation = 
-      widget.line === location.line && widget.column === column
+    var isForThisLocation = widget.key === key
     removeWidget()
     if(isForThisLocation) return
   }
 
   widget = {
     el: $('<div class="widget"></div>'),
-    line: line,
-    column: column
+    key: key
   }
 
-  editor.addWidget(
-    { line: widget.line - 1, ch: widget.column },
-    widget.el[0])
+  editor.addWidget({ line: endLine - 1, ch: endColumn }, widget.el[0])
 
   pendingChange = true
 })
@@ -59,44 +61,43 @@ function updateWidgetHtml() {
   
   if(!widget) return
     
-  var lineLog = selectedScriptLog.lineLogs[widget.line]
-    , log = lineLog[widget.column]
+  var varLog = selectedScriptLog.varLogs[widget.key]
 
   var html = widget.el.html()
-    , newHtml = buildWidgetHtml(log.value)
-console.log('lineLog', lineLog, 'log', log)    
+    , newHtml = buildWidgetHtml(varLog.value)
+
   if(html !== newHtml)
     widget.el.html(newHtml)  
 }
 
-function buildWidgetHtml(log) {
+function buildWidgetHtml(varLog) {
 
   var html = '\n'
-  html += '<div class="widget-inner ' + log.type + '">\n'
+  html += '<div class="widget-inner ' + varLog.type + '">\n'
 
-  if(log.type === 'Object') {
+  if(varLog.type === 'Object') {
     
-    var propertyKeys = Object.keys(log.properties)
+    var propertyKeys = Object.keys(varLog.properties)
     
     propertyKeys.sort().forEach(function(p) {
-      html += buildWidgetLineItem(log.properties, p)
+      html += buildWidgetLineItem(varLog.properties, p)
     })
       
     if(!propertyKeys.length)
-      html += log.type
+      html += varLog.type
     
-    if(!log.complete)
+    if(!varLog.complete)
       html += '<div><span>...<span></div>'
     
-  } else if(log.type === 'Array') {
+  } else if(varLog.type === 'Array') {
     
-    for(var e = 0; e < log.elements.length; e++)
-      html += buildWidgetLineItem(log.elements, e)
+    for(var e = 0; e < varLog.elements.length; e++)
+      html += buildWidgetLineItem(varLog.elements, e)
       
-    if(!log.elements.length)
-      html += log.type
+    if(!varLog.elements.length)
+      html += varLog.type
     
-  } else html += log.type
+  } else html += varLog.type
 
   html += '</div>\n'
   return html
@@ -141,7 +142,7 @@ function onStorage(evt) {
 
     var newScript = !url[val.script]
         
-    url[val.script] = { lineLogs: {}, body: val.body }    
+    url[val.script] = { varLogs: {}, body: val.body }    
     var scriptRef = { url: evt.url, script: val.script }
       , scriptRefJSON = JSON.stringify(scriptRef)
 
@@ -166,14 +167,18 @@ function onStorage(evt) {
 
     // Handle a log message.        
     var script = url[val.script]
-      , line = script.lineLogs[val.line] = script.lineLogs[val.line] || {}
-      , column
+      , varLog = script.varLogs[val.loc]
       
-      
-    if(!(column = line[val.column]))
-      column = line[val.column] = { column: val.column, line: val.line }
+    if(!varLog) {
 
-    column.value = val.val
+      var loc = JSON.parse(val.loc)
+
+      varLog = script.varLogs[val.loc] = {
+        loc: loc
+      }
+    }
+
+    varLog.value = val.val
 
     var isEventForSelectedScript =
       evt.url === selectedScriptRef.url &&
@@ -187,8 +192,10 @@ function onStorage(evt) {
 $('select').change(loadSelectedScript)
 
 function loadSelectedScript() {
+
   selectedScriptRef = JSON.parse(unescape($('select').val()))  
   selectedScriptLog = log[selectedScriptRef.url][selectedScriptRef.script]
+
   var tail = { line: editor.lineCount(), ch: 0 }
   editor.replaceRange(selectedScriptLog.body, { line: 0, ch: 0 }, tail)
 }
@@ -197,30 +204,26 @@ function draw() {
 
   if(pendingChange) {
 
-    Object.keys(selectedScriptLog.lineLogs).forEach(function(line) {      
+    Object.keys(selectedScriptLog.varLogs).forEach(function(key) {      
       
-      var lineLog = selectedScriptLog.lineLogs[line]
-        , columns = Object.keys(lineLog)
-
-      columns.forEach(function(column) {
-        
-        var columnLog = lineLog[column]
-          , logText = getLogText(columnLog.value)
-          
-        if(!columnLog.bookmark) {      
-          var bookmarkHtml = ''
-          bookmarkHtml += '<span class="bookmark" '
-          bookmarkHtml += 'data-line="' + line + '" '
-          bookmarkHtml += 'data-column="' + column + '" '
-          bookmarkHtml += '></span>'
-          columnLog.bookmarkWidget = $(bookmarkHtml)
-          var pos = { line: line - 1, ch: +column }
-            , options = {widget: columnLog.bookmarkWidget[0] }
-          columnLog.bookmark = editor.setBookmark(pos, options)
-        }
-        
-        columnLog.bookmarkWidget.html(logText)
-      })
+      var varLog = selectedScriptLog.varLogs[key]
+        , logText = getLogText(varLog.value)
+      
+      if(!varLog.bookmark) {      
+        var bookmarkHtml = ''
+        bookmarkHtml += '<span class="bookmark" '
+        bookmarkHtml += 'data-start-line="' + varLog.loc.start.line + '" '
+        bookmarkHtml += 'data-start-column="' + varLog.loc.start.column + '" '
+        bookmarkHtml += 'data-end-line="' + varLog.loc.end.line + '" '
+        bookmarkHtml += 'data-end-column="' + varLog.loc.end.column + '" '
+        bookmarkHtml += '></span>'
+        varLog.bookmarkWidget = $(bookmarkHtml)
+        var pos = { line: varLog.loc.end.line - 1, ch: varLog.loc.end.column }
+        , options = {widget: varLog.bookmarkWidget[0], insertLeft: 1 }
+        varLog.bookmark = editor.setBookmark(pos, options)
+      }
+      
+      varLog.bookmarkWidget.html(logText)
     })
     
     updateWidgetHtml()    

@@ -4,7 +4,7 @@
   // earhorn$ //
   /////////////////
   
-  function earhorn$(name, fn) {
+  function earhorn$(scope, name, fn) {
   
     // Name is optional.
     if(arguments.length < 2) {
@@ -79,11 +79,10 @@
         (node.type === 'MemberExpression' && 
           skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
           
-        // console.log(node)
+        console.log(node.loc)
         node.update('eh$("' +
-          name + '",' +
-          node.loc.end.line + ',' +
-          node.loc.end.column + ',' +
+          name + '",\'' +
+          JSON.stringify(node.loc) + '\',' +
           node.source() +
         ')')
       }
@@ -93,7 +92,7 @@
     
 console.log(instrumentedCode)
   
-    return new Function(instrumentedCode).apply(this)
+    return new Function(instrumentedCode).apply(scope)
   }
   
   earhorn$.maxElements = 3
@@ -165,12 +164,11 @@ console.log(instrumentedCode)
   }
   
   // Log and return the value.
-  function eh$(script, line, column, val) {
+  function eh$(script, loc, val) {
   
     localStorage.setItem('earhorn', JSON.stringify({
       script: script,
-      line: line,
-      column: column,
+      loc: loc,
       val: makeSerializable(val, earhorn$.depth)
     }))
   

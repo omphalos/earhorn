@@ -14,6 +14,7 @@ select { margin-left: 10px; }
 }
 .bookmark, .widget-inner {
   background-color: rgba(173, 216, 230, .25); 
+  padding: 1px 5px;
 }
 .bookmark, .widget {
   padding: 0px;
@@ -28,7 +29,6 @@ select { margin-left: 10px; }
   cursor: pointer;
 }
 .widget {
-  margin-left: -4em;
   background-color: white;
   z-index: 2;
   margin-top : 0.25em;
@@ -37,7 +37,7 @@ select { margin-left: 10px; }
   overflow-x: hidden;
   white-space: nowrap;
 }
-.widget-inner { padding: 0.5em; }
+.widget-inner {  }
 .widget-label.Function { color: green; }
 .widget-label.Object { color: brown; }
 .widget-label.Array { color: gray; }

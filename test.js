@@ -2,7 +2,7 @@
 // Test script //
 /////////////////
 
-earhorn$('test.js', function() {
+earhorn$(this, 'test.js', function() {
   
   $(document).on('mousemove', function(evt) {
     evt
