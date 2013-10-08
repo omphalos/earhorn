@@ -8,18 +8,14 @@ select { margin-left: 10px; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
 .var-assignment { color: gray; }
-.bookmark, .widget {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
+
 .bookmark, .widget-inner {
   background-color: rgba(173, 216, 230, .25); 
-  padding: 1px 5px;
+  padding: 0 0.5em;
 }
-.bookmark, .widget {
-  padding: 0px;
+.bookmark, .widget {  
   color: blue;
-  font-size: 0.8em;
+  font-size: 0.75em;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -37,7 +33,7 @@ select { margin-left: 10px; }
   overflow-x: hidden;
   white-space: nowrap;
 }
-.widget-inner {  }
+.widget-inner { padding: 1px 0.5em; }
 .widget-label.Function { color: green; }
 .widget-label.Object { color: brown; }
 .widget-label.Array { color: gray; }
