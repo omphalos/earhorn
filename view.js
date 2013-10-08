@@ -6,53 +6,11 @@ var options = JSON.parse(
   localStorage.earhornOptions ||
   '{ "historyLen": "1", "interval": "0" }')
 
-var openTag  = '\u2329' // unicode bracket
-  , closeTag = '\u232a' // unicode bracket
-
-CodeMirror.defineMode("earhorn-javascript", function(config, parserConfig) {
-
-  var javascriptMode = CodeMirror.getMode(config, 'javascript')
-    , javascriptModeToken = javascriptMode.token
-
-  javascriptMode.token = function(stream, state) {
-
-    if(!state.logging && stream.peek() == openTag) {
-      stream.next()
-      state.logging = 'log'
-      return 'log-start'
-    }
-
-    if(state.logging === 'log') {
-      var pos = stream.pos
-      stream.next()
-      if(stream.skipTo(closeTag)) {
-        state.logging = 'log-end'
-      } else {
-        delete state.logging
-        return 'error'
-      }
-      return 'log'
-    }
-    
-    if(state.logging === 'log-end') {
-      stream.next()
-      delete state.logging
-      return 'log-end'
-    }
-
-    return javascriptModeToken.apply(this, arguments)
-  }
-
-  return javascriptMode
-
-})
-
 var editor = CodeMirror($('#editor')[0], {
-  mode:  "earhorn-javascript",
+  mode:  'text/javascript',
   fullScreen: true,
   lineNumbers: true,
-  readOnly: true,
-  cursorBlinkRate: 0
+  readOnly: true
 })
 
 // Add widget on mousedown
@@ -62,61 +20,33 @@ editor.on('mousedown', function(editor, evt) {
   if($(evt.toElement).closest('.widget').length)
     return
 
-  if(!selectedScriptLog || evt.toElement.className !== 'cm-log')
+  if(!selectedScriptLog || evt.toElement.className !== 'bookmark')
     return removeWidget()
 
-  var location = editor.coordsChar({
-    top: evt.clientY,
-    left: evt.clientX
-  })
-  
-  var line = selectedScriptLog[location.line + 1]
-  if(!line) return removeWidget()
-    
-  //////////////////////
-  // Resolve the column.
-  
-  // Get all columns in the line.
-  var lineElements = Array.prototype.slice.call(evt.
-    toElement.
-    parentNode.
-    children)
-    
-  var filteredElements = lineElements.
-    filter(function(el) {
-      return el.className === 'cm-log'
-    })
+  var $el = $(evt.toElement)
+    , column = +$el.attr('data-column')
+    , line = +$el.attr('data-line')
 
-  var indexOfClickedElement = filteredElements.indexOf(evt.toElement)
-
-  var columns = Object.
-    keys(line).
-    sort(function(x, y){ return +x > +y })
-    
-  var column = columns[indexOfClickedElement]
   evt.codemirrorIgnore = true
   
   if(widget) {
-    var forThisLocation = 
+    var isForThisLocation = 
       widget.line === location.line && widget.column === column
     removeWidget()
-    if(forThisLocation) return
+    if(isForThisLocation) return
   }
-
-  if(!selectedScriptLog[location.line + 1])
-    return
 
   widget = {
     el: $('<div class="widget"></div>'),
-    line: location.line,
+    line: line,
     column: column
   }
 
   editor.addWidget(
-    { line: location.line, ch: location.ch },
+    { line: widget.line - 1, ch: widget.column },
     widget.el[0])
 
-  updateWidgetHtml()
+  pendingChange = true
 })
 
 function removeWidget() {
@@ -129,12 +59,12 @@ function updateWidgetHtml() {
   
   if(!widget) return
     
-  var linelog = selectedScriptLog[widget.line + 1]
-    , log = linelog[widget.column]
-    
-  var html = widget.el.html()
-    , newHtml = buildWidgetHtml(log)
+  var lineLog = selectedScriptLog.lineLogs[widget.line]
+    , log = lineLog[widget.column]
 
+  var html = widget.el.html()
+    , newHtml = buildWidgetHtml(log.value)
+console.log('lineLog', lineLog, 'log', log)    
   if(html !== newHtml)
     widget.el.html(newHtml)  
 }
@@ -186,6 +116,10 @@ function buildWidgetLineItem(rows, rowName) {
   return html
 }
 
+///////////////
+// onStorage //
+///////////////
+
 var log = {}
   , pendingChange = false
   , selectedScriptRef
@@ -207,7 +141,7 @@ function onStorage(evt) {
 
     var newScript = !url[val.script]
         
-    url[val.script] = { body: val.body, lines: val.body.split('\n') }    
+    url[val.script] = { lineLogs: {}, body: val.body }    
     var scriptRef = { url: evt.url, script: val.script }
       , scriptRefJSON = JSON.stringify(scriptRef)
 
@@ -232,9 +166,14 @@ function onStorage(evt) {
 
     // Handle a log message.        
     var script = url[val.script]
-      , line = script[val.line] = script[val.line] || {}
+      , line = script.lineLogs[val.line] = script.lineLogs[val.line] || {}
+      , column
+      
+      
+    if(!(column = line[val.column]))
+      column = line[val.column] = { column: val.column, line: val.line }
 
-    line[val.column] = val.val
+    column.value = val.val
 
     var isEventForSelectedScript =
       evt.url === selectedScriptRef.url &&
@@ -250,72 +189,41 @@ $('select').change(loadSelectedScript)
 function loadSelectedScript() {
   selectedScriptRef = JSON.parse(unescape($('select').val()))  
   selectedScriptLog = log[selectedScriptRef.url][selectedScriptRef.script]
-  pendingChange = true
-  draw()    
+  var tail = { line: editor.lineCount(), ch: 0 }
+  editor.replaceRange(selectedScriptLog.body, { line: 0, ch: 0 }, tail)
 }
-
-var lines
 
 function draw() {
 
   if(pendingChange) {
 
-    var newLines = selectedScriptLog.lines.map(function(lineText, lineIndex) {
+    Object.keys(selectedScriptLog.lineLogs).forEach(function(line) {      
       
-      var lineLog = selectedScriptLog[lineIndex + 1]
-      if(!lineLog) return lineText
-      
-      var columns = Object.
-        keys(lineLog).
-        sort(function(x, y) { return +x > +y })
+      var lineLog = selectedScriptLog.lineLogs[line]
+        , columns = Object.keys(lineLog)
 
-      var c = columns.length
-
-      while(c --> 0) {
-
-        var column = columns[c]
-          , obj = lineLog[column]
-          
-        lineText =
-          lineText.slice(0, column) +
-          openTag + getLogText(obj) + closeTag +
-          lineText.slice(column)      
-      }
-      
-      return lineText
-
-    })
-      
-    if(!lines)  
-      editor.setValue((lines = newLines).join('\n'))
-      
-    else {
-      for(var i = 0; i < newLines.length; i++) {
+      columns.forEach(function(column) {
         
-        if(i < lines.length) {
-          if(lines[i] !== newLines[i])
-            editor.setLine(i, newLines[i])
-        } else {
-          var tail = newLines.slice(lines.length).join('\n')
-            , location = { line: lines.length, ch: 0 }
-          editor.replaceRange(tail, location, location)
-          break
+        var columnLog = lineLog[column]
+          , logText = getLogText(columnLog.value)
+          
+        if(!columnLog.bookmark) {      
+          var bookmarkHtml = ''
+          bookmarkHtml += '<span class="bookmark" '
+          bookmarkHtml += 'data-line="' + line + '" '
+          bookmarkHtml += 'data-column="' + column + '" '
+          bookmarkHtml += '></span>'
+          columnLog.bookmarkWidget = $(bookmarkHtml)
+          var pos = { line: line - 1, ch: +column }
+            , options = {widget: columnLog.bookmarkWidget[0] }
+          columnLog.bookmark = editor.setBookmark(pos, options)
         }
-
-        if(lines.length > newLines.length) {
-
-          var from = { line: newLines.length, ch: 0 }
-            , to = { line: lines.length, ch: 0 }
-
-          // TODO: handle line clipping
-          editor.replaceRange('', from, to)
-        }
-      }
-      
-      lines = newLines
-    }
+        
+        columnLog.bookmarkWidget.html(logText)
+      })
+    })
     
-    updateWidgetHtml()
+    updateWidgetHtml()    
     
     pendingChange = false
   }
