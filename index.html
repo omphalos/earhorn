@@ -9,7 +9,20 @@
 </head>
 <body>
   <p id="start-message">No scripts detected yet.  Try opening the <a href="test.html">test page</a> in another window.</p>
-  <nav class="script-view">Select script:<select></select></nav>
+  <div class="script-view">
+    <div>Select script:<select></select></div>
+    <div class="timeline">
+      <div class="status">
+        <span title="Step Backward" class="step-backward icon"></span>
+        <span title="Pause" class="pause icon"></span>
+        <span title="Play" class="play active icon"></span>
+        <span title="Step Forward" class="step-forward icon"></span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="100">
+      </div>
+    </div>
+  </div>
   <div id="editor" class="script-view"><div>
   <script src="components/codemirror/lib/codemirror.js"></script>
   <script src="components/codemirror/mode/javascript/javascript.js"></script>

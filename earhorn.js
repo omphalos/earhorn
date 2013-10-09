@@ -82,8 +82,11 @@
           
         console.log(node.loc)
         node.update('eh$("' +
-          name + '",\'' +
-          JSON.stringify(node.loc) + '\',' +
+          name + '","' +
+          node.loc.start.line + ',' +
+          node.loc.start.column + ',' +
+          node.loc.end.line + ',' +
+          node.loc.end.column + '",' +
           node.source() +
         ')')
       }

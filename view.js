@@ -4,14 +4,86 @@
 
 var options = JSON.parse(
   localStorage.earhornOptions ||
-  '{ "historyLen": "1", "interval": "0", "formatDigits": "2" }')
+  JSON.stringify({
+    historyLen: 1000,
+    interval: 0,
+    formatDigits: 2
+  }))
 
 var editor = CodeMirror($('#editor')[0], {
   mode:  'text/javascript',
   fullScreen: true,
-  lineNumbers: true,
-  readOnly: true
+  lineNumbers: true
 })
+
+// Set up timeline
+var $timeline = $('input[type=range]')
+  , timelineMax = +$timeline.attr('max')
+  , playStatus = 'playing'
+  , history = []
+  , $play = $('.play.icon')
+  , $pause = $('.pause.icon')
+  , $stepForward = $('.step-forward.icon')
+  , $stepBackward = $('.step-backward.icon')
+  , position = history.length - 1
+  
+$timeline.val(options.historyLen)
+$timeline.on('change', function(evt) {
+  var val = +$timeline.val()
+  if(val < timelineMax && playStatus !== 'paused')
+    pause()
+  moveTo(Math.floor((history.length - 1) * val / timelineMax))
+})
+
+function moveTo(newPosition) {  
+
+  if(!history.length) return position = 0
+  
+  while(position < newPosition) {
+    position++
+    var frame = history[position]
+    selectedScriptLog.varLogs[frame.loc].value = frame.current
+  }
+  
+  while(position > newPosition) {
+    var frame = history[position]
+    selectedScriptLog.varLogs[frame.loc].value = frame.previous
+    position--
+  }
+  
+  pendingChange = true
+}
+
+function pause() {
+  $play.removeClass('active')
+  $pause.addClass('active')
+  playStatus = 'paused'
+}
+
+function play() {
+  $play.addClass('active')
+  $pause.removeClass('active')
+  playStatus = 'playing'
+  moveTo(history.length - 1)
+  $timeline.val(timelineMax)
+}
+
+$play.on('click', play)
+$pause.on('click', pause)
+
+$stepBackward.on('click', function() { step(-1) })
+
+$stepForward.on('click', function() { step(1) })
+
+function step(amount) {
+  pause()
+  var newPosition = position + amount
+  if(newPosition < history.length && newPosition >= 0)
+    moveTo(position + amount)
+  if(history.length)
+    $timeline.val((timelineMax * position / (history.length - 1)).toFixed())
+  else $timeline.val(timelineMax)
+}
 
 // Add widget on mousedown
 var widget
@@ -31,7 +103,13 @@ editor.on('mousedown', function(editor, evt) {
     , start = { line: startLine, column: startColumn }
     , end = { line: endLine, column: endColumn }
     , loc = { start: start, end: end }
-    , key = JSON.stringify(loc)
+
+  var key = [
+    loc.start.line,
+    loc.start.column,
+    loc.end.line,
+    loc.end.column
+  ].join(',')
 
   evt.codemirrorIgnore = true
   
@@ -166,20 +244,34 @@ function onStorage(evt) {
         loadSelectedScript()
     }
 
-  } else {
+  } else if(playStatus !== 'paused') {
+
+    // If we're paused we don't want to be adjusting history.
+    // Otherwise we have to somehow handle the user's historic
+    // state dropping off from the history array.
 
     // Handle a log message.        
     var script = url[val.script]
       , varLog = script.varLogs[val.loc]
+      , historyFrame = { loc: val.loc, current: val.val }
       
-    if(!varLog) {
+    if(varLog)
+      historyFrame.previous = varLog.value
 
-      var loc = JSON.parse(val.loc)
+    else {
 
-      varLog = script.varLogs[val.loc] = {
-        loc: loc
-      }
+      var fragments = val.loc.split(',')
+        , start = { line: fragments[0], column: fragments[1] }
+        , end = { line: fragments[2], column: fragments[3] }
+        , loc = { start: start, end: end }
+
+      varLog = script.varLogs[val.loc] = { loc: loc }
     }
+    
+    history.push(historyFrame)
+    while(history.length > options.historyLen)
+      history.shift()
+    position = history.length - 1
 
     varLog.value = val.val
 
@@ -196,6 +288,10 @@ $('select').change(loadSelectedScript)
 
 function loadSelectedScript() {
 
+  history = []
+
+  removeWidget()
+    
   selectedScriptRef = JSON.parse(unescape($('select').val()))  
   selectedScriptLog = log[selectedScriptRef.url][selectedScriptRef.script]
 
@@ -210,7 +306,18 @@ function draw() {
     Object.keys(selectedScriptLog.varLogs).forEach(function(key) {      
       
       var varLog = selectedScriptLog.varLogs[key]
-        , logText = getLogText(varLog.value)
+      
+      if(!varLog.value) {
+        // Rewinding and log is gone
+        if(varLog.bookmark) {
+          varLog.bookmark.clear()
+          delete varLog.bookmark
+          delete varLog.bookmarkWidget
+        }
+        return
+      }
+      
+      var logText = getLogText(varLog.value)
       
       if(!varLog.bookmark) {      
         var bookmarkHtml = ''
@@ -244,8 +351,7 @@ function getLogText(log) {
     
   if(log.type === 'Number') {
     if(!log.value || !options.formatDigits) return log.value
-    var exp = Math.pow(10, options.formatDigits)
-    return Math.round(log.value * exp) / exp
+    return log.value.toFixed(options.formatDigits)
   }
     
   if(log.type === 'Function')
