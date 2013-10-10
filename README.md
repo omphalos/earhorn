@@ -8,11 +8,11 @@ JavaScript line-by-line variable logging in the browser.
 Demo
 ====
 
-Check out the [demo](http://omphalos.github.io/earhorn/).  If you follow the instructions, it should look like:
+Check out the [demo](http://omphalos.github.io/earhorn/demo.html).
 
 ![sample.png](https://raw.github.com/omphalos/earhorn/master/sample.png)
 
-The variables should update in real-time.
+The variables should update in real-time.  You should also be able to run back and forth through the variable timeline.
 
 Caveats
 =======

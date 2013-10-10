@@ -1,0 +1,9 @@
+iframe {  
+  width: 640px;
+  height: 640px;
+  position: absolute;
+  border: 0px;
+  overflow: hidden;
+}
+.CodeMirror { position: absolute; background-color: rgba(255, 255, 255, 0.5); }
+.CodeMirror-focused .CodeMirror-selected { background-color: rgba(215, 212, 248, 0.5); }

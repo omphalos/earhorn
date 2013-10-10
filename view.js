@@ -241,11 +241,12 @@ function onStorage(evt) {
         val.script +
         '</option>')
   
-      if($('#start-message').is(':visible')) {
-        $('#start-message').hide()
-        $('.script-view').show()
+      if(!selectedScriptRef) {
         loadSelectedScript()
+        $('.script-view').show()
+        $('#editor').show()
       }
+
     } else {
       if(scriptRefJSON == JSON.stringify(selectedScriptRef))
         loadSelectedScript()
@@ -283,13 +284,15 @@ function onStorage(evt) {
     varLog.value = val.val
 
     var isEventForSelectedScript =
+      selectedScriptRef &&
       evt.url === selectedScriptRef.url &&
       val.script === selectedScriptRef.script
       
     if(isEventForSelectedScript)
       pendingChange = true
       
-    selectedScriptLog.lastChange = val.loc
+    if(selectedScriptLog)
+      selectedScriptLog.lastChange = val.loc
   }
 }
 

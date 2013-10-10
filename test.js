@@ -7,7 +7,7 @@ earhorn$(this, 'test-three.js', function() {
   // derived from http://www.mrdoob.com/projects/htmleditor/
   
   var renderer = new THREE.CanvasRenderer()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(480, 480)
   document.body.appendChild(renderer.domElement)
     
   var aspect = window.innerWidth / window.innerHeight
@@ -26,13 +26,11 @@ earhorn$(this, 'test-three.js', function() {
   
   function animate() {
     
-    //if(counter > 5) return
-    
     requestAnimationFrame(animate)
     
-    counter = (counter + 1) % 100
+    counter = (counter + 1) % 1000
     
-    var percent = counter * 0.01
+    var percent = counter * 0.001
       , radians = percent * Math.PI * 2
     
     mesh.rotation.x = Math.cos(radians)
