@@ -43,12 +43,14 @@ function moveTo(newPosition) {
     position++
     var frame = history[position]
     selectedScriptLog.varLogs[frame.loc].value = frame.current
+    selectedScriptLog.lastChange = frame.loc
   }
   
   while(position > newPosition) {
     var frame = history[position]
     selectedScriptLog.varLogs[frame.loc].value = frame.previous
     position--
+    selectedScriptLog.lastChange = history[position].loc    
   }
   
   pendingChange = true
@@ -92,11 +94,12 @@ editor.on('mousedown', function(editor, evt) {
   if($(evt.toElement).closest('.widget').length)
     return
 
-  if(!selectedScriptLog || evt.toElement.className !== 'bookmark')
+  var $el = $(evt.toElement).closest('.bookmark')
+
+  if(!selectedScriptLog || !$el.length)
     return removeWidget()
 
-  var $el = $(evt.toElement)
-    , startLine = +$el.attr('data-start-line')
+  var startLine = +$el.attr('data-start-line')
     , startColumn = +$el.attr('data-start-column')
     , endLine = +$el.attr('data-end-line')
     , endColumn = +$el.attr('data-end-column')
@@ -140,11 +143,15 @@ function updateWidgetHtml() {
   if(!widget) return
     
   var varLog = selectedScriptLog.varLogs[widget.key]
+  
+  if(!varLog.value)
+    return widget.el.hide()
+  else widget.el.show()
 
   var html = widget.el.html()
     , newHtml = buildWidgetHtml(varLog.value)
 
-  if(html !== newHtml)
+  if(html !== newHtml) 
     widget.el.html(newHtml)  
 }
 
@@ -281,6 +288,8 @@ function onStorage(evt) {
       
     if(isEventForSelectedScript)
       pendingChange = true
+      
+    selectedScriptLog.lastChange = val.loc
   }
 }
 
@@ -317,7 +326,11 @@ function draw() {
         return
       }
       
-      var logText = getLogText(varLog.value)
+      var logText = 
+        '<span' + 
+        (selectedScriptLog.lastChange === key ? ' class="current">' : '>') +
+        getLogText(varLog.value) + 
+        '</span>'
       
       if(!varLog.bookmark) {      
         var bookmarkHtml = ''
@@ -332,7 +345,7 @@ function draw() {
         , options = {widget: varLog.bookmarkWidget[0], insertLeft: 1 }
         varLog.bookmark = editor.setBookmark(pos, options)
       }
-      
+
       varLog.bookmarkWidget.html(logText)
     })
     
@@ -344,10 +357,22 @@ function draw() {
   setTimeout(draw, options.interval)
 }
 
+function htmlEscape(str) {
+  
+  var entityMap = {
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', 
+    '"': '&quot;', '\'': '&#39;', '/': '&#x2F;' 
+  }
+
+  return str.replace(/[&<>"'\/]/g, function (s) {
+    return entityMap[s];
+  })
+}
+
 function getLogText(log) {
 
   if(log.type === 'String')
-    return '"' + log.value + '"' + (log.clipped ? '...' : '')
+    return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
     
   if(log.type === 'Number') {
     if(!log.value || !options.formatDigits) return log.value

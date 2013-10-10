@@ -31,6 +31,7 @@ input[type=range] { width: 100%; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
 .var-assignment { color: gray; }
+.current { font-weight: bold; }
 .bookmark {
   user-select: none;
   -ms-user-select: none;
