@@ -3,6 +3,8 @@
 /////////////////
 
 earhorn$(this, 'test-three.js', function() {
+
+  // derived from http://www.mrdoob.com/projects/htmleditor/
   
   var renderer = new THREE.CanvasRenderer()
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -24,7 +26,7 @@ earhorn$(this, 'test-three.js', function() {
   
   function animate() {
     
-    if(counter > 5) return
+    //if(counter > 5) return
     
     requestAnimationFrame(animate)
     
@@ -38,6 +40,7 @@ earhorn$(this, 'test-three.js', function() {
     
     renderer.render(scene, camera)
   }
-  
+    
   animate()
 })
+
