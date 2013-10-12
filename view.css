@@ -70,7 +70,6 @@ input[type=range] { width: 100%; }
 .widget-label.Object { color: brown; }
 .widget-label.Array { color: gray; }
 
-.bookmark-loc {
-  font-weight: bold;
-  text-decoration: underline;
-}
+.bookmark-loc { font-weight: bold; }
+.current-loc { text-decoration: underline; }
+

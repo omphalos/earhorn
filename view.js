@@ -316,6 +316,7 @@ function loadSelectedScript() {
 }
 
 var hoverItem;
+var currentItem;
 function draw() {
 
   if(pendingChange) {
@@ -339,6 +340,21 @@ function draw() {
         (selectedScriptLog.lastChange === key ? ' class="current">' : '>') +
         getLogText(varLog.value) + 
         '</span>'
+         
+      if(selectedScriptLog.lastChange === key &&
+        (!currentItem || currentItem.varLog !== varLog)) {
+        
+        if(currentItem)
+          currentItem.marker.clear();
+        
+        currentItem = {
+          varLog: varLog,
+          marker: editor.markText(
+            { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+            { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+            { className: 'current-loc' })
+        }
+      }
       
       if(!varLog.bookmark) {   
       
@@ -357,7 +373,7 @@ function draw() {
         varLog.bookmark = editor.setBookmark(pos, options)
         
         varLog.bookmarkWidget.on('mouseenter', function() {
-          console.log(varLog.loc.start, varLog.loc.end)
+          removeHoverItem();
           hoverItem = {
             varLog: varLog,
             marker: editor.markText(
@@ -385,6 +401,7 @@ function draw() {
 }
 
 function removeHoverItem() {
+  if(!hoverItem) return;
   hoverItem.marker.clear();
   hoverItem = null;
 }
