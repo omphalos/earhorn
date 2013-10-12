@@ -103,6 +103,8 @@ console.log(instrumentedCode)
   earhorn$.maxKeys = 200
   earhorn$.depth = 2
   earhorn$.maxStringLength = 50
+  earhorn$.bufferSize = 100
+  earhorn$.flushInterval = 100
   
   function makeSerializable(obj, depth) {
     
@@ -167,17 +169,34 @@ console.log(instrumentedCode)
     return result
   }
   
+  var buffer = []
+  
   // Log and return the value.
   function eh$(script, loc, val) {
   
-    localStorage.setItem('earhorn', JSON.stringify({
+    buffer.push({
       script: script,
       loc: loc,
       val: makeSerializable(val, earhorn$.depth)
-    }))
-  
+    })
+    
+    if(buffer.length > earhorn$.bufferSize)
+      flush()
+ 
     return val
   }
+  
+  function flush() {
+    localStorage.setItem('earhorn', JSON.stringify(buffer))
+    buffer = []
+  }
+  
+  function checkBuffer() {    
+    if(buffer.length) flush()    
+    setTimeout(flush, earhorn$.flushInterval)
+  }
+  
+  setTimeout(checkBuffer, earhorn$.flushInterval)
   
   context.earhorn$ = earhorn$
   context.eh$ = eh$

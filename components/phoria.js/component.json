@@ -1,0 +1,9 @@
+{
+  "name": "phoria.js",
+  "version": "0.0.0",
+  "commit": "5a510b642c24ab90c3165168bec7edf11f663bcb",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevinroast/phoria.js.git"
+  }
+}

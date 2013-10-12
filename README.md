@@ -1,7 +1,7 @@
 earhorn
 =======
 
-JavaScript line-by-line variable logging in the browser.
+JavaScript reversible debugger in the browser.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
@@ -10,9 +10,7 @@ Demo
 
 Check out the [demo](http://omphalos.github.io/earhorn/demo.html).
 
-The variables should update in real-time.
-
-Try pausing the listener and replaying variable states.
+It's inspired by mr doob's excellent [htmleditor](http://www.mrdoob.com/projects/htmleditor/) (Although [phoria.js](https://github.com/kevinroast/phoria.js) has been kinder to me on mobile so I'm using that to render).
 
 Caveats
 =======

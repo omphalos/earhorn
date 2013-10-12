@@ -6,7 +6,7 @@ var options = JSON.parse(
   localStorage.earhornOptions ||
   JSON.stringify({
     historyLen: 100,
-    interval: 0,
+    interval: 100,
     formatDigits: 2
   }))
 
@@ -226,81 +226,85 @@ function onStorage(evt) {
 
   if(evt.key !== 'earhorn') return
 
-  var val = JSON.parse(evt.newValue)
-    , url = log[evt.url] = log[evt.url] || {}
+  var url = log[evt.url] = log[evt.url] || {}
+    , record = JSON.parse(evt.newValue)
 
-  // Ignore events if we haven't seen the script body  
-  if(!url[val.script] && !val.body) return
-  
-  if(val.body) {
-    
+  if(record.body) {
+      
     // Handle a script snapshot.
-
-    var newScript = !url[val.script]
-        
-    url[val.script] = { varLogs: {}, body: val.body }    
-    var scriptRef = { url: evt.url, script: val.script }
+  
+    var newScript = !url[record.script]
+          
+    url[record.script] = { varLogs: {}, body: record.body }    
+    var scriptRef = { url: evt.url, script: record.script }
       , scriptRefJSON = JSON.stringify(scriptRef)
-
+  
     if(newScript) {
-
+  
       $('select').append(
         '<option value="' + escape(scriptRefJSON) + '">' +
-        val.script +
+        record.script +
         '</option>')
-  
+    
       if(!selectedScriptRef) {
         loadSelectedScript()
         $('.script-view').show()
         $('#editor').show()
       }
-
+  
     } else {
       if(scriptRefJSON == JSON.stringify(selectedScriptRef))
         loadSelectedScript()
     }
-
-  } else if(playStatus !== 'paused') {
-
+  } else if(record.length && playStatus !== 'paused') {
+ 
     // If we're paused we don't want to be adjusting history.
     // Otherwise we have to somehow handle the user's historic
     // state dropping off from the history array.
-
-    // Handle a log message.        
-    var script = url[val.script]
-      , varLog = script.varLogs[val.loc]
-      , historyFrame = { loc: val.loc, current: val.val }
-      
-    if(varLog)
-      historyFrame.previous = varLog.value
-
-    else {
-
-      var fragments = val.loc.split(',')
-        , start = { line: fragments[0], column: fragments[1] }
-        , end = { line: fragments[2], column: fragments[3] }
-        , loc = { start: start, end: end }
-
-      varLog = script.varLogs[val.loc] = { loc: loc }
-    }
     
-    history.push(historyFrame)
-    while(history.length > options.historyLen)
-      history.shift()
-    position = history.length - 1
-
-    varLog.value = val.val
-
-    var isEventForSelectedScript =
-      selectedScriptRef &&
-      evt.url === selectedScriptRef.url &&
-      val.script === selectedScriptRef.script
+    for(var e = 0; e < record.length; e++) {
       
-    if(isEventForSelectedScript)
-      pendingChange = true
-      
-    if(selectedScriptLog)
-      selectedScriptLog.lastChange = val.loc
+      var val = record[e]
+  
+      // Ignore events if we haven't seen the script body  
+      if(!url[val.script]) return
+    
+      // Handle a log message.        
+      var script = url[val.script]
+        , varLog = script.varLogs[val.loc]
+        , historyFrame = { loc: val.loc, current: val.val }
+          
+      if(varLog)
+        historyFrame.previous = varLog.value
+    
+      else {
+    
+        var fragments = val.loc.split(',')
+          , start = { line: fragments[0], column: fragments[1] }
+          , end = { line: fragments[2], column: fragments[3] }
+          , loc = { start: start, end: end }
+    
+        varLog = script.varLogs[val.loc] = { loc: loc }
+      }
+        
+      history.push(historyFrame)
+      while(history.length > options.historyLen)
+        history.shift()
+      position = history.length - 1
+    
+      varLog.value = val.val
+    
+      var isEventForSelectedScript =
+        selectedScriptRef &&
+        evt.url === selectedScriptRef.url &&
+        val.script === selectedScriptRef.script
+          
+      if(isEventForSelectedScript)
+        pendingChange = true
+          
+      if(selectedScriptLog)
+        selectedScriptLog.lastChange = val.loc
+    }
   }
 }
 
@@ -339,32 +343,6 @@ function draw() {
         return
       }
       
-      var logText = 
-        '<span' + 
-        (playStatus !== 'playing' && selectedScriptLog.lastChange === key ?
-          ' class="current">' :
-          '>') +
-        getLogText(varLog.value) + 
-        '</span>'
-         
-      if(selectedScriptLog.lastChange === key) {
-        
-        if(currentItem &&
-          (currentItem.varLog !== varLog || playStatus === 'playing')) {
-          currentItem.marker.clear()
-          currentItem = null
-        }
-          
-        if(playStatus !== 'playing')
-          currentItem = {
-            varLog: varLog,
-            marker: editor.markText(
-              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
-              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
-              { className: 'current-loc' })
-          }
-      }
-      
       if(!varLog.bookmark) {   
       
         var bookmarkHtml = ''
@@ -393,12 +371,35 @@ function draw() {
         })
         
         varLog.bookmarkWidget.on('mouseleave', function() {
-          if(hoverItem.varLog === varLog)
+          if(hoverItem.varLog === varLog) {
             removeHoverItem()
+          }
         })
       }
 
+      var logText = '<span>' + getLogText(varLog.value) + '</span>'         
       varLog.bookmarkWidget.html(logText)
+      
+      if(selectedScriptLog.lastChange === key) {
+        
+        if(currentItem &&
+          (currentItem.varLog !== varLog || playStatus === 'playing')) {
+          currentItem.varLog.bookmarkWidget.removeClass('current')            
+          currentItem.marker.clear()
+          currentItem = null
+        }
+          
+        if(playStatus !== 'playing') {
+          currentItem = {
+            varLog: varLog,
+            marker: editor.markText(
+              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+              { className: 'current-loc' })
+          }
+          varLog.bookmarkWidget.addClass('current')            
+        }
+      }
     })
     
     updateWidgetHtml()
