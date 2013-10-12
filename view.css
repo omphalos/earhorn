@@ -1,5 +1,6 @@
-.script-view, #start-message { margin: 10px; }
-select { margin-left: 10px; }
+body { font-size: 1.5em; }
+.script-view, #start-message { margin: 1em; }
+select { margin-left: 1em; }
 .status {
   user-select: none;
   -ms-user-select: none;
@@ -13,20 +14,22 @@ select { margin-left: 10px; }
   opacity: 0.25;
 }
 .icon:not(.active) { cursor: pointer; }
-.icon { margin:  5px }
+.icon { margin: 5px }
 .icon:hover { opacity: 0.35; }
 .icon:active, .icon.active { opacity: 1; }
 .pause.icon { background-image: url(glyphicons/glyphicons_174_pause.png); }
 .play.icon { background-image: url(glyphicons/glyphicons_173_play.png); }
 .step-forward.icon { background-image: url(glyphicons/glyphicons_178_step_forward.png); }
 .step-backward.icon { background-image: url(glyphicons/glyphicons_170_step_backward.png); }
+.fast-backward.icon { background-image: url(glyphicons/glyphicons_171_fast_backward.png) }
+.fast-forward.icon { background-image: url(glyphicons/glyphicons_177_fast_forward.png) }
 input[type=range] { width: 100%; }
-.timeline { margin: 10px 0; }
-.timeline .input-container { margin: 0 130px 0 0; }
-.timeline .status { float: right; }
+.timeline { margin: 1em 0; }
+.timeline .status { margin: 0 1em 0 0; float: left; }
+.timeline .input-container { overflow: hidden;; }
 
 .CodeMirror { border-top: 1px solid black; }
-.CodeMirror-fullscreen { top: 80px; }
+.CodeMirror-fullscreen { top: 8em; }
 .script-view { display: none; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
@@ -45,10 +48,10 @@ input[type=range] { width: 100%; }
 .bookmark, .widget {  
   color: blue;
   font-size: 0.75em;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  border-radius: 10px;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  -ms-border-radius: 1em;
+  border-radius: 1em;
   border: 1px solid lightblue;
   color: blue;
   cursor: pointer;
@@ -57,7 +60,7 @@ input[type=range] { width: 100%; }
   background-color: white;
   z-index: 2;
   margin-top : 0.25em;
-  max-height: 318px;
+  max-height: 30em;
   overflow-y: auto;
   overflow-x: hidden;
   white-space: nowrap;
@@ -66,3 +69,8 @@ input[type=range] { width: 100%; }
 .widget-label.Function { color: green; }
 .widget-label.Object { color: brown; }
 .widget-label.Array { color: gray; }
+
+.bookmark-loc {
+  font-weight: bold;
+  text-decoration: underline;
+}

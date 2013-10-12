@@ -5,7 +5,7 @@
 var options = JSON.parse(
   localStorage.earhornOptions ||
   JSON.stringify({
-    historyLen: 1000,
+    historyLen: 100,
     interval: 0,
     formatDigits: 2
   }))
@@ -23,8 +23,6 @@ var $timeline = $('input[type=range]')
   , history = []
   , $play = $('.play.icon')
   , $pause = $('.pause.icon')
-  , $stepForward = $('.step-forward.icon')
-  , $stepBackward = $('.step-backward.icon')
   , position = history.length - 1
   
 $timeline.val(options.historyLen)
@@ -73,9 +71,14 @@ function play() {
 $play.on('click', play)
 $pause.on('click', pause)
 
-$stepBackward.on('click', function() { step(-1) })
-
-$stepForward.on('click', function() { step(1) })
+$('.fast-backward.icon').on('click', function() {
+  step(-position)
+})
+$('.fast-forward.icon').on('click', function() {
+  step(history.length - position - 1)
+})
+$('.step-backward.icon').on('click', function() { step(-1) })
+$('.step-forward.icon').on('click', function() { step(1) })
 
 function step(amount) {
   pause()
@@ -311,6 +314,7 @@ function loadSelectedScript() {
   editor.replaceRange(selectedScriptLog.body, { line: 0, ch: 0 }, tail)
 }
 
+var hoverItem;
 function draw() {
 
   if(pendingChange) {
@@ -335,7 +339,8 @@ function draw() {
         getLogText(varLog.value) + 
         '</span>'
       
-      if(!varLog.bookmark) {      
+      if(!varLog.bookmark) {   
+      
         var bookmarkHtml = ''
         bookmarkHtml += '<span class="bookmark" '
         bookmarkHtml += 'data-start-line="' + varLog.loc.start.line + '" '
@@ -343,21 +348,44 @@ function draw() {
         bookmarkHtml += 'data-end-line="' + varLog.loc.end.line + '" '
         bookmarkHtml += 'data-end-column="' + varLog.loc.end.column + '" '
         bookmarkHtml += '></span>'
+        
         varLog.bookmarkWidget = $(bookmarkHtml)
+        
         var pos = { line: varLog.loc.end.line - 1, ch: varLog.loc.end.column }
         , options = {widget: varLog.bookmarkWidget[0], insertLeft: 1 }
         varLog.bookmark = editor.setBookmark(pos, options)
+        
+        varLog.bookmarkWidget.on('mouseenter', function() {
+          console.log(varLog.loc.start, varLog.loc.end)
+          hoverItem = {
+            varLog: varLog,
+            marker: editor.markText(
+              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+              { className: 'bookmark-loc' })
+          }
+        })
+        
+        varLog.bookmarkWidget.on('mouseleave', function() {
+          if(hoverItem.varLog === varLog)
+            removeHoverItem()
+        })
       }
 
       varLog.bookmarkWidget.html(logText)
     })
     
-    updateWidgetHtml()    
+    updateWidgetHtml()
     
     pendingChange = false
   }
   
   setTimeout(draw, options.interval)
+}
+
+function removeHoverItem() {
+  hoverItem.marker.clear();
+  hoverItem = null;
 }
 
 function htmlEscape(str) {

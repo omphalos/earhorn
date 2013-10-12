@@ -4,19 +4,17 @@
 
 earhorn$(this, 'test-three.js', function() {
 
-  // derived from http://www.mrdoob.com/projects/htmleditor/
-  
   var renderer = new THREE.CanvasRenderer()
   renderer.setSize(480, 480)
   document.body.appendChild(renderer.domElement)
     
   var aspect = window.innerWidth / window.innerHeight
     , camera = new THREE.PerspectiveCamera(75, aspect, 1, 1000)
-  camera.position.z = 500
+  camera.position.z = 300
     
   var scene = new THREE.Scene()
     , geometry = new THREE.CubeGeometry(200, 200, 200)
-    , materialOptions = { color: 'gray', wireframe: true, wireframeLinewidth: 2 }
+    , materialOptions = { color: 'black', wireframe: true, wireframeLinewidth: 2 }
     , material = new THREE.MeshBasicMaterial(materialOptions)
     , mesh = new THREE.Mesh(geometry, material)
 
@@ -25,6 +23,8 @@ earhorn$(this, 'test-three.js', function() {
   var counter = 0
   
   function animate() {
+    
+    if(counter > 2) return;
     
     requestAnimationFrame(animate)
     
@@ -40,5 +40,7 @@ earhorn$(this, 'test-three.js', function() {
   }
     
   animate()
+  
+  // Example script derived from http://www.mrdoob.com/projects/htmleditor
 })
 
