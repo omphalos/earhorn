@@ -42,5 +42,23 @@ earhorn$(this, 'test-three.js', function() {
   animate()
   
   // Example script derived from http://www.mrdoob.com/projects/htmleditor
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 })
 

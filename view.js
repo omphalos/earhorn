@@ -149,13 +149,14 @@ function updateWidgetHtml() {
   
   if(!varLog.value)
     return widget.el.hide()
-  else widget.el.show()
 
   var html = widget.el.html()
     , newHtml = buildWidgetHtml(varLog.value)
 
   if(html !== newHtml) 
     widget.el.html(newHtml)  
+    
+  widget.el.show();
 }
 
 function buildWidgetHtml(varLog) {

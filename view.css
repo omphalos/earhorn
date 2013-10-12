@@ -60,7 +60,7 @@ input[type=range] { width: 100%; }
   background-color: white;
   z-index: 2;
   margin-top : 0.25em;
-  max-height: 30em;
+  max-height: 25em;
   overflow-y: auto;
   overflow-x: hidden;
   white-space: nowrap;
