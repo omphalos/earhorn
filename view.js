@@ -58,6 +58,8 @@ function pause() {
   $play.removeClass('active')
   $pause.addClass('active')
   playStatus = 'paused'
+  $('iframe').css('visibility', 'hidden')
+  pendingChange = true
 }
 
 function play() {
@@ -66,6 +68,8 @@ function play() {
   playStatus = 'playing'
   moveTo(history.length - 1)
   $timeline.val(timelineMax)
+  $('iframe').css('visibility', 'visible')
+  pendingChange = true
 }
 
 $play.on('click', play)
@@ -337,23 +341,28 @@ function draw() {
       
       var logText = 
         '<span' + 
-        (selectedScriptLog.lastChange === key ? ' class="current">' : '>') +
+        (playStatus !== 'playing' && selectedScriptLog.lastChange === key ?
+          ' class="current">' :
+          '>') +
         getLogText(varLog.value) + 
         '</span>'
          
-      if(selectedScriptLog.lastChange === key &&
-        (!currentItem || currentItem.varLog !== varLog)) {
+      if(selectedScriptLog.lastChange === key) {
         
-        if(currentItem)
-          currentItem.marker.clear();
-        
-        currentItem = {
-          varLog: varLog,
-          marker: editor.markText(
-            { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
-            { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
-            { className: 'current-loc' })
+        if(currentItem &&
+          (currentItem.varLog !== varLog || playStatus === 'playing')) {
+          currentItem.marker.clear()
+          currentItem = null
         }
+          
+        if(playStatus !== 'playing')
+          currentItem = {
+            varLog: varLog,
+            marker: editor.markText(
+              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+              { className: 'current-loc' })
+          }
       }
       
       if(!varLog.bookmark) {   
