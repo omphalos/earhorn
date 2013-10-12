@@ -24,7 +24,7 @@ earhorn$(this, 'test-three.js', function() {
   
   function animate() {
     
-    if(counter > 2) return;
+    // if(counter > 2) return;
     
     requestAnimationFrame(animate)
     
