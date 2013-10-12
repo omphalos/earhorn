@@ -4,6 +4,13 @@
 
 earhorn$(this, 'phoria.js', function() {
 
+  var requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.msRequestAnimationFrame || 
+    function(c) { window.setTimeout(c, 15) }
+
    var canvas = document.getElementById('canvas');
    
    var scene = new Phoria.Scene();
@@ -28,7 +35,7 @@ earhorn$(this, 'phoria.js', function() {
    scene.graph.push(cube);
    scene.graph.push(new Phoria.DistantLight());
 
-   var fnAnimate = function() {
+   function animate() {
 
      cube.rotateY(0.01);
      
@@ -40,11 +47,9 @@ earhorn$(this, 'phoria.js', function() {
      scene.modelView();
      renderer.render(scene);
 
-     requestAnimationFrame(fnAnimate);
-   };
-   
-   console.log(cube);
-   
-   requestAnimationFrame(fnAnimate);
+     requestAnimationFrame(animate);
+   }
+      
+   requestAnimationFrame(animate);
 })
 
