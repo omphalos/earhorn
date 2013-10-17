@@ -6,7 +6,7 @@ var options = JSON.parse(
   localStorage.earhornOptions ||
   JSON.stringify({
     historyLen: 100,
-    interval: 100,
+    interval: 0,
     formatDigits: 2
   }))
 
@@ -40,15 +40,15 @@ function moveTo(newPosition) {
   while(position < newPosition) {
     position++
     var frame = history[position]
-    selectedScriptLog.varLogs[frame.loc].value = frame.current
-    selectedScriptLog.lastChange = frame.loc
+    log[selectedScript].varLogs[frame.loc].value = frame.current
+    log[selectedScript].lastChange = frame.loc
   }
   
   while(position > newPosition) {
     var frame = history[position]
-    selectedScriptLog.varLogs[frame.loc].value = frame.previous
+    log[selectedScript].varLogs[frame.loc].value = frame.previous
     position--
-    selectedScriptLog.lastChange = history[position].loc    
+    log[selectedScript].lastChange = history[position].loc    
   }
   
   pendingChange = true
@@ -103,7 +103,7 @@ editor.on('mousedown', function(editor, evt) {
 
   var $el = $(evt.toElement).closest('.bookmark')
 
-  if(!selectedScriptLog || !$el.length)
+  if(!log[selectedScript] || !$el.length)
     return removeWidget()
 
   var startLine = +$el.attr('data-start-line')
@@ -149,7 +149,7 @@ function updateWidgetHtml() {
   
   if(!widget) return
     
-  var varLog = selectedScriptLog.varLogs[widget.key]
+  var varLog = log[selectedScript].varLogs[widget.key]
   
   if(!varLog.value)
     return widget.el.hide()
@@ -219,59 +219,64 @@ function buildWidgetLineItem(rows, rowName) {
 
 var log = {}
   , pendingChange = false
-  , selectedScriptRef
-  , selectedScriptLog
+  , selectedScript
 
 function onStorage(evt) {
 
-  if(evt.key !== 'earhorn') return
+  if(evt.key !== 'earhorn-log') {
+    console.log(evt)
+    return
+  }
 
-  var url = log[evt.url] = log[evt.url] || {}
-    , record = JSON.parse(evt.newValue)
+  var record = JSON.parse(evt.newValue)
 
-  if(record.body) {
+  if(record.type === 'announcement') {
       
     // Handle a script snapshot.
   
-    var newScript = !url[record.script]
+    var newScript = !log[record.script]
           
-    url[record.script] = { varLogs: {}, body: record.body }    
-    var scriptRef = { url: evt.url, script: record.script }
-      , scriptRefJSON = JSON.stringify(scriptRef)
+    log[record.script] = { varLogs: {}, body: record.body }    
   
     if(newScript) {
   
       $('select').append(
-        '<option value="' + escape(scriptRefJSON) + '">' +
+        '<option value="' + record.script + '">' +
         record.script +
         '</option>')
     
-      if(!selectedScriptRef) {
-        loadSelectedScript()
+      if(!selectedScript) {
         $('.script-view').show()
         $('#editor').show()
+        loadSelectedScript()
       }
   
     } else {
-      if(scriptRefJSON == JSON.stringify(selectedScriptRef))
+      if(selectedScript == record.script)
         loadSelectedScript()
     }
-  } else if(record.length && playStatus !== 'paused') {
- 
+  } else if(record.type === 'log' && playStatus !== 'paused') {
+
     // If we're paused we don't want to be adjusting history.
     // Otherwise we have to somehow handle the user's historic
     // state dropping off from the history array.
     
-    for(var e = 0; e < record.length; e++) {
+    var missingScripts = {}
+    
+    for(var e = 0; e < record.buffer.length; e++) {
       
-      var val = record[e]
+      var val = record.buffer[e]
   
-      // Ignore events if we haven't seen the script body  
-      if(!url[val.script]) return
+      if(!log[val.script]) {
+        // If we haven't seen the script body, ignore the event
+        // Just request the body
+        missingScripts[val.script] = true
+        continue
+      }
     
       // Handle a log message.        
-      var script = url[val.script]
-        , varLog = script.varLogs[val.loc]
+      var scriptLog = log[val.script]
+        , varLog = scriptLog.varLogs[val.loc]
         , historyFrame = { loc: val.loc, current: val.val }
           
       if(varLog)
@@ -284,7 +289,7 @@ function onStorage(evt) {
           , end = { line: fragments[2], column: fragments[3] }
           , loc = { start: start, end: end }
     
-        varLog = script.varLogs[val.loc] = { loc: loc }
+        varLog = scriptLog.varLogs[val.loc] = { loc: loc }
       }
         
       history.push(historyFrame)
@@ -295,16 +300,18 @@ function onStorage(evt) {
       varLog.value = val.val
     
       var isEventForSelectedScript =
-        selectedScriptRef &&
-        evt.url === selectedScriptRef.url &&
-        val.script === selectedScriptRef.script
+        val.script === selectedScript
           
       if(isEventForSelectedScript)
         pendingChange = true
           
-      if(selectedScriptLog)
-        selectedScriptLog.lastChange = val.loc
+      if(log[selectedScript])
+        log[selectedScript].lastChange = val.loc
     }
+    
+    Object.keys(missingScripts).forEach(function(missingScript) { 
+      localStorage.setItem('earhorn-ping', missingScript)
+    })
   }
 }
 
@@ -316,11 +323,12 @@ function loadSelectedScript() {
 
   removeWidget()
     
-  selectedScriptRef = JSON.parse(unescape($('select').val()))  
-  selectedScriptLog = log[selectedScriptRef.url][selectedScriptRef.script]
+  selectedScript = $('select').val()
 
   var tail = { line: editor.lineCount(), ch: 0 }
-  editor.replaceRange(selectedScriptLog.body, { line: 0, ch: 0 }, tail)
+  editor.replaceRange(log[selectedScript].body, { line: 0, ch: 0 }, tail)
+  
+  pendingChange = true
 }
 
 var hoverItem;
@@ -329,9 +337,15 @@ function draw() {
 
   if(pendingChange) {
 
-    Object.keys(selectedScriptLog.varLogs).forEach(function(key) {      
+    if(currentItem) {
+      currentItem.marker.clear()
+      currentItem.varLog.bookmarkWidget.removeClass('current')
+      currentItem = null
+    }
+
+    Object.keys(log[selectedScript].varLogs).forEach(function(key) {      
       
-      var varLog = selectedScriptLog.varLogs[key]
+      var varLog = log[selectedScript].varLogs[key]
       
       if(!varLog.value) {
         // Rewinding and log is gone
@@ -380,25 +394,17 @@ function draw() {
       var logText = '<span>' + getLogText(varLog.value) + '</span>'         
       varLog.bookmarkWidget.html(logText)
       
-      if(selectedScriptLog.lastChange === key) {
+      if(log[selectedScript].lastChange === key && playStatus !== 'playing') {
         
-        if(currentItem &&
-          (currentItem.varLog !== varLog || playStatus === 'playing')) {
-          currentItem.varLog.bookmarkWidget.removeClass('current')            
-          currentItem.marker.clear()
-          currentItem = null
+        currentItem = {
+          varLog: varLog,
+          marker: editor.markText(
+            { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+            { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+            { className: 'current-loc' })
         }
-          
-        if(playStatus !== 'playing') {
-          currentItem = {
-            varLog: varLog,
-            marker: editor.markText(
-              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
-              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
-              { className: 'current-loc' })
-          }
-          varLog.bookmarkWidget.addClass('current')            
-        }
+
+        varLog.bookmarkWidget.addClass('current')
       }
     })
     
@@ -411,6 +417,7 @@ function draw() {
 }
 
 function removeHoverItem() {
+
   if(!hoverItem) return;
   hoverItem.marker.clear();
   hoverItem = null;

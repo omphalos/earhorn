@@ -3,7 +3,35 @@
   /////////////////
   // earhorn$ //
   /////////////////
+
+  // Subscribe to localStorage events.
+  if(window.addEventListener) window.addEventListener('storage', onStorage, false)
+  else if(window.attachEvent) window.attachEvent('onstorage', onStorage)
   
+  function onStorage(evt) {
+
+    if(evt.key !== 'earhorn-ping') return
+
+    var scriptName = evt.newValue
+    if(!scripts[scriptName]) return
+    
+    announce(scriptName)
+  }
+
+  var scripts = {}
+
+  function announce(name) {
+
+    var body = scripts[name]
+
+    localStorage.setItem('earhorn-log', JSON.stringify({
+      type: 'announcement',
+      script: name,
+      body: body
+    }))
+
+  }
+
   function earhorn$(scope, name, fn) {
   
     // Name is optional.
@@ -21,10 +49,8 @@
       
     while(body[0] === '\n') body = body.slice(1)
   
-    localStorage.setItem('earhorn', JSON.stringify({
-      script: name,
-      body: body
-    }))
+    scripts[name] = body
+    announce(name)
   
     function isExpression(type) {
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
@@ -80,7 +106,6 @@
         (node.type === 'MemberExpression' && 
           skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
           
-        console.log(node.loc)
         node.update('eh$("' +
           name + '","' +
           node.loc.start.line + ',' +
@@ -94,9 +119,12 @@
   
     instrumentedCode += '//@ sourceURL=' + name
     
-console.log(instrumentedCode)
-  
-    return new Function(instrumentedCode).apply(scope)
+    try {
+      return new Function(instrumentedCode).apply(scope)
+    } catch(e) {
+      console.error(instrumentedCode)
+      return new Function(instrumentedCode).apply(scope)
+    }
   }
   
   earhorn$.maxElements = 3
@@ -187,13 +215,16 @@ console.log(instrumentedCode)
   }
   
   function flush() {
-    localStorage.setItem('earhorn', JSON.stringify(buffer))
+    localStorage.setItem('earhorn-log', JSON.stringify({
+      type: 'log',
+      buffer: buffer
+    }))
     buffer = []
   }
   
-  function checkBuffer() {    
-    if(buffer.length) flush()    
-    setTimeout(flush, earhorn$.flushInterval)
+  function checkBuffer() {
+    flush()    
+    setTimeout(checkBuffer, earhorn$.flushInterval)
   }
   
   setTimeout(checkBuffer, earhorn$.flushInterval)
