@@ -373,22 +373,20 @@ function draw() {
         , options = {widget: varLog.bookmarkWidget[0], insertLeft: 1 }
         varLog.bookmark = editor.setBookmark(pos, options)
         
-        varLog.bookmarkWidget.on('mouseenter', function() {
-          removeHoverItem();
-          hoverItem = {
-            varLog: varLog,
-            marker: editor.markText(
-              { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
-              { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
-              { className: 'bookmark-loc' })
-          }
-        })
-        
-        varLog.bookmarkWidget.on('mouseleave', function() {
-          if(hoverItem.varLog === varLog) {
+        varLog.bookmarkWidget.hover(
+          function mousenter() {
+            removeHoverItem();
+            hoverItem = {
+              varLog: varLog,
+              marker: editor.markText(
+                { line: +varLog.loc.start.line - 1, ch: +varLog.loc.start.column},
+                { line: +varLog.loc.end.line - 1, ch: +varLog.loc.end.column},
+                { className: 'bookmark-loc' })
+            }
+          },
+          function mouseleave() {
             removeHoverItem()
-          }
-        })
+          })
       }
 
       var logText = '<span>' + getLogText(varLog.value) + '</span>'         
