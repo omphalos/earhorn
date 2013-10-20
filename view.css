@@ -29,15 +29,13 @@ input[type=range] { width: 100%; }
 .timeline .input-container { overflow: hidden;; }
 
 .CodeMirror { border-top: 1px solid black; }
-.CodeMirror-fullscreen { top: 8em; }
+.CodeMirror-fullscreen { top: 9em; }
 .script-view { display: none; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
 .var-assignment { color: gray; }
 
-.bookmark {
-  cursor: pointer;  
-}
+.bookmark { cursor: pointer; }
 .bookmark, .widget-inner {
   background-color: rgba(173, 216, 230, .25); 
   padding: 0 0.5em;
@@ -75,5 +73,5 @@ input[type=range] { width: 100%; }
 .current { text-decoration: underline; }
 .bookmark:hover { font-weight: bold; }
 
-
-
+.continue-message { font-style: italic; opacity: 0; transition: opacity 0.25s ease-in-out; }
+.show.continue-message { opacity: 1; transition: opacity 1s ease-in-out; }

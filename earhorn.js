@@ -10,12 +10,25 @@
   
   function onStorage(evt) {
 
-    if(evt.key !== 'earhorn-ping') return
+    if(evt.key !== 'earhorn-view') return
 
-    var scriptName = evt.newValue
-    if(!scripts[scriptName]) return
-    
-    announce(scriptName)
+    var record = JSON.parse(evt.newValue)
+
+    if(record.type === 'echo') {
+
+      var scriptName = evt.script
+      if(!scripts[scriptName]) return
+      
+      announce(scriptName)      
+
+    } else if(record.type === 'edit' && scripts[record.script]) {
+
+      if(scripts[record.script]) {
+        sessionStorage.setItem('earhorn-' + record.script, record.body)
+        if(record.reload) // TODO: could do hot code-swapping instead ...
+          location.reload(true)
+      }
+    }
   }
 
   var scripts = {}
@@ -29,25 +42,26 @@
       script: name,
       body: body
     }))
-
   }
 
   function earhorn$(scope, name, fn) {
   
-    // Name is optional.
-    if(arguments.length < 2) {
-      fn = name
-      name = Math.random().toString()
-    }
-  
     // Get the function body.
-    var fnStr = fn.toString()
+    var sessionFn = sessionStorage.getItem('earhorn-' + name)
+      , fnStr = fn.toString()
+      
+    if(sessionFn) console.log('using copy of code in session storage for', name, fnStr)
   
-    var body = fnStr.substring(
+    var body = sessionFn
+    
+    if(!body) {
+      
+      body = fnStr.substring(
       fnStr.indexOf('{') + 1,
       fnStr.lastIndexOf('}'))
       
-    while(body[0] === '\n') body = body.slice(1)
+      while(body[0] === '\n') body = body.slice(1)
+    }
   
     scripts[name] = body
     announce(name)
@@ -69,7 +83,7 @@
       // TODO function arguments
       // TODO CatchClause
       // TODO ForStatement
-      // TODO ForInSTatement
+      // TODO ForInStatement
     ]
     
     var instrumentedParentTypes = [

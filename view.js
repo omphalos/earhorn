@@ -18,8 +18,9 @@ var editor = CodeMirror($('#editor')[0], {
 
 // Set up timeline
 var $timeline = $('input[type=range]')
+  , $continueMessage = $('.continue-message')
   , timelineMax = +$timeline.attr('max')
-  , playStatus = 'playing'
+  , mode = 'playing'
   , history = []
   , $play = $('.play.icon')
   , $pause = $('.pause.icon')
@@ -28,7 +29,7 @@ var $timeline = $('input[type=range]')
 $timeline.val(options.historyLen)
 $timeline.on('change', function(evt) {
   var val = +$timeline.val()
-  if(val < timelineMax && playStatus !== 'paused')
+  if(val < timelineMax && mode === 'playing')
     pause()
   moveTo(Math.floor((history.length - 1) * val / timelineMax))
 })
@@ -57,18 +58,31 @@ function moveTo(newPosition) {
 function pause() {
   $play.removeClass('active')
   $pause.addClass('active')
-  playStatus = 'paused'
-  $('iframe').css('visibility', 'hidden')
+  mode = 'paused'
   pendingChange = true
 }
 
 function play() {
+  
+  if(selectedScript && mode === 'editing') {
+    
+    localStorage.setItem('earhorn-view', JSON.stringify({
+      type: 'edit',
+      script: selectedScript,
+      body: editor.getValue(),
+      reload: true
+    }))
+    
+    history.length = 0
+    delete log[selectedScript]
+  }
+  
   $play.addClass('active')
   $pause.removeClass('active')
-  playStatus = 'playing'
+  $continueMessage.removeClass('show')
+  mode = 'playing'
   moveTo(history.length - 1)
   $timeline.val(timelineMax)
-  $('iframe').css('visibility', 'visible')
   pendingChange = true
 }
 
@@ -255,7 +269,7 @@ function onStorage(evt) {
       if(selectedScript == record.script)
         loadSelectedScript()
     }
-  } else if(record.type === 'log' && playStatus !== 'paused') {
+  } else if(record.type === 'log' && mode === 'playing') {
 
     // If we're paused we don't want to be adjusting history.
     // Otherwise we have to somehow handle the user's historic
@@ -310,13 +324,16 @@ function onStorage(evt) {
     }
     
     Object.keys(missingScripts).forEach(function(missingScript) { 
-      localStorage.setItem('earhorn-ping', missingScript)
+      localStorage.setItem('earhorn-view', JSON.stringify({
+        type: 'echo',
+        script: missingScript
+      }))
     })
   }
 }
 
+var isLoadingScript = false
 $('select').change(loadSelectedScript)
-
 function loadSelectedScript() {
 
   history = []
@@ -326,22 +343,27 @@ function loadSelectedScript() {
   selectedScript = $('select').val()
 
   var tail = { line: editor.lineCount(), ch: 0 }
+  isLoadingScript = true
   editor.replaceRange(log[selectedScript].body, { line: 0, ch: 0 }, tail)
-  
+  isLoadingScript = false
+
   pendingChange = true
+}
+
+function deleteBookmark(varLog) {
+  if(!varLog.bookmark) return
+  varLog.bookmark.clear()
+  delete varLog.bookmark
+  delete varLog.bookmarkWidget
 }
 
 var hoverItem;
 var currentItem;
 function draw() {
 
-  if(pendingChange) {
+  if(pendingChange && selectedScript && log[selectedScript]) {
 
-    if(currentItem) {
-      currentItem.marker.clear()
-      currentItem.varLog.bookmarkWidget.removeClass('current')
-      currentItem = null
-    }
+    removeCurrentItem()
 
     Object.keys(log[selectedScript].varLogs).forEach(function(key) {      
       
@@ -349,11 +371,7 @@ function draw() {
       
       if(!varLog.value) {
         // Rewinding and log is gone
-        if(varLog.bookmark) {
-          varLog.bookmark.clear()
-          delete varLog.bookmark
-          delete varLog.bookmarkWidget
-        }
+        deleteBookmark(varLog)
         return
       }
       
@@ -392,7 +410,7 @@ function draw() {
       var logText = '<span>' + getLogText(varLog.value) + '</span>'         
       varLog.bookmarkWidget.html(logText)
       
-      if(log[selectedScript].lastChange === key && playStatus !== 'playing') {
+      if(log[selectedScript].lastChange === key && mode !== 'playing') {
         
         currentItem = {
           varLog: varLog,
@@ -412,6 +430,13 @@ function draw() {
   }
   
   setTimeout(draw, options.interval)
+}
+
+function removeCurrentItem() {
+  if(!currentItem) return
+  currentItem.marker.clear()
+  currentItem.varLog.bookmarkWidget.removeClass('current')
+  currentItem = null
 }
 
 function removeHoverItem() {
@@ -456,6 +481,32 @@ function getLogText(log) {
     return log.constructor || log.type
           
   return log.type
+}
+
+editor.on('change', function() {
+
+  if(!selectedScript) return
+
+  clearAllLogArtifacts()
+
+  if(!isLoadingScript && mode !== 'editing') {
+    $play.removeClass('active')
+    $pause.addClass('active')
+    $continueMessage.addClass('show')
+    mode = 'editing'
+  }
+})
+
+function clearAllLogArtifacts() {
+  removeCurrentItem()
+  removeHoverItem()
+
+  var varLogs = log[selectedScript].varLogs
+
+  Object.keys(varLogs).forEach(function(key) {
+    var varLog = varLogs[key]
+    deleteBookmark(varLog)
+  })
 }
 
 setTimeout(draw)
