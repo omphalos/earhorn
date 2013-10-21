@@ -512,6 +512,14 @@ function clearAllLogArtifacts() {
 setTimeout(draw)
 
 // Subscribe to localStorage events.
-if(window.addEventListener) window.addEventListener('storage', onStorage, false)
+if(window.addEventListener) window.addEventListener('storage', onStorage, 0)
 else if(window.attachEvent) window.attachEvent('onstorage', onStorage)
 
+// Add iframe if requested
+$(document).ready(function() {
+  var iframeIndex = location.search.lastIndexOf('iframe=')
+  if(iframeIndex < 0) return
+  var iframeUrl = location.search.substring(iframeIndex + 'iframe='.length)
+console.log(iframeUrl)
+  $('body').append('<iframe src="' + iframeUrl + '"></iframe>')
+})

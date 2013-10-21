@@ -1,5 +1,16 @@
-body { font-size: 1.5em; }
-.script-view, #start-message { margin: 1em; }
+body { font-size: 1em; min-width: 1210px; height: 100%; box-sizing: border-box; }
+main { float: left; width: 50%; box-sizing: border-box; }
+nav { padding: 1em; }
+iframe {  
+  padding: 1em; 
+  width: 50%;
+  height: 100%;
+  float: right;
+  border: 0px;
+  border-left: 1px solid gray; 
+  box-sizing: border-box;
+}
+
 select { margin-left: 1em; }
 .status {
   user-select: none;
@@ -28,8 +39,7 @@ input[type=range] { width: 100%; }
 .timeline .status { margin: 0 1em 0 0; float: left; }
 .timeline .input-container { overflow: hidden;; }
 
-.CodeMirror { border-top: 1px solid black; }
-.CodeMirror-fullscreen { top: 9em; }
+.CodeMirror { border-top: 1px solid gray; top: 11em; width: 50%; }
 .script-view { display: none; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }
@@ -75,3 +85,5 @@ input[type=range] { width: 100%; }
 
 .continue-message { font-style: italic; opacity: 0; transition: opacity 0.25s ease-in-out; }
 .show.continue-message { opacity: 1; transition: opacity 1s ease-in-out; }
+
+
