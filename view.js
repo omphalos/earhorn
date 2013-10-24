@@ -345,6 +345,7 @@ function loadSelectedScript() {
   var tail = { line: editor.lineCount(), ch: 0 }
   isLoadingScript = true
   editor.replaceRange(log[selectedScript].body, { line: 0, ch: 0 }, tail)
+  editor.clearHistory()
   isLoadingScript = false
 
   pendingChange = true
@@ -483,6 +484,28 @@ function getLogText(log) {
   return log.type
 }
 
+var validateCodeDebounced = _.debounce(validateCode, 500)
+  , errorWidget = null
+function validateCode() {
+  try {
+    esprima.parse(editor.getValue())
+  } catch(err) {    
+    var message = err.message.substring(err.message.indexOf(':') + 2)
+    var el = $('<span class="error-inline">' + message + '</span>')[0]
+    removeErrorWidget()
+    errorWidget = editor.addLineWidget(Math.max(0, err.lineNumber - 1), el)
+    return
+  }
+  removeErrorWidget()
+}
+
+function removeErrorWidget() {
+  if(errorWidget) {
+    errorWidget.clear()
+    errorWidget = null
+  }
+}
+
 editor.on('change', function() {
 
   if(!selectedScript) return
@@ -495,6 +518,8 @@ editor.on('change', function() {
     $continueMessage.addClass('show')
     mode = 'editing'
   }
+  
+  validateCodeDebounced()
 })
 
 function clearAllLogArtifacts() {

@@ -12,7 +12,7 @@ iframe {
 }
 
 select { margin-left: 1em; }
-.status {
+.script-view {
   user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
@@ -32,14 +32,17 @@ select { margin-left: 1em; }
 .play.icon { background-image: url(glyphicons/glyphicons_173_play.png); }
 .step-forward.icon { background-image: url(glyphicons/glyphicons_178_step_forward.png); }
 .step-backward.icon { background-image: url(glyphicons/glyphicons_170_step_backward.png); }
-.fast-backward.icon { background-image: url(glyphicons/glyphicons_171_fast_backward.png) }
-.fast-forward.icon { background-image: url(glyphicons/glyphicons_177_fast_forward.png) }
+.fast-backward.icon { background-image: url(glyphicons/glyphicons_171_fast_backward.png); }
+.fast-forward.icon { background-image: url(glyphicons/glyphicons_177_fast_forward.png); }
+.error.icon { background-image: url(glyphicons/glyphicons_196_circle_exclamation_mark.png); }
+.error { float: right; }
+.error-inline { background-color: red; opacity: 0.75; color: white; font-weight: bold; }
 input[type=range] { width: 100%; }
 .timeline { margin: 1em 0; }
 .timeline .status { margin: 0 1em 0 0; float: left; }
 .timeline .input-container { overflow: hidden;; }
 
-.CodeMirror { border-top: 1px solid gray; top: 11em; width: 50%; }
+.CodeMirror { border-top: 1px solid gray; top: 11em; width: 50%; line-height: normal;}
 .script-view { display: none; }
 .var-name { font-weight: bold; color: darkblue; }
 .var-val { color: green; }

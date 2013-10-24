@@ -50,7 +50,7 @@
     var sessionFn = sessionStorage.getItem('earhorn-' + name)
       , fnStr = fn.toString()
       
-    if(sessionFn) console.log('using copy of code in session storage for', name, fnStr)
+    if(sessionFn) console.log('using copy of code in session storage for', name)
   
     var body = sessionFn
     
@@ -103,7 +103,16 @@
     ]
     
     // Wrap Identifiers with calls to our logger, eh$(...)
-    var instrumentedCode = falafel(body, { loc: true, raw: true }, function(node) {
+    
+    var instrumentedCode
+    try {
+      instrumentedCode = falafel(body, { loc: true, raw: true }, visitNode).toString()
+    } catch(err) {
+      console.error(err, body)
+      throw err
+    }
+    
+    function visitNode(node) {
      
       if(!node.parent || node.type === 'Literal') return
        
@@ -129,7 +138,7 @@
           node.source() +
         ')')
       }
-    }).toString()
+    }
   
     instrumentedCode += '//@ sourceURL=' + name
     
