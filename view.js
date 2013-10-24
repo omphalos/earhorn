@@ -237,10 +237,7 @@ var log = {}
 
 function onStorage(evt) {
 
-  if(evt.key !== 'earhorn-log') {
-    console.log(evt)
-    return
-  }
+  if(evt.key !== 'earhorn-log') return
 
   var record = JSON.parse(evt.newValue)
 

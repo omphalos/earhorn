@@ -1,20 +1,18 @@
 earhorn
 =======
 
-JavaScript reversible debugger in the browser.
+Experimental JavaScript development tool.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
 Demo
 ====
 
-Check out the [demo](http://omphalos.github.io/earhorn/demo.html).
-
-It's inspired by mr doob's excellent [htmleditor](http://www.mrdoob.com/projects/htmleditor/) (Although [phoria.js](https://github.com/kevinroast/phoria.js) has been kinder to me on mobile so I'm using that to render).
+Check out the [demo](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html).
 
 Caveats
 =======
-This thing is super experimental and barely works.  Have fun :)
+This thing is super experimental and only sort-of works.  Have fun :)
 
 License
 =======
