@@ -24,7 +24,7 @@
     } else if(record.type === 'edit' && scripts[record.script]) {
 
       if(scripts[record.script]) {
-        sessionStorage.setItem('earhorn-' + record.script, record.body)
+        localStorage.setItem('earhorn-' + record.script, record.body)
         if(record.reload) // TODO: could do hot code-swapping instead ...
           location.reload(true)
       }
@@ -47,7 +47,7 @@
   function earhorn$(scope, name, fn) {
   
     // Get the function body.
-    var sessionFn = sessionStorage.getItem('earhorn-' + name)
+    var sessionFn = localStorage.getItem('earhorn-' + name)
       , fnStr = fn.toString()
       
     if(sessionFn) console.log('using copy of code in session storage for', name)

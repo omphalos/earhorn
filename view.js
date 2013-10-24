@@ -245,7 +245,7 @@ function onStorage(evt) {
       
     // Handle a script snapshot.
   
-    var newScript = !log[record.script]
+    var newScript = !log[record.script] && record.script !== selectedScript
           
     log[record.script] = { varLogs: {}, body: record.body }    
   
