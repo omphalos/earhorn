@@ -1,0 +1,22 @@
+<nav>
+  <div>Select script:<select></select></div>
+  <div class="timeline">
+    <div class="status">
+      <span title="Fast Backward" class="fast-backward icon" ng-click="commands.fastBackward()"></span>
+      <span title="Step Backward" class="step-backward icon" ng-click="commands.stepBackward()"></span>
+      <span title="Pause" class="pause icon" ng-click="commands.pause()"></span>
+      <span title="Play" class="play active icon" ng-click="commands.play()"></span>
+      <span title="Step Forward" class="step-forward icon" ng-click="commands.stepForward()"></span>
+      <span title="Fast Forward" class="fast-forward icon" ng-click="commands.fastForward()"></span>
+    </div>
+    <div class="input-container">
+      <input type="range" min="0" max="100" ng-model="historyPosition">
+    </div>
+  </div>
+  <span class="continue-message">Press play to continue.</span>
+  <!--span class="error">
+    <span title="Go to error" class="error icon"></span>
+  </span-->
+</nav>
+<editor model="code" mode="text/javascript" full-screen="true" line-numbers="true"></editor>
+<iframe ng-if="!!iframe" src="{{iframe}}"></iframe>

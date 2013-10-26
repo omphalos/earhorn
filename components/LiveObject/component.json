@@ -1,0 +1,9 @@
+{
+  "name": "LiveObject",
+  "version": "0.0.0",
+  "commit": "3db2eaa9e2bc058178f363398affc70112cfe266",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/omphalos/LiveObject"
+  }
+}
