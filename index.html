@@ -20,7 +20,6 @@
   <script src="/components/codemirror/mode/javascript/javascript.js"></script>
   <script src="/components/codemirror/addon/display/fullscreen.js"></script>
   <script src="/components/esprima/esprima.js"></script>
-  <script src="/components/LiveObject/index.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -32,8 +31,13 @@
 
   <!-- Core -->
   <script>angular.module('app', ['ngRoute', 'main'])</script>
-  <script src="/modules/editor/editor.js"></script>
-  <script src="/modules/main/main.js"></script>
+  <!-- Modules can be plugged-in here: -->
+  <script>angular.module('main', [])</script>
+  <script src="/modules/main/editor.js"></script>
+  <script src="/modules/main/logClient.js"></script>
+  <script src="/modules/main/settingsService.js"></script>
+  <!-- main.js goes last -->
+  <script src="/modules/main/MainCtrl.js"></script>
 
 </body>
 </html>

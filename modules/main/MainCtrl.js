@@ -1,46 +1,32 @@
 angular.module('app').config(['$routeProvider', function($routeProvider) {
-
   $routeProvider.otherwise({
     templateUrl:'/modules/main/main.html',
     controller:'MainCtrl'
   })
 }])
 
-angular.module('main', ['editor'])
 angular.module('main').controller('MainCtrl', [
   '$scope',
   '$location',
-  '$interval', function(
+  '$interval',
+  'logClient',
+  'settingsService', function(
   $scope,
   $location,
-  $interval) {
+  $interval,
+  logClient,
+  settingsService) {
     
   ///////////////
   // Settings. //
   ///////////////
-      
-  $scope.settings = JSON.parse(
-    localStorage.getItem('earhorn-settings') ||
-    JSON.stringify({
-      historyLen: 100,
-      interval: 0,
-      formatDigits: 2
-    }))
   
-  $scope.$watch('settings', function(newVal, oldVal) {
-    if(newVal === oldVal) return
-    localStorage.setItem('earhorn-settings', JSON.stringify(newVal))
-  }, true)
+  settingsService.attach($scope, 'settings', 'earhorn-settings', {
+    historyLen: 100,
+    interval: 0,
+    formatDigits: 2
+  })
   
-  function onStorage(evt) {
-    if(evt.key !== 'earhorn-settings') return
-    $scope.$apply(function() {
-      angular.copy(JSON.parse(evt.newValue), $scope.settings)
-    })
-  }
-    
-  window.addEventListener('storage', onStorage, false)
-
   /////////////////////////
   // Timeline functions. //
   /////////////////////////
@@ -56,6 +42,8 @@ angular.module('main').controller('MainCtrl', [
   // Create a console interface. //
   /////////////////////////////////
   
+  // TODO: create a console interface service
+  
   $scope.arguments = arguments
   $scope.public = {
     
@@ -68,8 +56,7 @@ angular.module('main').controller('MainCtrl', [
     pause: $scope.pause,
     play: $scope.play,
     stepForward: $scope.stepForward,
-    fastForward: $scope.fastForward,
-    
+    fastForward: $scope.fastForward,   
     
     // Expose the $scope for ease of development.
     MainCtrl: $scope,
@@ -91,6 +78,12 @@ angular.module('main').controller('MainCtrl', [
   // User shouldn't have to call $digest
   $interval(function() {}, 100)
   
+  ///////////////////////////
+  // Subscribe to the log. //
+  ///////////////////////////
+
+  logClient.subscribe()
+  
   ///////////////////////////////////
   // Build an iframe if requested. //
   ///////////////////////////////////
@@ -104,7 +97,7 @@ angular.module('main').controller('MainCtrl', [
   /////////////////////////
   
   $scope.$on('$destroy', function() {
-    window.removeEventListener('storage', onStorage, false)
+    logClient.unsubscribe()
     Object.keys($scope.public).forEach(function(key) { delete window[key] })
   })
   
