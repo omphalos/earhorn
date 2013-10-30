@@ -10,7 +10,7 @@
   
   function onStorage(evt) {
 
-    if(evt.key !== 'earhorn-view') return
+    if(evt.key !== 'earhorn-listener') return
 console.log(evt.newValue)
     var record = JSON.parse(evt.newValue)
 
@@ -34,14 +34,11 @@ console.log(evt.newValue)
   var scripts = {}
 
   function announce(name) {
-
-    var body = scripts[name]
-
-    localStorage.setItem('earhorn-log', JSON.stringify({
+    send({
       type: 'announcement',
       script: name,
-      body: body
-    }))
+      body: scripts[name]
+    })
   }
 
   function earhorn$(scope, name, fn) {
@@ -225,23 +222,26 @@ console.log(evt.newValue)
   // Log and return the value.
   function eh$(script, loc, val) {
   
-    buffer.push({
+    send({
+      type: 'log',
       script: script,
       loc: loc,
       val: makeSerializable(val, earhorn$.depth)
     })
-    
-    if(buffer.length > earhorn$.bufferSize)
-      flush()
- 
+
     return val
   }
   
+  function send(message) {
+    
+    buffer.push(message)
+    
+    if(buffer.length > earhorn$.bufferSize)
+      flush()
+  }
+  
   function flush() {
-    localStorage.setItem('earhorn-log', JSON.stringify({
-      type: 'log',
-      buffer: buffer
-    }))
+    localStorage.setItem('earhorn-log', JSON.stringify(buffer))
     buffer = []
   }
   

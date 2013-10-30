@@ -9,12 +9,12 @@ angular.module('app').config(['$routeProvider', function($routeProvider) {
 angular.module('main').controller('MainCtrl', [
   '$scope',
   '$location',
-  'programLog',
+  'timeline',
   'settingsService', 
   'consoleInterface', function(
   $scope,
   $location,
-  programLog,
+  timeline,
   settingsService,
   consoleInterface) {
     
@@ -22,11 +22,7 @@ angular.module('main').controller('MainCtrl', [
   // Set up Settings. //
   //////////////////////
   
-  settingsService.loadAnd$watch($scope, 'settings', {
-    historyLen: 100,
-    interval: 0,
-    formatDigits: 2
-  })
+  settingsService.loadAnd$watch($scope, 'settings')
   
   ///////////////////////////
   // Subscribe to the log. //
@@ -34,7 +30,7 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.log = {}
   $scope.history = []
-  programLog.attach($scope, $scope.log, $scope.history, $scope.settings)
+  // timeline.attach($scope, $scope.log, $scope.history, $scope.settings)
 
   /////////////////////////
   // Timeline functions. //
