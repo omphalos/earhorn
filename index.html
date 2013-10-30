@@ -29,14 +29,17 @@
     ga('send', 'pageview');
   </script>
 
-  <!-- Core -->
+  <!-- Set up app module: -->
   <script>angular.module('app', ['ngRoute', 'main'])</script>
-  <!-- Modules can be plugged-in here: -->
+
+  <!-- Plug-ins would add themselves here: -->
+
+  <!-- Here we have the 'main' module: -->
   <script>angular.module('main', [])</script>
   <script src="/modules/main/editor.js"></script>
-  <script src="/modules/main/logClient.js"></script>
+  <script src="/modules/main/consoleInterface.js"></script>
+  <script src="/modules/main/programLog.js"></script>
   <script src="/modules/main/settingsService.js"></script>
-  <!-- main.js goes last -->
   <script src="/modules/main/MainCtrl.js"></script>
 
 </body>

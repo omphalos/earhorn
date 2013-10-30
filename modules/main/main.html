@@ -1,5 +1,10 @@
 <nav>
-  <div>Select script:<select></select></div>
+
+  <div>Select script:
+  <select>
+    <option ng-repeat="(script, log) in log" value="{{script}}">{{script}}</option>
+  </select></div>
+
   <div class="timeline">
     <div class="status">
       <span title="Fast Backward" class="fast-backward icon" ng-click="commands.fastBackward()"></span>
@@ -13,10 +18,13 @@
       <input type="range" min="0" max="100" ng-model="historyPosition">
     </div>
   </div>
+
   <span class="continue-message">Press play to continue.</span>
   <!--span class="error">
     <span title="Go to error" class="error icon"></span>
   </span-->
+
 </nav>
+
 <editor model="code" init-mode="text/javascript" init-full-screen="true" init-line-numbers="true"></editor>
 <iframe ng-if="!!iframe" src="{{iframe}}"></iframe>

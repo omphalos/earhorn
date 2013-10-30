@@ -1,40 +1,56 @@
-angular.module('main').factory('settingsService', [function() {
+angular.module('main').factory('settingsService', [
+  '$rootScope', 
+  '$parse', function(
+  $rootScope,
+  $parse) {
 
-  console.log('settingsService')
+  // Create settings object.
+  var settings = JSON.parse(localStorage.getItem('earhorn-settings') || '{}')
 
-  function attach($scope, pathInScope, localStorageKey, defaults) {
+  // Apply changes from other windows.
+  function onStorage(evt) {
+    if(evt.key !== 'earhorn-settings') return
+    $scope.$apply(function() {
+      angular.copy(JSON.parse(evt.newValue), settings)
+    })      
+      }
+  
+  // Manage event life-cycle.
+  window.addEventListener('storage', onStorage, false)
 
-    // Create settings object.
-    var settings = $scope[pathInScope] =
-      JSON.parse(localStorage.getItem(localStorageKey) || '{}')
+  $rootScope.$on('$destroy', function() {
+    window.removeEventListener('storage', onStorage, false)
+  })
 
-    // Set defaults.
+  function load(defaults) {
+
+    defaults = defaults || {}
+    
     Object.keys(defaults).forEach(function(key) {
       if(!settings.hasOwnProperty(key))
         settings[key] = defaults[key]
     })
+    
+    return settings
+  }
+
+  function $watch($scope, pathInScope) {
   
     // Persist changes to localStorage.
     $scope.$watch(pathInScope, function(newVal, oldVal) {
       if(newVal === oldVal) return
-      localStorage.setItem(localStorageKey, JSON.stringify(newVal))
+      localStorage.setItem('earhorn-settings', JSON.stringify(newVal))
     }, true)
-
-    // Apply changes from other windows.
-    function onStorage(evt) {
-      if(evt.key !== localStorageKey) return
-      $scope.$apply(function() {
-        angular.copy(JSON.parse(evt.newValue), settings)
-      })      
-    }
-
-    // Manage event life-cycle.
-    window.addEventListener('storage', onStorage, false)
-
-    $scope.$on('$destroy', function() {
-      window.removeEventListener('storage', onStorage, false)
-    })
+  }
+  
+  function loadAnd$watch($scope, pathInScope, defaults) {
+    $parse(pathInScope).assign($scope, load(defaults))
+    $watch($scope, pathInScope)
   }
 
-  return { attach: attach  }
+  return {
+    load: load,
+    $watch: $watch,
+    loadAnd$watch: loadAnd$watch
+  }
 }])

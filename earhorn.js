@@ -11,7 +11,7 @@
   function onStorage(evt) {
 
     if(evt.key !== 'earhorn-view') return
-
+console.log(evt.newValue)
     var record = JSON.parse(evt.newValue)
 
     if(record.type === 'echo') {
@@ -24,7 +24,7 @@
     } else if(record.type === 'edit' && scripts[record.script]) {
 
       if(scripts[record.script]) {
-        localStorage.setItem('earhorn-' + record.script, record.body)
+        localStorage.setItem('earhorn-script-' + record.script, record.body)
         if(record.reload) // TODO: could do hot code-swapping instead ...
           location.reload(true)
       }
@@ -47,7 +47,7 @@
   function earhorn$(scope, name, fn) {
   
     // Get the function body.
-    var sessionFn = localStorage.getItem('earhorn-' + name)
+    var sessionFn = localStorage.getItem('earhorn-script-' + name)
       , fnStr = fn.toString()
       
     if(sessionFn) console.log('using copy of code in session storage for', name)
