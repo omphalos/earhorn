@@ -9,12 +9,12 @@ angular.module('app').config(['$routeProvider', function($routeProvider) {
 angular.module('main').controller('MainCtrl', [
   '$scope',
   '$location',
-  'timeline',
+  'logClient',
   'settingsService', 
   'consoleInterface', function(
   $scope,
   $location,
-  timeline,
+  logClient,
   settingsService,
   consoleInterface) {
     
