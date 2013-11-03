@@ -5,30 +5,91 @@ angular.module('main').factory('programStateFactory', [function() {
   function ProgramState() {
     this.scripts = {}
   }
-    
-  // Take a log object from the logClient and create a forwardable/reversible delta
-  ProgramState.prototype.getDelta = function(log) {
-
-    // Traverse code changes from announcements
-    // Traverse code changes from pause points
-    // Traverse var state change
-  }
-  
-  ProgramState.prototype.change = function(change) {
-    console.log(change)
-  }
   
   ProgramState.prototype.forward = function(record) {
 
-    if(!record.undo) {
-      // Create a delta
+    var self = this
+
+    if(!record.reverse) {
+      
+      var reverse = record.reverse = {
+        loc: record.loc,
+        script: record.script,
+        scriptBodies: {},
+        scriptStates: {}
+      }
+
+      // Get the previous script bodies.
+      Object.keys(record.announcements).forEach(function(key) {
+      
+        reverse.scriptBodies[key] = 
+          self.scripts[key] ? self.scripts[key].body : null
+      
+        reverse.scriptStates[key] =
+          self.scripts[key] ? self.scripts[key].log : null
+      })
+      
+      // Take script snapshots.
+      Object.keys(record.lostMessageCounts).forEach(function(key) {
+        reverse.scriptStates[key] = 
+          self.scripts[key] ? self.scripts[key].log : null
+      })
+      
+      // Get the previous value.
+      record.reverse.val = self.scripts[record.script] ?
+        self.scripts[record.script][record.loc] : null
     }
     
-    this.change(record)
+    if(!record.forward) {
+      
+      var forward = record.forward = {
+        loc: record.loc,
+        script: record.script,
+        scriptBodies: {},
+        scriptStates: {}
+      }
+      
+      if(record.announcements) {
+        
+        Object.keys(record.announcements).forEach(function(key) {
+          forward.scriptBodies[key] = record.announcements[key]
+          forward.scriptStates[key] = {}
+        })
+      }
+      
+      if(record.lostMessageCounts) {
+        Object.keys(record.lostMessageCounts).forEach(function(key) {
+          forward.scriptStates[key] = {}
+        })
+      }
+      
+      forward.val = record.val
+    }
+    
+    this.applyChange(record.forward)
+  }
+  
+  ProgramState.prototype.applyChange = function(change) {
+    
+    var self = this
+    
+    Object.keys(change.scriptBodies).forEach(function(key) {
+      self.scripts[key] = self.scripts[key] || { logs: {} }
+      self.scripts[key].body = change.scriptBodies[key]
+    })
+    
+    Object.keys(change.scriptStates).forEach(function(key) {
+      self.scripts[key] = self.scripts[key] || { logs: {} }
+      self.scripts[key].logs = change.scriptStates[key]
+    })
+    
+    if(!this.scripts[change.script]) throw 'missing script ' + change.script
+    this.scripts[change.script].logs[change.loc] = change.val
+    this.scripts[change.script].currentLoc = change.loc
   }
   
   ProgramState.prototype.reverse = function(record) {
-    this.change(record.undo)
+    this.applyChange(record.reverse)
   }
   
   return {

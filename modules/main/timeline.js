@@ -18,7 +18,6 @@ angular.module('main').factory('timeline', [
     , handlers = {}
     , playing = true
     , settings = settingsService.load({ maxHistoryLenth: 100 })
-    , lostMessageCounts = {}
 
   timeline.scriptContents = {}
   timeline.history = []
@@ -80,7 +79,8 @@ angular.module('main').factory('timeline', [
   // Route messages. //
   /////////////////////
 
-  var pendingAnnouncements = null
+  var pendingAnnouncements = {}
+    , lostMessageCounts = {}
 
   logClient.$on('main.logClient', function(evt, records) {
 
@@ -101,7 +101,6 @@ angular.module('main').factory('timeline', [
   ///////////////////////////
   
   handlers.announcement = function(record) {
-    pendingAnnouncements = pendingAnnouncements || {}
     pendingAnnouncements[record.script] = record.body
     timeline.scriptContents[record.script] = record.body
   }
@@ -131,18 +130,19 @@ angular.module('main').factory('timeline', [
     }
 
     // Add any pending announcements to this record, publishing them together.
-    if(pendingAnnouncements) {
-      record.annoucements = pendingAnnouncements
-      record.lostMessageCounts = lostMessageCounts
-      pendingAnnouncements = null
-      lostMessageCounts = {}
-    }
+    record.announcements = pendingAnnouncements
+    pendingAnnouncements = {}
+    
+    record.lostMessageCounts = lostMessageCounts
+    lostMessageCounts = {}
     
     // Add the record to the history.
     timeline.history.push(record)
 
     if(playing) {
-     
+
+      console.log('playing', record)
+
       // If we're playing, we need to update the state for every new record.
       timeline.programState.forward(record)
 

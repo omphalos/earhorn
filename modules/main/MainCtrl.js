@@ -72,6 +72,7 @@ angular.module('main').controller('MainCtrl', [
     play: $scope.play,
     stepForward: $scope.stepForward,
     fastForward: $scope.fastForward,   
+    timeline: timeline,
     
     // Expose the $scope for ease of development.
     MainCtrl: $scope
