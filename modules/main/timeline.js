@@ -18,7 +18,7 @@ angular.module('main').factory('timeline', [
     , handlers = {}
     , playing = true
     , settings = settingsService.load({ maxHistoryLenth: 100 })
-    , lostMessageCount
+    , lostMessageCounts = {}
 
   timeline.scriptContents = {}
   timeline.history = []
@@ -103,7 +103,7 @@ angular.module('main').factory('timeline', [
   handlers.announcement = function(record) {
     pendingAnnouncements = pendingAnnouncements || {}
     pendingAnnouncements[record.script] = record.body
-    timeline.scriptContents[record.sript] = record.body
+    timeline.scriptContents[record.script] = record.body
   }
   
   //////////////////
@@ -125,22 +125,28 @@ angular.module('main').factory('timeline', [
     // Otherwise, information that's important to the user could
     // be pushed out of the timeline.
     if(!playing && timeline.length >= settings.maxHistoryLenth - 1) {
-      timeline.lostMessageCount++
+      lostMessageCounts[record.script] = lostMessageCounts[record.script] || 0
+      lostMessageCounts[record.script]++
       return
     }
 
     // Add any pending announcements to this record, publishing them together.
-    if(pendingAnnoucnements) {
+    if(pendingAnnouncements) {
       record.annoucements = pendingAnnouncements
+      record.lostMessageCounts = lostMessageCounts
       pendingAnnouncements = null
+      lostMessageCounts = {}
     }
     
+    // Add the record to the history.
     timeline.history.push(record)
 
     if(playing) {
      
+      // If we're playing, we need to update the state for every new record.
       timeline.programState.forward(record)
-      
+
+      // Max sure history doesn't overflow its capacity.
       if(timeline.history.length >= settings.maxHistoryLength)
         timeline.shift()
     }

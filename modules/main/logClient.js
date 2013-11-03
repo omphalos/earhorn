@@ -39,13 +39,13 @@ angular.module('main').factory('logClient', [
   ////////////////////////////////////////////
 
   function onStorage(evt) {
-    
+
     if(evt.key !== 'earhorn-log')
       return
 
     // Read the records
     var records = JSON.parse(evt.newValue)
-    
+
     // Publish the records to anyone listening.
     logClient.$broadcast('main.logClient', records)
   }
@@ -54,9 +54,11 @@ angular.module('main').factory('logClient', [
   // Manage storage event life cycle. //
   //////////////////////////////////////
   
+  console.log('listening')
   window.addEventListener('storage', onStorage, false)    
   
   logClient.$on('$destroy', function() {
+    console.log('destroying')
     window.removeEventListener('storage', onStorage, false)
   })
 

@@ -51,7 +51,9 @@ angular.module('main').controller('MainCtrl', [
   
   var path = $location.path()
     , iframeIndex = path.lastIndexOf('iframe=')
-  if(iframeIndex >= 0) $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
+
+  if(iframeIndex >= 0)
+    $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
   
   /////////////////////////////////
   // Create a console interface. //

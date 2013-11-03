@@ -1,17 +1,20 @@
 (function(context) {
-  
-  /////////////////
+
+  //////////////
   // earhorn$ //
-  /////////////////
+  //////////////
 
   // Subscribe to localStorage events.
   if(window.addEventListener) window.addEventListener('storage', onStorage, false)
   else if(window.attachEvent) window.attachEvent('onstorage', onStorage)
   
   function onStorage(evt) {
+    
+    console.log('server receieved message')
 
-    if(evt.key !== 'earhorn-listener') return
-console.log(evt.newValue)
+    if(evt.key !== 'earhorn-listener')
+      return
+
     var record = JSON.parse(evt.newValue)
 
     if(record.type === 'announcement-request') {
@@ -232,8 +235,13 @@ console.log(evt.newValue)
     return val
   }
   
+  // Setting an initial event seems to be necessary in some cases
+  // to get the localStorage event to fire correctly for subsequent events
+  // in listening windows.
+  localStorage.setItem('earhorn-log', '[]')
+  
   function send(message) {
-    
+
     buffer.push(message)
     
     if(buffer.length > earhorn$.bufferSize)
@@ -242,6 +250,7 @@ console.log(evt.newValue)
   
   function flush() {
     if(!buffer.length) return
+
     localStorage.setItem('earhorn-log', JSON.stringify(buffer))
     buffer = []
   }

@@ -14,12 +14,21 @@ angular.module('main').factory('programStateFactory', [function() {
     // Traverse var state change
   }
   
-  ProgramState.prototype.forward = function(delta) {
-    
+  ProgramState.prototype.change = function(change) {
+    console.log(change)
   }
   
-  ProgramState.prototype.reverse = function(delta) {
+  ProgramState.prototype.forward = function(record) {
+
+    if(!record.undo) {
+      // Create a delta
+    }
     
+    this.change(record)
+  }
+  
+  ProgramState.prototype.reverse = function(record) {
+    this.change(record.undo)
   }
   
   return {
