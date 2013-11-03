@@ -14,7 +14,7 @@
 console.log(evt.newValue)
     var record = JSON.parse(evt.newValue)
 
-    if(record.type === 'echo') {
+    if(record.type === 'announcement-request') {
 
       var scriptName = evt.script
       if(!scripts[scriptName]) return
@@ -241,6 +241,7 @@ console.log(evt.newValue)
   }
   
   function flush() {
+    if(!buffer.length) return
     localStorage.setItem('earhorn-log', JSON.stringify(buffer))
     buffer = []
   }

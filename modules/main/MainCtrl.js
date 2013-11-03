@@ -10,11 +10,13 @@ angular.module('main').controller('MainCtrl', [
   '$scope',
   '$location',
   'logClient',
-  'settingsService', 
+  'timeline',
+  'settingsService',
   'consoleInterface', function(
   $scope,
   $location,
   logClient,
+  timeline,
   settingsService,
   consoleInterface) {
     
