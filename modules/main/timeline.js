@@ -141,8 +141,6 @@ angular.module('main').factory('timeline', [
 
     if(playing) {
 
-      console.log('playing', record)
-
       // If we're playing, we need to update the state for every new record.
       timeline.programState.forward(record)
 

@@ -3,9 +3,9 @@ angular.module('main').directive('editor', [function() {
   function link(scope, element, attr) {      
     console.log('editor')
     
-    ///////////////////////////////////////////
-    // Create the CodeMirror editor instance //
-    ///////////////////////////////////////////
+    ////////////////////////////////////////////
+    // Create the CodeMirror editor instance. //
+    ////////////////////////////////////////////
 
     var initOptions = { value: scope[attr.model] || '' }
     Object.keys(attr).forEach(function(attribute) {
