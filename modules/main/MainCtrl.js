@@ -44,7 +44,9 @@ angular.module('main').controller('MainCtrl', [
   $scope.hasScripts = function() {
     return Object.keys(timeline.programState.scripts).length
   }
+
   $scope.timeline = timeline
+  $scope.programState = timeline.programState
 
   /////////////////////////////////////
   // Build an iframe when requested. //

@@ -2,9 +2,9 @@
 
   <nav>
     <div class="top">
-      <span ng-class="{ 'fade-out': !hasScripts(), 'fade-in': hasScripts() }">
+      <span ng-show="hasScripts()">
         Select script:
-        <select>
+        <select ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
       </span>

@@ -36,8 +36,12 @@ angular.module('main').factory('programStateFactory', [function() {
       })
       
       // Get the previous value.
-      record.reverse.val = self.scripts[record.script] ?
+      reverse.val = self.scripts[record.script] ?
         self.scripts[record.script][record.loc] : null
+        
+      // Get the previous 'current' value
+      reverse.currentScript = self.currentScript
+      reverse.currentLoc = self.currentLoc
     }
     
     if(!record.forward) {
@@ -64,6 +68,10 @@ angular.module('main').factory('programStateFactory', [function() {
       }
       
       forward.val = record.val
+      
+      // Get the next 'current' value
+      forward.currentScript = record.script
+      forward.currentLoc = record.loc
     }
     
     this.applyChange(record.forward)
@@ -85,7 +93,8 @@ angular.module('main').factory('programStateFactory', [function() {
     
     if(!this.scripts[change.script]) throw 'missing script ' + change.script
     this.scripts[change.script].logs[change.loc] = change.val
-    this.scripts[change.script].currentLoc = change.loc
+    this.currentScript = change.currentScript
+    this.currentLoc = change.currentLoc
   }
   
   ProgramState.prototype.reverse = function(record) {
