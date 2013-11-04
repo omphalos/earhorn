@@ -1,19 +1,17 @@
 .main-container { height: 100%; }
-.main-container nav { margin-bottom: 1em; height: 7em; }
+.main-container nav { padding: 1em; height: 7em; }
 .main-container .main-content { border-top: 1px solid #555; }
 
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
   top: 145px;
-  left: 1em;
   bottom: 0;
   height: auto; 
-  border-right: 1px solid #555; 
 }
 
-.main-container editor.half .CodeMirror { right: 50%; }
-.main-container editor.full .CodeMirror { right: 1em; }
+.main-container editor.half .CodeMirror { left: 0; right: 50%; border-right: 1px solid #555; }
+.main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
 
 iframe {
   border: 0px;
@@ -23,9 +21,7 @@ iframe {
   width: 50%;
 }
 
-.main-container .top {
-  height: 1em;
-}
+.main-container .top { height: 1.5em; }
 
 
 .main-container a.github { float: right; }

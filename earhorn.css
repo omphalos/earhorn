@@ -4,7 +4,6 @@ body {
   min-width: 640px;
   height: 100%;
   box-sizing: border-box;
-  padding: 1em;
   color: #555;
 }
 main { height: 100%; }
