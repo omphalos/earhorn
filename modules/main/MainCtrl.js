@@ -25,14 +25,6 @@ angular.module('main').controller('MainCtrl', [
   //////////////////////
   
   settingsService.loadAnd$watch($scope, 'settings')
-  
-  ///////////////////////////
-  // Subscribe to the log. //
-  ///////////////////////////
-
-  $scope.log = {}
-  $scope.history = []
-  // timeline.attach($scope, $scope.log, $scope.history, $scope.settings)
 
   /////////////////////////
   // Timeline functions. //
@@ -44,6 +36,15 @@ angular.module('main').controller('MainCtrl', [
   $scope.play = function() { console.log('play') }
   $scope.stepForward = function() { console.log('step forward') }
   $scope.fastForward = function() { console.log('fast forward') }
+
+  ////////////////////
+  // Editor's code. //
+  ////////////////////
+  
+  $scope.hasScripts = function() {
+    return Object.keys(timeline.programState.scripts).length
+  }
+  $scope.timeline = timeline
 
   /////////////////////////////////////
   // Build an iframe when requested. //

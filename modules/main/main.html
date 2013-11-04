@@ -1,11 +1,13 @@
 <div class="main-container">
 
-  <nav>NAV
-    <div>
-      Select script:
-      <select>
-        <option ng-repeat="(script, log) in log" value="{{script}}">{{script}}</option>
-      </select>
+  <nav>
+    <div class="top">
+      <span ng-class="{ 'fade-out': !hasScripts(), 'fade-in': hasScripts() }">
+        Select script:
+        <select>
+          <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
+        </select>
+      </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn">github</a>
     </div>
@@ -24,14 +26,14 @@
       </div>
     </div>
 
-    <span class="continue-message">Press play to continue.</span-->
+    <span class="continue-message fade-out">Press play to continue.</span-->
     <!--span class="error">
       <span title="Go to error" class="error icon"></span>
     </span-->
 
   </nav>
 
-  <div class="main-content">MAIN-CONTENT
+  <div class="main-content">
     <editor ng-class="{ full: !iframe, half: !!iframe }" model="code" init-mode="text/javascript" init-full-screen="true" init-line-numbers="true">EDITOR</editor>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>

@@ -22,3 +22,6 @@ a:hover { text-decoration: underline; }
 .icon { margin: 5px }
 .icon:hover { opacity: 0.35; }
 .icon:active, .icon.active { opacity: 0.5; }
+
+.fade-out { opacity: 0; }
+.fade-in { opacity: 1; transition: opacity 1s ease-in-out; }
