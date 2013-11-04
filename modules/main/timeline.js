@@ -35,10 +35,10 @@ angular.module('main').factory('timeline', [
   timeline.$watch('position', function(newVal, oldVal) {
 
     for(var i = oldVal; i < newVal && i < timeline.history.length; i++)
-      programState.forward(history[i])
+      programState.forward(timeline.history[i])
     
     for(var i = oldVal; i > newVal && i >= 0; i--)
-      programState.reverse(history[i])
+      programState.reverse(timeline.history[i])
       
     if(newVal !== getEndPosition())
       timeline.pause()
@@ -49,7 +49,7 @@ angular.module('main').factory('timeline', [
   }
 
   timeline.play = function() {
-    position = getEndPosition()
+    timeline.position = getEndPosition()
     // if(postponedAnnouncements) // TODO
     playing = true
   }
@@ -60,7 +60,7 @@ angular.module('main').factory('timeline', [
   
   timeline.step = function(stepSize) {
     timeline.pause()
-    position += stepSize
+    timeline.position += stepSize
   }
   
   timeline.stepForward = function() { 
@@ -72,11 +72,11 @@ angular.module('main').factory('timeline', [
   }
   
   timeline.fastForward = function() {
-    timeline.step(Math.min(timeline.history.length, 1) - position - 1)
+    timeline.step(Math.min(timeline.history.length, 1) - timeline.position - 1)
   }
 
   timeline.fastBackward = function() {
-    timeline.step(-position)
+    timeline.step(-timeline.position)
   }
 
   /////////////////////
@@ -127,7 +127,7 @@ angular.module('main').factory('timeline', [
     // message would exceed the maximum history capacity.
     // Otherwise, information that's important to the user could
     // be pushed out of the timeline.
-    if(!playing && timeline.length >= settings.maxHistoryLenth - 1) {
+    if(!playing && timeline.history.length >= settings.maxHistoryLenth - 1) {
       lostMessageCounts[record.script] = lostMessageCounts[record.script] || 0
       lostMessageCounts[record.script]++
       return
@@ -150,7 +150,7 @@ angular.module('main').factory('timeline', [
 
       // Max sure history doesn't overflow its capacity.
       if(timeline.history.length >= settings.maxHistoryLength)
-        timeline.shift()
+        timeline.history.shift()
     }
   }
   

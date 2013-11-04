@@ -57,6 +57,11 @@ angular.module('main').controller('MainCtrl', [
     if(timeline.isPlaying())
       $scope.code = $scope.getCurrentScriptBody()
   })
+  
+  $scope.timelinePosition = timeline.position
+  $scope.$watch('timelinePosition', function(newVal, oldVal) {
+    timeline.position = +newVal
+  })
 
   /////////////////////////////////////
   // Build an iframe when requested. //
@@ -79,12 +84,12 @@ angular.module('main').controller('MainCtrl', [
     settings: $scope.settings,
     
     // Timeline functions.
-    stepBackward: $scope.stepBackward,
-    fastBackward: $scope.fastBackward,
-    pause: $scope.pause,
-    play: $scope.play,
-    stepForward: $scope.stepForward,
-    fastForward: $scope.fastForward,   
+    stepBackward: timeline.stepBackward,
+    fastBackward: timeline.fastBackward,
+    pause: timeline.pause,
+    play: timeline.play,
+    stepForward: timeline.stepForward,
+    fastForward: timeline.fastForward,   
     
     // Expose the $scope for ease of development.
     timeline: timeline,

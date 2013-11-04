@@ -27,7 +27,7 @@ iframe {
 .main-container a.github { float: right; }
 
 .main-container select { margin-left: 1em; }
-.main-container .script-view {
+.main-container .timeline {
   user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
