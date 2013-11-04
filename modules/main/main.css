@@ -1,8 +1,40 @@
-.main iframe {  
+.main-container { height: 100%; }
+.main-container nav { margin-bottom: 1em; height: 7em; }
+.main-container .main-content { border-top: 1px solid #555; }
+
+.main-container .CodeMirror {  
+  width: auto;
+  position: fixed; 
+  top: 145px;
+  left: 1em;
+  bottom: 0;
+  height: auto; 
+  border-right: 1px solid #555; 
+}
+
+.main-container editor.half .CodeMirror { right: 50%; }
+.main-container editor.full .CodeMirror { right: 1em; }
+
+iframe {
+  border: 0px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  float: right;
+  width: 50%;
+}
+
+
+/*.main { border-top: 1px solid #555; height: 100%; width: 100%; background-color: blue; }*/
+/*
+.main main editor, .main main iframe { display: none !important; }
+
+.main main editor { display: inline-block; width: 50%; }
+.main main iframe { 
+  position: absolute;
+  left: 50%;
+  display: inline-block;
   padding: 1em; 
   width: 50%;
-  height: 100%;
-  float: right;
   border: 0px;
   border-left: 1px solid #555; 
   box-sizing: border-box;
@@ -32,7 +64,7 @@
 .main .timeline .status { margin: 0 1em 0 0; float: left; }
 .main .timeline .input-container { overflow: hidden;; }
 
-.main .CodeMirror { border-top: 1px solid #555; top: 11em; width: 50%; line-height: normal;}
+.main .CodeMirror { line-height: normal;}
 .main .script-view { display: none; }
 .main .var-name { font-weight: bold; color: darkblue; }
 .main .var-val { color: green; }
@@ -80,3 +112,4 @@
 .main .show.continue-message { opacity: 1; transition: opacity 1s ease-in-out; }
 
 
+*/
