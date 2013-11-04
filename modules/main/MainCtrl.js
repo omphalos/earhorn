@@ -46,7 +46,17 @@ angular.module('main').controller('MainCtrl', [
   }
 
   $scope.timeline = timeline
-  $scope.programState = timeline.programState
+  var programState = $scope.programState = timeline.programState
+  
+  $scope.getCurrentScriptBody = function() {
+    var script = programState.scripts[programState.currentScript]
+    return result = (script || {}).body || ''
+  }
+  
+  $scope.$watch('getCurrentScriptBody()', function(oldVal, newVal) {
+    if(timeline.isPlaying())
+      $scope.code = $scope.getCurrentScriptBody()
+  })
 
   /////////////////////////////////////
   // Build an iframe when requested. //
@@ -75,9 +85,10 @@ angular.module('main').controller('MainCtrl', [
     play: $scope.play,
     stepForward: $scope.stepForward,
     fastForward: $scope.fastForward,   
-    timeline: timeline,
     
     // Expose the $scope for ease of development.
+    timeline: timeline,
+    programState: programState,
     MainCtrl: $scope
   }
   

@@ -1,7 +1,6 @@
 angular.module('main').directive('editor', [function() {  
 
   function link(scope, element, attr) {      
-    console.log('editor')
     
     ////////////////////////////////////////////
     // Create the CodeMirror editor instance. //

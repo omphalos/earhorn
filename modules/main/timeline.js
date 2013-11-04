@@ -43,6 +43,10 @@ angular.module('main').factory('timeline', [
     if(newVal !== getEndPosition())
       timeline.pause()
   })
+  
+  timeline.isPlaying = function() {
+    return playing
+  }
 
   timeline.play = function() {
     position = getEndPosition()

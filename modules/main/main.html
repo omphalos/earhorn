@@ -22,7 +22,7 @@
         <span title="Fast Forward" class="fast-forward icon" ng-click="commands.fastForward()"></span>
       </div>
       <div class="input-container">
-        <input type="range" min="0" max="100" ng-model="historyPosition">
+        <input type="range" min="0" max="{{timeline.history.length}}" ng-model="historyPosition">
       </div>
     </div>
 

@@ -1,7 +1,5 @@
 angular.module('main').factory('consoleInterface', ['$interval', function($interval) {
 
-  console.log('consoleInterface')
-
   function expose($scope, pathInScope) {
 
     // Set up help() command.

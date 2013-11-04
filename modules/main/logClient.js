@@ -54,7 +54,6 @@ angular.module('main').factory('logClient', [
   // Manage storage event life cycle. //
   //////////////////////////////////////
   
-  console.log('listening')
   window.addEventListener('storage', onStorage, false)    
   
   logClient.$on('$destroy', function() {
