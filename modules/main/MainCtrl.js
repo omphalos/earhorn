@@ -52,15 +52,20 @@ angular.module('main').controller('MainCtrl', [
     var script = programState.scripts[programState.currentScript]
     return result = (script || {}).body || ''
   }
-  
-  $scope.$watch('getCurrentScriptBody()', function(oldVal, newVal) {
+
+  function updateCodeWhenScriptIsRunning() {
     if(timeline.isPlaying())
       $scope.code = $scope.getCurrentScriptBody()
-  })
+  }
+  timeline.$watch('isPlaying()', updateCodeWhenScriptIsRunning)
+  $scope.$watch('getCurrentScriptBody()', updateCodeWhenScriptIsRunning)
   
   $scope.timelinePosition = timeline.position
   $scope.$watch('timelinePosition', function(newVal, oldVal) {
     timeline.position = +newVal
+  })
+  timeline.$watch('position', function(newVal, oldVal) {
+    $scope.timelinePosition = newVal
   })
 
   /////////////////////////////////////

@@ -31,7 +31,7 @@ angular.module('main').factory('timeline', [
   function getEndPosition() {
     return Math.max(timeline.history.length - 1, 0)
   }
-  
+
   timeline.$watch('position', function(newVal, oldVal) {
 
     for(var i = oldVal; i < newVal && i < timeline.history.length; i++)
@@ -145,8 +145,7 @@ angular.module('main').factory('timeline', [
 
     if(playing) {
 
-      // If we're playing, we need to update the state for every new record.
-      timeline.programState.forward(record)
+      timeline.position = getEndPosition()
 
       // Max sure history doesn't overflow its capacity.
       if(timeline.history.length >= settings.maxHistoryLength)
