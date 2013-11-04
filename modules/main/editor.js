@@ -9,7 +9,7 @@ angular.module('main').directive('editor', [function() {
     var initOptions = { value: scope[attr.model] || '' }
     Object.keys(attr).forEach(function(attribute) {
       if(attribute.slice(0, 4) !== 'init') return
-      var key = attribute.slice(4)
+      var key = attribute[4].toLowerCase() + attribute.slice(5)
       initOptions[key] = attr[attribute]
     })
     
