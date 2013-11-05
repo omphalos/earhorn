@@ -9,7 +9,7 @@
         </select>
       </span>
 
-      <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">github</a>
+      <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
     </div>
 
     <div class="timeline">
@@ -34,7 +34,7 @@
   </nav>
 
   <div class="main-content">
-    <editor ng-class="{ full: !iframe, half: !!iframe }" model="code" init-mode="text/javascript" init-full-screen="true" init-line-numbers="true"></editor>
+    <editor ng-class="{ full: !iframe, half: !!iframe }" code="code" line="currentLine" ch="currentCh" init-autofocus="true" init-style-active-line="true" init-mode="text/javascript" init-full-screen="true" init-line-numbers="true"></editor>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>
 

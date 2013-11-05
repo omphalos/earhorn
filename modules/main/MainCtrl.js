@@ -48,17 +48,25 @@ angular.module('main').controller('MainCtrl', [
   $scope.timeline = timeline
   var programState = $scope.programState = timeline.programState
   
-  $scope.getCurrentScriptBody = function() {
-    var script = programState.scripts[programState.currentScript]
-    return result = (script || {}).body || ''
+  $scope.getCurrentScript = function() {
+    return programState.scripts[programState.currentScript] || {}
   }
-
+  
+  $scope.getCurrentScriptBody = function() {
+    return $scope.getCurrentScript().body
+  }
+  
   function updateCodeWhenScriptIsRunning() {
-    if(timeline.isPlaying())
-      $scope.code = $scope.getCurrentScriptBody()
+    if(!timeline.isPlaying()) return console.log('not playing')
+    console.log('updating')
+    $scope.code = $scope.getCurrentScriptBody()
+    var location = (programState.currentLoc || '').split(',')
+    $scope.currentLine = +location[2]
+    $scope.currentCh = +location[3]
   }
   timeline.$watch('isPlaying()', updateCodeWhenScriptIsRunning)
   $scope.$watch('getCurrentScriptBody()', updateCodeWhenScriptIsRunning)
+  $scope.$watch('programState.currentLoc', updateCodeWhenScriptIsRunning)
   
   $scope.timelinePosition = timeline.position
   $scope.$watch('timelinePosition', function(newVal, oldVal) {
