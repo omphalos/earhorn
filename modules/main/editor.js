@@ -1,4 +1,8 @@
-angular.module('main').directive('editor', [function() {  
+angular.module('main').directive('editor', [
+  'consoleInterface',
+  '$parse', function(
+  consoleInterface,
+  $parse) {  
 
   function link(scope, element, attr) {      
 
@@ -13,8 +17,11 @@ angular.module('main').directive('editor', [function() {
       initOptions[key] = attr[attribute]
     })
     
-    var editor = scope.editor = CodeMirror(element[0], initOptions)
+    var editor = CodeMirror(element[0], initOptions)
     
+    if(attr.hasOwnProperty('element'))
+      $parse(attr.element).assign(scope, editor)
+        
     //////////////////////////////////////
     // Set up two-way binding for code. //
     //////////////////////////////////////
@@ -37,31 +44,32 @@ angular.module('main').directive('editor', [function() {
     ////////////////////////////////////////
 
     scope.$watch(attr.line, function(newValue, oldValue) {
-      console.log('line', newValue)
+      //console.log('line', newValue)
       if(newValue === oldValue) return
       editor.setCursor({
-        line: (scope.$eval(attr.line) || 1) - 1,
+        line: scope.$eval(attr.line) || 0,
         ch: editor.getCursor().ch 
       })
     })
       
     scope.$watch(attr.ch, function(newValue, oldValue) {
-      console.log('ch', newValue)
+      //console.log('ch', newValue)
       if(newValue === oldValue) return
       editor.setCursor({
         line: editor.getCursor().line,
-        ch: (scope.$eval(attr.ch) || 0)
+        ch: scope.$eval(attr.ch) || 0
       })
     })
       
     editor.on('cursorActivity', _.debounce(function() {
+      //console.log('on cursor activity')
       var cursor = editor.getCursor()
       scope.$apply(function() {
-        scope[attr.line] = cursor.line + 1
+        scope[attr.line] = cursor.line
         scope[attr.ch] = cursor.ch
       })
     }, 100))
   }
 
-  return { restrict: 'E', link: link }
+  return { restrict: 'E', link: link, transclude: true }
 }])

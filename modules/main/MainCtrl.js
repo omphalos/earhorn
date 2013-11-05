@@ -58,10 +58,10 @@ angular.module('main').controller('MainCtrl', [
   
   function updateCodeWhenScriptIsRunning() {
     if(!timeline.isPlaying()) return console.log('not playing')
-    console.log('updating')
+    //console.log('updating')
     $scope.code = $scope.getCurrentScriptBody()
     var location = (programState.currentLoc || '').split(',')
-    $scope.currentLine = +location[2]
+    $scope.currentLine = +location[2] - 1
     $scope.currentCh = +location[3]
   }
   timeline.$watch('isPlaying()', updateCodeWhenScriptIsRunning)

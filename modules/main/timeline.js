@@ -21,7 +21,7 @@ angular.module('main').factory('timeline', [
 
   timeline.scriptContents = {}
   timeline.history = []
-  timeline.position = 0
+  timeline.position = -1
   timeline.programState = programStateFactory.create()
   
   ///////////////////////
@@ -32,14 +32,28 @@ angular.module('main').factory('timeline', [
     return Math.max(timeline.history.length - 1, 0)
   }
 
+  function movePositionForward(newVal, oldVal) {
+    for(var i = oldVal + 1; i <= newVal; i++) {
+      //console.log('applying record', i)
+      programState.forward(timeline.history[i])
+    }
+  }
+  
+  function movePositionBackward(newVal, oldVal) {
+    for(var i = oldVal; i >= newVal; i--)
+      programState.reverse(timeline.history[i])
+  }
+
   timeline.$watch('position', function(newVal, oldVal) {
 
-    for(var i = oldVal; i < newVal && i < timeline.history.length; i++)
-      programState.forward(timeline.history[i])
+    if(newVal === oldVal) return
+
+    //console.log('position changed from', oldVal, 'to', newVal)
+
+    movePositionForward(newVal, oldVal)
     
-    for(var i = oldVal; i > newVal && i >= 0; i--)
-      programState.reverse(timeline.history[i])
-      
+    movePositionBackward(newVal, oldVal)
+    
     if(newVal !== getEndPosition())
       timeline.pause()
   })
@@ -50,7 +64,6 @@ angular.module('main').factory('timeline', [
 
   timeline.play = function() {
     timeline.position = getEndPosition()
-    // if(postponedAnnouncements) // TODO
     playing = true
   }
 

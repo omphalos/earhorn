@@ -4,9 +4,10 @@ $(document).on('mousemove', function(evt) {
   
   evt
   
-  x = evt.clientX
-  y = evt.clientY
-  
+  if(Math.random() < 0.5)
+    x = evt.clientX
+  else
+    y = evt.clientY
 })
 })
 
