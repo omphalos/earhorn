@@ -12,24 +12,40 @@ angular.module('main').controller('MainCtrl', [
   'logClient',
   'timeline',
   'settingsService',
-  'consoleInterface', function(
+  'consoleInterface',
+  '$compile', function(
   $scope,
   $location,
   logClient,
   timeline,
   settingsService,
-  consoleInterface) {
+  consoleInterface,
+  $compile) {
     
-  //////////////////////
-  // Set up Settings. //
-  //////////////////////
+  //////////////////////////
+  // Set up our services. //
+  //////////////////////////
   
-  settingsService.loadAnd$watch($scope, 'settings')
+  settingsService.loadAnd$watch($scope, 'settings', { formatDigits: 2 })
 
-  /////////////////////////
-  // Timeline functions. //
-  /////////////////////////
+  ///////////////
+  // Timeline. //
+  ///////////////
+
+  $scope.timeline = timeline
   
+  // Two-way binding for position.
+  $scope.timelinePosition = timeline.position
+  
+  $scope.$watch('timelinePosition', function(newVal, oldVal) {
+    timeline.position = +newVal
+  })
+  
+  timeline.$watch('position', function(newVal, oldVal) {
+    $scope.timelinePosition = newVal
+  })
+
+  // Traversal functions.
   $scope.fastBackward = function() { console.log('gast backward') }
   $scope.stepBackward = function() { console.log('step backward') }
   $scope.pause = function() { console.log('pause') }
@@ -38,44 +54,75 @@ angular.module('main').controller('MainCtrl', [
   $scope.fastForward = function() { console.log('fast forward') }
 
   ////////////////////
-  // Editor's code. //
+  // Program state. //
   ////////////////////
   
+  var programState = $scope.programState = timeline.programState
+
   $scope.hasScripts = function() {
     return Object.keys(timeline.programState.scripts).length
   }
-
-  $scope.timeline = timeline
-  var programState = $scope.programState = timeline.programState
   
-  $scope.getCurrentScript = function() {
+  var getCurrentScript = $scope.getCurrentScript = function() {
     return programState.scripts[programState.currentScript] || {}
   }
   
-  $scope.getCurrentScriptBody = function() {
-    return $scope.getCurrentScript().body
+  function updateCode() {
+    $scope.code = getCurrentScript().body
   }
   
-  function updateCodeWhenScriptIsRunning() {
-    if(!timeline.isPlaying()) return console.log('not playing')
-    //console.log('updating')
-    $scope.code = $scope.getCurrentScriptBody()
+  function updateLocation() {
     var location = (programState.currentLoc || '').split(',')
-    $scope.currentLine = +location[2] - 1
+    $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
   }
-  timeline.$watch('isPlaying()', updateCodeWhenScriptIsRunning)
-  $scope.$watch('getCurrentScriptBody()', updateCodeWhenScriptIsRunning)
-  $scope.$watch('programState.currentLoc', updateCodeWhenScriptIsRunning)
+
+  $scope.getLogs = function() {
+    return timeline.isPlaying() ? programState.logs : {}
+  }
   
-  $scope.timelinePosition = timeline.position
-  $scope.$watch('timelinePosition', function(newVal, oldVal) {
-    timeline.position = +newVal
-  })
-  timeline.$watch('position', function(newVal, oldVal) {
-    $scope.timelinePosition = newVal
+  $scope.getCurrentScriptLogs = function() {
+    return getCurrentScript().logs
+  }
+  
+  $scope.getLogText = function(log) {
+    
+    log = log.val
+    
+    if(log.type === 'String')
+      return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
+
+    if(log.type === 'Number') {
+      if(!log.value || !settings.formatDigits) return log.value
+      return log.value.toFixed(settings.formatDigits)
+    }
+      
+    if(log.type === 'Function')
+      return log.name || log.type
+      
+    if(typeof log.value !== 'undefined')
+      return '' + log.value
+        
+    if(log.type === 'Array')
+      return 'Array(' + log.length + ')'
+          
+    if(log.type === 'Object')        
+      return log.constructor || log.type
+            
+    return log.type
+  }  
+  
+  timeline.$watch('isPlaying()', function(newVal) {
+    console.log('isPlaying $watch')
+    if(!newVal) return
+    updateCode()
+    updateLocation()
   })
 
+  $scope.$watch('getCurrentScript().body', updateCode)
+  $scope.$watch('programState.currentLoc', updateLocation)
+  // $scope.$watch('getCurrentScript().logs', updateLogs, true)
+  
   /////////////////////////////////////
   // Build an iframe when requested. //
   /////////////////////////////////////

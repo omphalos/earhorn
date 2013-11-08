@@ -131,9 +131,9 @@
           
         node.update('eh$("' +
           name + '","' +
-          node.loc.start.line + ',' +
+          (node.loc.start.line - 1) + ',' +
           node.loc.start.column + ',' +
-          node.loc.end.line + ',' +
+          (node.loc.end.line - 1) + ',' +
           node.loc.end.column + '",' +
           node.source() +
         ')')

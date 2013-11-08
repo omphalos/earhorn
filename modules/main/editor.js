@@ -1,8 +1,12 @@
 angular.module('main').directive('editor', [
   'consoleInterface',
-  '$parse', function(
+  '$parse', 
+  '$templateCache', 
+  '$compile', function(
   consoleInterface,
-  $parse) {  
+  $parse,
+  $templateCache,
+  $compile) {  
 
   function link(scope, element, attr) {      
 
@@ -10,7 +14,7 @@ angular.module('main').directive('editor', [
     // Create the CodeMirror editor instance. //
     ////////////////////////////////////////////
 
-    var initOptions = { value: scope[attr.code] || '' }
+    var initOptions = { value: scope.$eval(attr.code) || '' }
     Object.keys(attr).forEach(function(attribute) {
       if(attribute.slice(0, 4) !== 'init') return
       var key = attribute[4].toLowerCase() + attribute.slice(5)
@@ -21,55 +25,115 @@ angular.module('main').directive('editor', [
     
     if(attr.hasOwnProperty('element'))
       $parse(attr.element).assign(scope, editor)
-        
-    //////////////////////////////////////
-    // Set up two-way binding for code. //
-    //////////////////////////////////////
+    
+    ///////////////////////////////
+    // Two-way binding for code. //
+    ///////////////////////////////
     
     var lastReadCodeValue
 
     scope.$watch(attr.code, function(newValue, oldValue) {
+      console.log('code change')
       if(newValue !== oldValue && newValue !== lastReadCodeValue)
         editor.setValue(newValue || '')
     })
-      
+
     editor.on('change', _.debounce(function() {
       scope.$apply(function() {
         lastReadCodeValue = scope[attr.code] = editor.getValue()
       })
     }, 100))
-    
-    ////////////////////////////////////////
-    // Set up two-way binding for cursor. //
-    ////////////////////////////////////////
 
-    scope.$watch(attr.line, function(newValue, oldValue) {
-      //console.log('line', newValue)
-      if(newValue === oldValue) return
-      editor.setCursor({
-        line: scope.$eval(attr.line) || 0,
-        ch: editor.getCursor().ch 
+    /////////////////////////////////
+    // Two-way binding for cursor. //
+    /////////////////////////////////
+
+    if(attr.hasOwnProperty('line'))
+      scope.$watch(attr.line, function(newValue, oldValue) {
+        //console.log('line', newValue)
+        if(newValue === oldValue) return
+        editor.setCursor({
+          line: scope.$eval(attr.line) || 0,
+          ch: editor.getCursor().ch 
+        })
       })
-    })
-      
-    scope.$watch(attr.ch, function(newValue, oldValue) {
-      //console.log('ch', newValue)
-      if(newValue === oldValue) return
-      editor.setCursor({
-        line: editor.getCursor().line,
-        ch: scope.$eval(attr.ch) || 0
+
+    if(attr.hasOwnProperty('ch'))
+      scope.$watch(attr.ch, function(newValue, oldValue) {
+        //console.log('ch', newValue)
+        if(newValue === oldValue) return
+        editor.setCursor({
+          line: editor.getCursor().line,
+          ch: scope.$eval(attr.ch) || 0
+        })
       })
-    })
       
     editor.on('cursorActivity', _.debounce(function() {
       //console.log('on cursor activity')
       var cursor = editor.getCursor()
       scope.$apply(function() {
-        scope[attr.line] = cursor.line
-        scope[attr.ch] = cursor.ch
+        if(attr.hasOwnProperty('line'))
+          $parse(attr.line).assign(scope, cursor.line)
+        if(attr.hasOwnProperty('ch'))
+          $parse(attr.ch).assign(scope, cursor.ch)
       })
     }, 100))
-  }
 
-  return { restrict: 'E', link: link, transclude: true }
+    /////////////////////////////////////////
+    // Two-way binding for inline widgets. //
+    /////////////////////////////////////////
+    
+    if(attr.hasOwnProperty('bookmarks')) {
+      
+      var bookmarks = {}
+
+      // console.log('editor-scope', scope.$id, attr.bookmarks)
+
+      // console.log('watching', attr.bookmarks)
+      scope.$watch(attr.bookmarks, function(newValue, oldValue) {
+
+        var newBookmarks = scope.$eval(attr.bookmarks) || {}
+
+        // console.log('newBookmarks', newBookmarks, 'oldBookmarks', bookmarks, editor.getValue().length)
+        
+        Object.keys(bookmarks).forEach(function(key) {
+
+          if(newBookmarks.hasOwnProperty(key)) return
+
+          // Delete widget.
+          bookmarks[key].clear()
+          delete bookmarks[key]
+        })
+        
+        Object.keys(newBookmarks).forEach(function(key) {
+
+          if(bookmarks.hasOwnProperty(key)) {
+            
+            // Update
+            bookmarks[key].scope.log = newBookmarks[key]
+            
+          } else {
+
+            // Add widget.
+            var bookmarkScope = scope.$new()
+              , log = newBookmarks[key]
+              , pos = { line: log.loc.to.line, ch: log.loc.to.column }
+              , template = $compile($templateCache.get(attr.bookmarkTemplate))
+              , widget = template(bookmarkScope)[0]
+              , options = angular.extend({ widget: widget, insertLeft: 1 }, log)
+  
+            bookmarkScope.log = log
+  
+            bookmarks[key] = {
+              scope: bookmarkScope,
+              bookmark: editor.setBookmark(pos, options),
+              widget: widget
+            }
+          }
+        })
+      }, true)
+    }
+  }
+  
+  return { restrict: 'E', link: link }
 }])

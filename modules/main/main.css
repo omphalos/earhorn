@@ -14,11 +14,12 @@
 .main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
 
 iframe {
+  width:  50%;
+  min-height: 100%;
   border: 0px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   float: right;
-  width: 50%;
 }
 
 .main-container .top { height: 1.5em; }

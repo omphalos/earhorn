@@ -45,7 +45,7 @@ angular.module('main').factory('logClient', [
 
     // Read the records
     var records = JSON.parse(evt.newValue)
-
+    
     // Publish the records to anyone listening.
     logClient.$broadcast('main.logClient', records)
   }

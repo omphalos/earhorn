@@ -34,8 +34,24 @@
   </nav>
 
   <div class="main-content">
-    <editor ng-class="{ full: !iframe, half: !!iframe }" code="code" line="currentLine" ch="currentCh" init-autofocus="true" init-style-active-line="true" init-mode="text/javascript" init-full-screen="true" init-line-numbers="true" element="editor"></editor>
+    <editor
+      ng-class="{ full: !iframe, half: !!iframe }"
+      code="code"
+      line="currentLine"
+      ch="currentCh"
+      init-autofocus="true"
+      init-style-active-line="true"
+      init-mode="text/javascript"
+      init-full-screen="true"
+      init-line-numbers="true"
+      bookmarks="getCurrentScriptLogs()"
+      bookmark-template="bookmarkTemplate"
+      element="editor"/>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>
+
+  <script type="text/ng-template" id="bookmarkTemplate">
+    <span class="bookmark">{{getLogText(log)}}</span>
+  </script>
 
 </div>

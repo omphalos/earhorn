@@ -1,4 +1,5 @@
-angular.module('main').factory('programStateFactory', [function() {
+angular.module('main').factory('programStateFactory', [
+  function() {
 
   'use strict'
   
@@ -44,6 +45,7 @@ angular.module('main').factory('programStateFactory', [function() {
       
       var forward = record.forward = {
         loc: record.loc,
+        val: record.val,
         script: record.script,
         scriptBodies: {},
         scriptStates: {}
@@ -62,8 +64,6 @@ angular.module('main').factory('programStateFactory', [function() {
           forward.scriptStates[key] = {}
         })
       }
-      
-      forward.val = record.val
     }
     
     this.applyChange(record.forward)
@@ -74,18 +74,28 @@ angular.module('main').factory('programStateFactory', [function() {
     var self = this
     
     Object.keys(change.scriptBodies).forEach(function(key) {
-      self.scripts[key] = self.scripts[key] || { logs: {} }
-      self.scripts[key].body = change.scriptBodies[key]
+      var script = self.scripts[key] = self.scripts[key] || { logs: {} }
+      script.body = change.scriptBodies[key]
     })
     
     Object.keys(change.scriptStates).forEach(function(key) {
-      self.scripts[key] = self.scripts[key] || { logs: {} }
-      self.scripts[key].logs = change.scriptStates[key]
+      var script = self.scripts[key] = self.scripts[key] || { logs: {} }
+      script.logs = change.scriptStates[key]
     })
     
-    if(!this.scripts[change.script])
-      throw 'missing script ' + change.script
-    this.scripts[change.script].logs[change.loc] = change.val
+    var changingScript = this.scripts[change.script]
+      , changingLog = changingScript[change.loc]
+    
+    if(!changingLog) {
+      var split = change.loc.split(',')
+        , from = { line: +split[0], column: +split[1] }
+        , to = { line: +split[2], column: +split[3]}
+        , parsed = { from: from, to: to }
+        
+      changingLog = changingScript.logs[change.loc] = { loc: parsed }
+    }
+    
+    changingLog.val = change.val
     this.currentScript = change.script
     this.currentLoc = change.loc
   }
