@@ -79,29 +79,53 @@ angular.module('main').directive('editor', [
       })
     }, 100))
 
-    /////////////////////////////////////////
-    // Two-way binding for inline widgets. //
-    /////////////////////////////////////////
+    /////////////////////////////////////
+    // Two-way binding for the widget. //
+    /////////////////////////////////////
+    
+    if(attr.hasOwnProperty('widgetTemplate')) {
+
+      var template = $compile($templateCache.get(attr.widgetTemplate))
+        , widgetElement = template(scope)[0]
+        , widgetObj
+
+      function updateWidget() {
+
+        console.log('updating widget')
+        
+        if(widgetObj) widgetObj.clear() // TODO check this
+
+        var line = scope.$eval(attr.widgetLine)
+          , ch = scope.$eval(attr.widgetCh)
+          , pos = { line: line, ch: ch }
+
+        widgetObj = editor.addWidget(pos, widgetElement)
+    }
+      
+      scope.$watch(attr.widgetLine, updateWidget)
+      scope.$watch(attr.widgetCh, updateWidget)
+    }
+
+    ////////////////////////////////////
+    // Two-way binding for bookmarks. //
+    ////////////////////////////////////
     
     if(attr.hasOwnProperty('bookmarks')) {
       
       var bookmarks = {}
 
-      // console.log('editor-scope', scope.$id, attr.bookmarks)
-
-      // console.log('watching', attr.bookmarks)
       scope.$watch(attr.bookmarks, function(newValue, oldValue) {
 
         var newBookmarks = scope.$eval(attr.bookmarks) || {}
 
-        // console.log('newBookmarks', newBookmarks, 'oldBookmarks', bookmarks, editor.getValue().length)
-        
         Object.keys(bookmarks).forEach(function(key) {
 
           if(newBookmarks.hasOwnProperty(key)) return
 
           // Delete widget.
-          bookmarks[key].clear()
+          var bookmark = bookmarks[key]
+          bookmark.widget.clear() // TODO rename widget to textMarker
+          bookmark.scope.$destroy()
           delete bookmarks[key]
         })
         

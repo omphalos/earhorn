@@ -46,12 +46,19 @@
       init-line-numbers="true"
       bookmarks="getCurrentScriptLogs()"
       bookmark-template="bookmarkTemplate"
+      widget-line="widgetLine"
+      widget-line="widgetCh"
+      widget-template="widgetTemplate"
       element="editor"/>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
     <span class="bookmark">{{getLogText(log)}}</span>
+  </script>
+
+  <script type="text/ng-template" id="widgetTemplate">
+    <span class="widget">widget</span>
   </script>
 
 </div>

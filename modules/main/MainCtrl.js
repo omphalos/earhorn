@@ -122,6 +122,13 @@ angular.module('main').controller('MainCtrl', [
   $scope.$watch('getCurrentScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
   // $scope.$watch('getCurrentScript().logs', updateLogs, true)
+
+  ////////////////////////////////
+  // Support inspection widget. //
+  ////////////////////////////////
+
+  $scope.widgetLine = 4
+  $scope.widgetCh = 4
   
   /////////////////////////////////////
   // Build an iframe when requested. //

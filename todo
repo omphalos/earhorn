@@ -1,0 +1,23 @@
+_ show widget
+  x create attribute for widget template id
+  x create a template from the id
+  x compile it against the scope
+  x get the element
+  x create attributes for widget-line, widget-ch
+  x watch the attributes
+  x on watch, update the widget
+  x load template from $templateCache
+  x watch widget location
+  x look at add widget api: editor.addWidget({ line: endLine - 1, ch: endColumn }, widget.el[0])
+  x have template variable for widget html
+  x support widget in directive
+  _ build real widget template
+  _ bind widget to real model
+  _ get it working
+  _ widget controls its own visibility
+_ fix reversal
+_ show bookmark underline
+_ show code underline
+_ show current bold
+_ fix scripts display
+
