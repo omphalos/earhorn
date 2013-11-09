@@ -85,9 +85,68 @@ angular.module('main').controller('MainCtrl', [
     return getCurrentScript().logs
   }
   
-  $scope.getLogText = function(log) {
+  timeline.$watch('isPlaying()', function(newVal) {
+    console.log('isPlaying $watch')
+    if(!newVal) return
+    updateCode()
+    updateLocation()
+  })
+
+  $scope.$watch('getCurrentScript().body', updateCode)
+  $scope.$watch('programState.currentLoc', updateLocation)
+  // $scope.$watch('getCurrentScript().logs', updateLogs, true)
+
+  ////////////////////////////////
+  // Support inspection widget. //
+  ////////////////////////////////
+
+  $scope.toggleWidget = function($event, key) {
+
+    $event.stopPropagation()
     
-    log = log.val
+    if($scope.widgetKey === key)
+      return delete $scope.widgetKey
+    
+    $scope.widgetScript = programState.currentScript
+    $scope.widgetKey = key
+    var log = $scope.getWidgetLog()
+    $scope.widgetLine = log.loc.to.line
+    $scope.widgetCh = log.loc.to.column
+  }
+
+  $scope.getWidgetLog = function() {
+
+    var currentScript = $scope.getCurrentScript()
+    
+    var widgetLog =
+      $scope.widgetKey && 
+      currentScript &&
+      currentScript.logs && 
+      currentScript.logs[$scope.widgetKey]
+      
+    return widgetLog
+  }
+
+  $scope.widgetLine = 4
+  $scope.widgetCh = 4
+
+  ////////////////
+  // getLogText //
+  ////////////////
+  
+  var entityMap = {
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', 
+    '"': '&quot;', '\'': '&#39;', '/': '&#x2F;' 
+  }
+  
+  function htmlEscape(str) {
+    
+    return str.replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    })
+  }
+  
+  $scope.getLogText = function(log, key) {
     
     if(log.type === 'String')
       return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
@@ -111,36 +170,6 @@ angular.module('main').controller('MainCtrl', [
             
     return log.type
   }  
-  
-  timeline.$watch('isPlaying()', function(newVal) {
-    console.log('isPlaying $watch')
-    if(!newVal) return
-    updateCode()
-    updateLocation()
-  })
-
-  $scope.$watch('getCurrentScript().body', updateCode)
-  $scope.$watch('programState.currentLoc', updateLocation)
-  // $scope.$watch('getCurrentScript().logs', updateLogs, true)
-
-  ////////////////////////////////
-  // Support inspection widget. //
-  ////////////////////////////////
-
-  $scope.toggleWidget = function($event, log) {
-
-    $event.stopPropagation()
-    
-    if($scope.widgetLog === log)
-      return delete $scope.widgetLog
-    
-    $scope.widgetLog = log
-    $scope.widgetLine = log.loc.to.line
-    $scope.widgetCh = log.loc.to.column
-  }
-
-  $scope.widgetLine = 4
-  $scope.widgetCh = 4
   
   /////////////////////////////////////
   // Build an iframe when requested. //

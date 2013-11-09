@@ -145,6 +145,7 @@ angular.module('main').directive('editor', [
               , options = angular.extend({ widget: widget, insertLeft: 1 }, log)
   
             bookmarkScope.log = log
+            bookmarkScope.key = key
   
             bookmarks[key] = {
               scope: bookmarkScope,

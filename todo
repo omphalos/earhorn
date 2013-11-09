@@ -11,10 +11,10 @@ _ show widget
   x look at add widget api: editor.addWidget({ line: endLine - 1, ch: endColumn }, widget.el[0])
   x have template variable for widget html
   x support widget in directive
+  x bind widget to real model
+  x get it working
+  x widget controls its own visibility
   _ build real widget template
-  _ bind widget to real model
-  _ get it working
-  _ widget controls its own visibility
 _ fix reversal
 _ show bookmark underline
 _ show code underline

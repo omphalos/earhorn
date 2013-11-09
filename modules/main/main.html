@@ -33,7 +33,7 @@
 
   </nav>
 
-  <div class="main-content" ng-click="widgetLog = null">
+  <div class="main-content" ng-click="widgetKey = null">
     <editor
       ng-class="{ full: !iframe, half: !!iframe }"
       code="code"
@@ -54,13 +54,43 @@
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
-    <span class="bookmark" ng-click="toggleWidget($event, log)">{{getLogText(log)}}</span>
+    <span class="bookmark" ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
   </script>
 
   <script type="text/ng-template" id="widgetTemplate">
-    <span ng-show="widgetLog" class="widget">
-      <div ng-if="widgetLog" class="widget-inner {{widgetLog.type}}">
-      WIDGET
+    <span ng-show="getWidgetLog() && widgetScript == programState.currentScript" class="widget">
+      <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">
+        <!-- TODO: use ng-switch -->
+
+        <!-- Object widgets -->
+        <span ng-if="getWidgetLog().val.type == 'Object'">
+          <div ng-repeat="(key, value) in getWidgetLog().val.properties" title="value.type">
+            <span class="widget-label {{value.type}}">
+              {{key}}<span ng-if="value.type == 'Function'">()</span>
+            </span>
+            <span class="widget-separator">: </span>
+            <span class="widget-value {{value.type}}">{{getLogText(value, key)}}</span>
+          </div>
+          <div ng-if="!getWidgetLog().val.complete">...</div>
+        </span>
+
+        <!-- Array widgets -->
+        <span ng-if="getWidgetLog().val.type == 'Array'">
+          <div ng-repeat="(key, value) in getWidgetLog().val.elements" title="value.type">
+            <span class="widget-label {{value.type}}">
+              {{key}}<span ng-if="value.type == 'Function'">()</span>
+            </span>
+            <span class="widget-separator">: </span>
+            <span class="widget-value {{value.type}}">{{getLogText(value)}}</span>
+          </div>
+          <div ng-if="!getWidgetLog().val.elements.length">{{getWidgetLog().val.type}}</div>
+          <div ng-if="getWidgetLog().val.length !== getWidgetLog().val.elements.length">...</div>
+        </span>
+
+        <!-- Other widgets -->
+        <span ng-if="getWidgetLog().val.type !== 'Object' && getWidgetLog().val.type !== 'Array'">
+          {{getWidgetLog().val.type}}
+        </span>
       </div>
     </span>
   </script>
