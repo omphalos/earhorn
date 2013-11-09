@@ -91,16 +91,14 @@ angular.module('main').directive('editor', [
 
       function updateWidget() {
 
-        console.log('updating widget')
-        
         if(widgetObj) widgetObj.clear() // TODO check this
 
-        var line = scope.$eval(attr.widgetLine)
-          , ch = scope.$eval(attr.widgetCh)
+        var line = scope.$eval(attr.widgetLine) || 0
+          , ch = scope.$eval(attr.widgetCh) || 0
           , pos = { line: line, ch: ch }
 
         widgetObj = editor.addWidget(pos, widgetElement)
-    }
+      }
       
       scope.$watch(attr.widgetLine, updateWidget)
       scope.$watch(attr.widgetCh, updateWidget)

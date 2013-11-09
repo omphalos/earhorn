@@ -33,7 +33,7 @@
 
   </nav>
 
-  <div class="main-content">
+  <div class="main-content" ng-click="widgetLog = null">
     <editor
       ng-class="{ full: !iframe, half: !!iframe }"
       code="code"
@@ -47,18 +47,22 @@
       bookmarks="getCurrentScriptLogs()"
       bookmark-template="bookmarkTemplate"
       widget-line="widgetLine"
-      widget-line="widgetCh"
+      widget-ch="widgetCh"
       widget-template="widgetTemplate"
       element="editor"/>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
-    <span class="bookmark">{{getLogText(log)}}</span>
+    <span class="bookmark" ng-click="toggleWidget($event, log)">{{getLogText(log)}}</span>
   </script>
 
   <script type="text/ng-template" id="widgetTemplate">
-    <span class="widget">widget</span>
+    <span ng-show="widgetLog" class="widget">
+      <div ng-if="widgetLog" class="widget-inner {{widgetLog.type}}">
+      WIDGET
+      </div>
+    </span>
   </script>
 
 </div>

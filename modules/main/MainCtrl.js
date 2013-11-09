@@ -127,6 +127,18 @@ angular.module('main').controller('MainCtrl', [
   // Support inspection widget. //
   ////////////////////////////////
 
+  $scope.toggleWidget = function($event, log) {
+
+    $event.stopPropagation()
+    
+    if($scope.widgetLog === log)
+      return delete $scope.widgetLog
+    
+    $scope.widgetLog = log
+    $scope.widgetLine = log.loc.to.line
+    $scope.widgetCh = log.loc.to.column
+  }
+
   $scope.widgetLine = 4
   $scope.widgetCh = 4
   
