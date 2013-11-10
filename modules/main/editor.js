@@ -122,7 +122,7 @@ angular.module('main').directive('editor', [
 
           // Delete widget.
           var bookmark = bookmarks[key]
-          bookmark.widget.clear() // TODO rename widget to textMarker
+          bookmark.bookmark.clear() // TODO rename widget to textMarker
           bookmark.scope.$destroy()
           delete bookmarks[key]
         })

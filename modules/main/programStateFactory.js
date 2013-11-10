@@ -14,8 +14,10 @@ angular.module('main').factory('programStateFactory', [
     if(!record.reverse) {
       
       var reverse = record.reverse = {
-        loc: self.currentLoc,
-        script: self.currentScript,
+        currentLoc: self.currentLoc,
+        currentScript: self.currentScript,
+        script: record.script,
+        loc: record.loc,
         scriptBodies: {},
         scriptStates: {}
       }
@@ -37,8 +39,10 @@ angular.module('main').factory('programStateFactory', [
       })
       
       // Get the previous value.
-      reverse.val = self.scripts[record.script] ?
-        self.scripts[record.script][record.loc] : null
+      reverse.val =
+        self.scripts[record.script] &&
+        self.scripts[record.script].logs[record.loc] &&
+        self.scripts[record.script].logs[record.loc].val
     }
     
     if(!record.forward) {
@@ -46,6 +50,8 @@ angular.module('main').factory('programStateFactory', [
       var forward = record.forward = {
         loc: record.loc,
         val: record.val,
+        currentLoc: record.loc,
+        currentScript: record.script,
         script: record.script,
         scriptBodies: {},
         scriptStates: {}
@@ -84,20 +90,33 @@ angular.module('main').factory('programStateFactory', [
     })
     
     var changingScript = this.scripts[change.script]
-      , changingLog = changingScript[change.loc]
+    this.currentScript = change.currentScript
+    this.currentLoc = change.currentLoc
+
+    if(!changingScript) return console.log('no changing script')
     
-    if(!changingLog) {
-      var split = change.loc.split(',')
-        , from = { line: +split[0], column: +split[1] }
-        , to = { line: +split[2], column: +split[3]}
-        , parsed = { from: from, to: to }
-        
-      changingLog = changingScript.logs[change.loc] = { loc: parsed }
+    if(change.val) {
+
+      var changingLog = changingScript[change.loc]
+
+      if(!changingLog) {
+
+        // Add
+        var split = change.loc.split(',')
+          , from = { line: +split[0], column: +split[1] }
+          , to = { line: +split[2], column: +split[3]}
+          , parsed = { from: from, to: to }
+          
+        changingLog = changingScript.logs[change.loc] = { loc: parsed }
+      }
+
+      changingLog.val = change.val
+
+    } else {
+      
+      // Delete log
+      delete changingScript.logs[change.loc]
     }
-    
-    changingLog.val = change.val
-    this.currentScript = change.script
-    this.currentLoc = change.loc
   }
   
   ProgramState.prototype.reverse = function(record) {

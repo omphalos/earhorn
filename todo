@@ -1,4 +1,14 @@
-_ show widget
+_ fix reversal
+_ show current bookmark underline
+_ show current code underline
+_ show hover bold
+_ fix script dropdown display
+_ setup error notifications
+_ setup hotswap
+_ setup keybindings
+_ fix reliance on $interval
+
+x show widget
   x create attribute for widget template id
   x create a template from the id
   x compile it against the scope
@@ -14,10 +24,5 @@ _ show widget
   x bind widget to real model
   x get it working
   x widget controls its own visibility
-  _ build real widget template
-_ fix reversal
-_ show bookmark underline
-_ show code underline
-_ show current bold
-_ fix scripts display
+  x build real widget template
 

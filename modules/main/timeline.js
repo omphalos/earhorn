@@ -40,7 +40,7 @@ angular.module('main').factory('timeline', [
   }
   
   function movePositionBackward(newVal, oldVal) {
-    for(var i = oldVal; i >= newVal; i--)
+    for(var i = oldVal; i > newVal; i--)
       programState.reverse(timeline.history[i])
   }
 
@@ -73,7 +73,12 @@ angular.module('main').factory('timeline', [
   
   timeline.step = function(stepSize) {
     timeline.pause()
-    timeline.position += stepSize
+    var candidate = timeline.position + stepSize
+    if(candidate < 0 || candidate >= timeline.history.length) {
+      console.log('out of range', candidate)
+      return
+    }
+    timeline.position = candidate
   }
   
   timeline.stepForward = function() { 

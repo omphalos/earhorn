@@ -86,7 +86,6 @@ angular.module('main').controller('MainCtrl', [
   }
   
   timeline.$watch('isPlaying()', function(newVal) {
-    console.log('isPlaying $watch')
     if(!newVal) return
     updateCode()
     updateLocation()
@@ -147,6 +146,8 @@ angular.module('main').controller('MainCtrl', [
   }
   
   $scope.getLogText = function(log, key) {
+
+    if(!log) return 'ERROR'
     
     if(log.type === 'String')
       return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
