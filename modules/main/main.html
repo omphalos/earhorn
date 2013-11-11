@@ -49,12 +49,13 @@
       widget-line="widgetLine"
       widget-ch="widgetCh"
       widget-template="widgetTemplate"
+      markers="markers"
       element="editor"/>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
-    <span class="bookmark" ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
+    <span ng-class="{ bookmark: 1, current: key == programState.currentLoc}" ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
   </script>
 
   <script type="text/ng-template" id="widgetTemplate">

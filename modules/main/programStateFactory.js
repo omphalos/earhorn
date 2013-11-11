@@ -85,6 +85,7 @@ angular.module('main').factory('programStateFactory', [
     })
     
     Object.keys(change.scriptStates).forEach(function(key) {
+      console.log('applying script state', key, change.scriptStates[key])
       var script = self.scripts[key] = self.scripts[key] || { logs: {} }
       script.logs = change.scriptStates[key]
     })

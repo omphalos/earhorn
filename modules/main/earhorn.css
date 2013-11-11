@@ -1,0 +1,26 @@
+html { height: 100%; }
+body {
+  font-size: 1em;
+  min-width: 640px;
+  height: 100%;
+  box-sizing: border-box;
+  color: #555;
+}
+main { height: 100%; }
+
+a { text-decoration: none; color: #555; }
+a:hover { text-decoration: underline; }
+
+.icon {
+  height: 1em; width: 1em;  
+  background-size: 100% 100%;
+  display: inline-block;
+  opacity: 0.2;
+}
+.icon:not(.active) { cursor: pointer; }
+.icon { margin: 5px }
+.icon:hover { opacity: 0.35; }
+.icon:active, .icon.active { opacity: 0.5; }
+
+.fade-out { opacity: 0; }
+.fade-in { opacity: 1; transition: opacity 1s ease-in-out; }

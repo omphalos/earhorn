@@ -104,6 +104,41 @@ angular.module('main').directive('editor', [
       scope.$watch(attr.widgetCh, updateWidget)
     }
 
+    //////////////////////////////////
+    // Two-way binding for markers. //
+    //////////////////////////////////
+    
+    if(attr.hasOwnProperty('markers')) {
+      
+      var markers = {}
+      
+      scope.$watch(attr.markers, function(newValue, oldValue) {
+        
+        var newMarkers = scope.$eval(attr.markers) || {}
+        
+        Object.keys(markers).forEach(function(key) {
+
+          if(newMarkers.hasOwnProperty(key)) return
+          
+          // Delete marker.
+          markers[key].clear()
+          delete markers[key]          
+        })
+        
+        Object.keys(newMarkers).forEach(function(key) {
+          
+          if(markers.hasOwnProperty(key)) return
+          
+          // Add marker.
+          var marker = newMarkers[key]
+          markers[key] = editor.markText(
+            marker.from, 
+            marker.to, 
+            marker.options)
+        })
+      }, true)
+    }
+
     ////////////////////////////////////
     // Two-way binding for bookmarks. //
     ////////////////////////////////////

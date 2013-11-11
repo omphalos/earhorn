@@ -90,7 +90,7 @@ angular.module('main').factory('timeline', [
   }
   
   timeline.fastForward = function() {
-    timeline.step(Math.min(timeline.history.length, 1) - timeline.position - 1)
+    timeline.step(timeline.history.length - timeline.position - 1)
   }
 
   timeline.fastBackward = function() {

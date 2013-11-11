@@ -1,12 +1,15 @@
-_ fix reversal
 _ show current bookmark underline
-_ show current code underline
+  whatever is the current bookmark, add the current class to it
+_ fix reversal
+  _ dont reset on message less
+  _ on message loss mark suspicious messages
 _ show hover bold
 _ fix script dropdown display
 _ setup error notifications
 _ setup hotswap
 _ setup keybindings
 _ fix reliance on $interval
+_ swap underline and bold
 
 x show widget
   x create attribute for widget template id
@@ -25,4 +28,9 @@ x show widget
   x get it working
   x widget controls its own visibility
   x build real widget template
+x show current code underline
+  x add currentStartCh
+  x add currentStartLine
+  x resolve cursorch, cursorline vs currentch currentline
+  x marker: editor.markText(
 
