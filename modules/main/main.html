@@ -55,7 +55,11 @@
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
-    <span ng-class="{ bookmark: 1, current: key == programState.currentLoc}" ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
+    <span
+      ng-mouseenter="hover(key,log.loc)"
+      ng-mouseleave="unhover()"
+      ng-class="{ bookmark: 1, current: key == programState.currentLoc}"
+      ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
   </script>
 
   <script type="text/ng-template" id="widgetTemplate">

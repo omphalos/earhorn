@@ -1,9 +1,8 @@
-_ show current bookmark underline
-  whatever is the current bookmark, add the current class to it
 _ fix reversal
   _ dont reset on message less
   _ on message loss mark suspicious messages
 _ show hover bold
+  _ bookmark mouseenter, mouseleave -> update hoverKey
 _ fix script dropdown display
 _ setup error notifications
 _ setup hotswap
@@ -33,4 +32,5 @@ x show current code underline
   x add currentStartLine
   x resolve cursorch, cursorline vs currentch currentline
   x marker: editor.markText(
+x show current bookmark underline
 

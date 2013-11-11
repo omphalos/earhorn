@@ -95,11 +95,35 @@ angular.module('main').controller('MainCtrl', [
   $scope.$watch('programState.currentLoc', updateLocation)
   // $scope.$watch('getCurrentScript().logs', updateLogs, true)
 
+  ///////////////////////////
+  // Hover over bookmarks. //
+  ///////////////////////////
+
+  $scope.hover = function(key, loc) {
+
+    $scope.unhover()
+
+    hoverMarkerKey = 'hover:' + key
+
+    $scope.markers[hoverMarkerKey] = {
+      from: { line: loc.from.line, ch: loc.from.column },
+      to: { line: loc.to.line, ch: loc.to.column },
+      options: { className: 'bookmark-loc' }
+    }
+    
+    console.log(hoverMarkerKey, $scope.markers[hoverMarkerKey])
+  }
+  
+  $scope.unhover = function() {
+    delete $scope.markers[hoverMarkerKey]
+  }
+  
   ///////////////////////////////////////////////////
   // Current program statement marker (underline). //
   ///////////////////////////////////////////////////
 
   var currentMarkerKey = null
+    , hoverMarkerKey = null
   $scope.markers = {}
 
   $scope.$watch('programState.currentLoc', function() {
@@ -108,21 +132,18 @@ angular.module('main').controller('MainCtrl', [
     
     if(!programState.currentLoc) return
     
-    currentMarkerKey = programState.currentLoc
-
-    var location = currentMarkerKey.split(',') // TODO use a loc object
+    var location = programState.currentLoc.split(',') // TODO use a loc object
       , from = { line: +location[0], ch: +location[1] }
       , to = { line: +location[2], ch: +location[3] }
       
+    currentMarkerKey = 'current:' + programState.currentLoc
+
     $scope.markers[currentMarkerKey] = {
       from: from,
       to: to,
       options: { className: 'current-loc' }
     }
   })
-
-  // var s = MainCtrl.getCurrentScript()
-  // s.logs[programState.currentLoc].loc
 
   ////////////////////////////////
   // Support inspection widget. //
