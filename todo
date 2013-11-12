@@ -1,25 +1,30 @@
 _ fix code swap loss
-  _ on code change, clear timeline before the code change
-  two cases, announcements and lost messages
-    dont reset state during message loss
-    during announcement, figure out if the script is a new script
-    maybe the log client or the timeline should track if the announcement is new?
-    dont need pending announcements
+  x dont reset state during message loss
+  on announcement, reset the timeline for that script
+    find the last place in the timeline where that script appeared
+    move the timeline to that position
+    snapshot the programState at that position
+    clear history before that position
+    replace the starting position with the snapshot
+    reset position to 0
 
-_ setup error notification (?)
+_ setup error notification
 _ swap underline and bold
 _ fix script dropdown display
-_ fix overlap iframe
-_ support editScript different from programState.currentScript
+_ fix iframe inspector overlap
+_ in MainCtrl support editScript different from programState.currentScript
 _ fix timeline
   _ dont reset on message loss
   _ on message loss mark suspicious messages
   _ identify other bugs
 _ use earhorn subdirectory
 _ add README for adding to a site
-_ add jquery todomvc example
 _ fix reliance on $interval
 _ setup keybindings
+_ message loss should just incorporate dropped messages into the tail snapshot
+_ message loss should also show a warning that messages were lost
+_ create multi-script test example
+_ add jquery todomvc example
 
 x show widget
   x create attribute for widget template id

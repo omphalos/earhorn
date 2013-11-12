@@ -33,10 +33,10 @@ angular.module('main').factory('programStateFactory', [
       })
       
       // Take script snapshots.
-      Object.keys(record.lostMessageCounts).forEach(function(key) {
+      /* Object.keys(record.lostMessageCounts).forEach(function(key) {
         reverse.scriptStates[key] = 
           self.scripts[key] ? self.scripts[key].log : null
-      })
+      }) */
       
       // Get the previous value.
       reverse.val =
@@ -65,11 +65,11 @@ angular.module('main').factory('programStateFactory', [
         })
       }
       
-      if(record.lostMessageCounts) {
+      /* if(record.lostMessageCounts) {
         Object.keys(record.lostMessageCounts).forEach(function(key) {
           forward.scriptStates[key] = {}
         })
-      }
+      } */
     }
     
     this.applyChange(record.forward)
