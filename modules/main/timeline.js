@@ -17,7 +17,7 @@ angular.module('main').factory('timeline', [
   var timeline = $rootScope.$new()  
     , handlers = {}
     , playing = true
-    , settings = settingsService.load({ maxHistoryLenth: 100 })
+    , settings = settingsService.load({ maxHistoryLength: 100 })
 
   timeline.scriptContents = {}
   timeline.history = []
@@ -33,13 +33,12 @@ angular.module('main').factory('timeline', [
   }
 
   function movePositionForward(newVal, oldVal) {
-    for(var i = oldVal + 1; i <= newVal; i++) {
-      //console.log('applying record', i)
+    for(var i = oldVal + 1; i <= newVal; i++)
       programState.forward(timeline.history[i])
-    }
   }
   
   function movePositionBackward(newVal, oldVal) {
+
     for(var i = oldVal; i > newVal; i--)
       programState.reverse(timeline.history[i])
   }
@@ -47,8 +46,6 @@ angular.module('main').factory('timeline', [
   timeline.$watch('position', function(newVal, oldVal) {
 
     if(newVal === oldVal) return
-
-    //console.log('position changed from', oldVal, 'to', newVal)
 
     movePositionForward(newVal, oldVal)
     
@@ -74,10 +71,7 @@ angular.module('main').factory('timeline', [
   timeline.step = function(stepSize) {
     timeline.pause()
     var candidate = timeline.position + stepSize
-    if(candidate < 0 || candidate >= timeline.history.length) {
-      console.log('out of range', candidate)
-      return
-    }
+    if(candidate < 0 || candidate >= timeline.history.length) return
     timeline.position = candidate
   }
   
@@ -145,7 +139,7 @@ angular.module('main').factory('timeline', [
     // message would exceed the maximum history capacity.
     // Otherwise, information that's important to the user could
     // be pushed out of the timeline.
-    if(!playing && timeline.history.length >= settings.maxHistoryLenth - 1) {
+    if(!playing && timeline.history.length >= settings.maxHistoryLength - 1) {
       lostMessageCounts[record.script] = lostMessageCounts[record.script] || 0
       lostMessageCounts[record.script]++
       return

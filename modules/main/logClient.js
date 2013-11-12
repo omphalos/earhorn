@@ -61,6 +61,28 @@ angular.module('main').factory('logClient', [
     window.removeEventListener('storage', onStorage, false)
   })
 
+  ////////////////
+  // Edit code. //
+  ////////////////
+
+  logClient.edit = function(script, code) {
+
+    localStorage.setItem('earhorn-listener', JSON.stringify({
+      type: 'edit',
+      script: script,
+      body: code,
+      reload: true
+    }))
+  }
+
+  logClient.reset = function(script) {
+
+    localStorage.setItem('earhorn-listener', JSON.stringify({
+      type: 'reset',
+      script: script,
+      reload: true
+    }))
+  }
 
   ///////////////
   // All done. //

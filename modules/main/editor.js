@@ -50,8 +50,7 @@ angular.module('main').directive('editor', [
 
     if(attr.hasOwnProperty('line'))
       scope.$watch(attr.line, function(newValue, oldValue) {
-        //console.log('line', newValue)
-        if(newValue === oldValue) return
+        if(newValue === editor.getCursor().line) return
         editor.setCursor({
           line: scope.$eval(attr.line) || 0,
           ch: editor.getCursor().ch 
@@ -60,8 +59,7 @@ angular.module('main').directive('editor', [
 
     if(attr.hasOwnProperty('ch'))
       scope.$watch(attr.ch, function(newValue, oldValue) {
-        //console.log('ch', newValue)
-        if(newValue === oldValue) return
+        if(newValue === editor.getCursor().ch) return
         editor.setCursor({
           line: editor.getCursor().line,
           ch: scope.$eval(attr.ch) || 0
@@ -69,7 +67,6 @@ angular.module('main').directive('editor', [
       })
       
     editor.on('cursorActivity', _.debounce(function() {
-      //console.log('on cursor activity')
       var cursor = editor.getCursor()
       scope.$apply(function() {
         if(attr.hasOwnProperty('line'))

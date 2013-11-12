@@ -1,14 +1,25 @@
-_ fix reversal
-  _ dont reset on message less
-  _ on message loss mark suspicious messages
-_ show hover bold
-  _ bookmark mouseenter, mouseleave -> update hoverKey
-_ fix script dropdown display
-_ setup error notifications
-_ setup hotswap
-_ setup keybindings
-_ fix reliance on $interval
+_ fix code swap loss
+  _ on code change, clear timeline before the code change
+  two cases, announcements and lost messages
+    dont reset state during message loss
+    during announcement, figure out if the script is a new script
+    maybe the log client or the timeline should track if the announcement is new?
+    dont need pending announcements
+
+_ setup error notification (?)
 _ swap underline and bold
+_ fix script dropdown display
+_ fix overlap iframe
+_ support editScript different from programState.currentScript
+_ fix timeline
+  _ dont reset on message loss
+  _ on message loss mark suspicious messages
+  _ identify other bugs
+_ use earhorn subdirectory
+_ add README for adding to a site
+_ add jquery todomvc example
+_ fix reliance on $interval
+_ setup keybindings
 
 x show widget
   x create attribute for widget template id
@@ -33,4 +44,6 @@ x show current code underline
   x resolve cursorch, cursorline vs currentch currentline
   x marker: editor.markText(
 x show current bookmark underline
+x show hover bold
+x setup hotswap
 

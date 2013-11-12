@@ -45,14 +45,6 @@ angular.module('main').controller('MainCtrl', [
     $scope.timelinePosition = newVal
   })
 
-  // Traversal functions.
-  $scope.fastBackward = function() { console.log('gast backward') }
-  $scope.stepBackward = function() { console.log('step backward') }
-  $scope.pause = function() { console.log('pause') }
-  $scope.play = function() { console.log('play') }
-  $scope.stepForward = function() { console.log('step forward') }
-  $scope.fastForward = function() { console.log('fast forward') }
-
   ////////////////////
   // Program state. //
   ////////////////////
@@ -81,12 +73,13 @@ angular.module('main').controller('MainCtrl', [
     return timeline.isPlaying() ? programState.logs : {}
   }
   
-  $scope.getCurrentScriptLogs = function() {
-    return getCurrentScript().logs
+  $scope.getBookmarks = function() {
+    return $scope.editing ? {} : getCurrentScript().logs
   }
   
   timeline.$watch('isPlaying()', function(newVal) {
     if(!newVal) return
+    $scope.editing = false
     updateCode()
     updateLocation()
   })
@@ -94,6 +87,33 @@ angular.module('main').controller('MainCtrl', [
   $scope.$watch('getCurrentScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
   // $scope.$watch('getCurrentScript().logs', updateLogs, true)
+
+  ////////////////
+  // Edit code. //
+  ////////////////
+  
+  $scope.editing = false
+  
+  var debouncedEdit = _.debounce(function(editScript, newVal) {
+    logClient.edit(editScript, newVal)
+  })
+  
+  $scope.$watch('code', function(newVal, oldVal) {
+    
+    var editScript = programState.currentScript // TODO
+    
+    if(newVal === getCurrentScript().body) return
+    
+    $scope.editing = true
+    
+    timeline.pause()
+    
+    debouncedEdit(editScript, newVal)
+  })
+
+  $scope.reset = function(script) {
+    logClient.reset(script || programState.currentScript)
+  }
 
   ///////////////////////////
   // Hover over bookmarks. //
@@ -110,8 +130,6 @@ angular.module('main').controller('MainCtrl', [
       to: { line: loc.to.line, ch: loc.to.column },
       options: { className: 'bookmark-loc' }
     }
-    
-    console.log(hoverMarkerKey, $scope.markers[hoverMarkerKey])
   }
   
   $scope.unhover = function() {
