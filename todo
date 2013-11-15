@@ -1,12 +1,9 @@
 _ fix code swap loss
   x dont reset state during message loss
-  on announcement, reset the timeline for that script
-    find the last place in the timeline where that script appeared
-    move the timeline to that position
-    snapshot the programState at that position
-    clear history before that position
-    replace the starting position with the snapshot
-    reset position to 0
+  x on announcement, remove the script from the timeline
+  _ fix position $watch
+    add getPosition, setPosition
+
 
 _ setup error notification
 _ swap underline and bold
@@ -25,6 +22,9 @@ _ message loss should just incorporate dropped messages into the tail snapshot
 _ message loss should also show a warning that messages were lost
 _ create multi-script test example
 _ add jquery todomvc example
+_ remove .logs indirection in programState
+_ remove script contents
+_ fix cursor position on startup
 
 x show widget
   x create attribute for widget template id

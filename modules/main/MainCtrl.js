@@ -35,13 +35,13 @@ angular.module('main').controller('MainCtrl', [
   $scope.timeline = timeline
   
   // Two-way binding for position.
-  $scope.timelinePosition = timeline.position
+  $scope.timelinePosition = timeline.getPosition()
   
   $scope.$watch('timelinePosition', function(newVal, oldVal) {
-    timeline.position = +newVal
+    timeline.setPosition(+newVal)
   })
   
-  timeline.$watch('position', function(newVal, oldVal) {
+  timeline.$watch('getPosition()', function(newVal, oldVal) {
     $scope.timelinePosition = newVal
   })
 
@@ -250,6 +250,18 @@ angular.module('main').controller('MainCtrl', [
   if(iframeIndex >= 0)
     $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
   
+  //////////////////////
+  // Abandon changes. //
+  //////////////////////
+
+  $scope.abandonAllChanges = function() {
+    Object.keys(localStorage).filter(function(key) {
+      return !key.indexOf('earhorn-script-')
+    }).forEach(function(key) {
+      localStorage.removeItem(key)
+    })
+  }
+  
   /////////////////////////////////
   // Create a console interface. //
   /////////////////////////////////
@@ -267,6 +279,9 @@ angular.module('main').controller('MainCtrl', [
     play: timeline.play,
     stepForward: timeline.stepForward,
     fastForward: timeline.fastForward,   
+
+    // Miscellaneous utilities.
+    abandonAllChanges: $scope.abandonAllChanges,
     
     // Expose the $scope for ease of development.
     timeline: timeline,

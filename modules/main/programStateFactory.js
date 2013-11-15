@@ -10,6 +10,9 @@ angular.module('main').factory('programStateFactory', [
   ProgramState.prototype.forward = function(record) {
 
     var self = this
+    
+    if(!record)
+      throw 'invalid record'
 
     if(!record.reverse) {
       
@@ -23,14 +26,14 @@ angular.module('main').factory('programStateFactory', [
       }
 
       // Get the previous script bodies.
-      Object.keys(record.announcements).forEach(function(key) {
+      /*Object.keys(record.announcements).forEach(function(key) {
       
         reverse.scriptBodies[key] = 
           self.scripts[key] ? self.scripts[key].body : null
       
         reverse.scriptStates[key] =
           self.scripts[key] ? self.scripts[key].log : null
-      })
+      })*/
       
       // Take script snapshots.
       /* Object.keys(record.lostMessageCounts).forEach(function(key) {
@@ -57,13 +60,13 @@ angular.module('main').factory('programStateFactory', [
         scriptStates: {}
       }
       
-      if(record.announcements) {
+      /*if(record.announcements) {
         
         Object.keys(record.announcements).forEach(function(key) {
           forward.scriptBodies[key] = record.announcements[key]
           forward.scriptStates[key] = {}
         })
-      }
+      }*/
       
       /* if(record.lostMessageCounts) {
         Object.keys(record.lostMessageCounts).forEach(function(key) {
@@ -94,7 +97,8 @@ angular.module('main').factory('programStateFactory', [
     this.currentScript = change.currentScript
     this.currentLoc = change.currentLoc
 
-    if(!changingScript) return console.log('no changing script')
+    if(!changingScript)
+      return console.log('no changing script')
     
     if(change.val) {
 

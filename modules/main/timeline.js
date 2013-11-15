@@ -18,18 +18,32 @@ angular.module('main').factory('timeline', [
     , handlers = {}
     , playing = true
     , settings = settingsService.load({ maxHistoryLength: 100 })
+    , position = -1
 
   timeline.scriptContents = {}
   timeline.history = []
-  timeline.position = -1
   timeline.programState = programStateFactory.create()
   
   ///////////////////////
   // Player interface. //
   ///////////////////////
   
+  timeline.setPosition = function(newVal) {
+
+    movePosition(newVal, position)
+
+    if(newVal !== getEndPosition())
+      timeline.pause()
+      
+    position = newVal
+  }
+  
+  timeline.getPosition = function() {
+    return position
+  }
+  
   function getEndPosition() {
-    return Math.max(timeline.history.length - 1, 0)
+    return timeline.history.length - 1
   }
 
   function movePositionForward(newVal, oldVal) {
@@ -42,25 +56,18 @@ angular.module('main').factory('timeline', [
     for(var i = oldVal; i > newVal; i--)
       programState.reverse(timeline.history[i])
   }
-
-  timeline.$watch('position', function(newVal, oldVal) {
-
-    if(newVal === oldVal) return
-
+  
+  function movePosition(newVal, oldVal) {
     movePositionForward(newVal, oldVal)
-    
     movePositionBackward(newVal, oldVal)
-    
-    if(newVal !== getEndPosition())
-      timeline.pause()
-  })
+  }
   
   timeline.isPlaying = function() {
     return playing
   }
 
   timeline.play = function() {
-    timeline.position = getEndPosition()
+    timeline.setPosition(getEndPosition())
     playing = true
   }
 
@@ -70,9 +77,9 @@ angular.module('main').factory('timeline', [
   
   timeline.step = function(stepSize) {
     timeline.pause()
-    var candidate = timeline.position + stepSize
+    var candidate = position + stepSize
     if(candidate < 0 || candidate >= timeline.history.length) return
-    timeline.position = candidate
+    timeline.setPosition(candidate)
   }
   
   timeline.stepForward = function() { 
@@ -84,19 +91,18 @@ angular.module('main').factory('timeline', [
   }
   
   timeline.fastForward = function() {
-    timeline.step(timeline.history.length - timeline.position - 1)
+    timeline.step(timeline.history.length - position - 1)
   }
 
   timeline.fastBackward = function() {
-    timeline.step(-timeline.position)
+    timeline.step(-position)
   }
 
   /////////////////////
   // Route messages. //
   /////////////////////
 
-  var pendingAnnouncements = {}
-    , lostMessageCounts = {}
+  var lostMessageCounts = {}
 
   logClient.$on('main.logClient', function(evt, records) {
 
@@ -117,8 +123,26 @@ angular.module('main').factory('timeline', [
   ///////////////////////////
   
   handlers.announcement = function(record) {
-    pendingAnnouncements[record.script] = record.body
+
     timeline.scriptContents[record.script] = record.body
+        
+    programState.scripts[record.script] = { body: record.body, logs: {} }
+    
+    // Find the last place in the timeline where the script appeared.
+    var lastIndex = _(timeline.history).
+      pluck('script').
+      lastIndexOf(record.script)
+
+    if(lastIndex < 0)
+      return
+
+    // Move to after this location in history.
+    if(!playing && position <= lastIndex)
+      movePosition(lastIndex + 1, position)
+
+    // Finally remove references to this script from history.
+    timeline.splice(0, lastIndex + 1)
+    position -= lastIndex
   }
   
   //////////////////
@@ -145,10 +169,7 @@ angular.module('main').factory('timeline', [
       return
     }
 
-    // Add any pending announcements to this record, publishing them together.
-    record.announcements = pendingAnnouncements
-    pendingAnnouncements = {}
-    
+    // Track message loss.
     record.lostMessageCounts = lostMessageCounts
     lostMessageCounts = {}
     
@@ -157,7 +178,9 @@ angular.module('main').factory('timeline', [
 
     if(playing) {
 
-      timeline.position = getEndPosition()
+      timeline.setPosition(getEndPosition())
+
+      programState.forward(record)
 
       // Max sure history doesn't overflow its capacity.
       if(timeline.history.length >= settings.maxHistoryLength)
