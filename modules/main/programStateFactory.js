@@ -80,6 +80,9 @@ angular.module('main').factory('programStateFactory', [
   
   ProgramState.prototype.applyChange = function(change) {
     
+    if(!change) 
+      throw 'invalid change'
+    
     var self = this
     
     Object.keys(change.scriptBodies).forEach(function(key) {

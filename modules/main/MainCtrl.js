@@ -115,9 +115,19 @@ angular.module('main').controller('MainCtrl', [
     logClient.reset(script || programState.currentScript)
   }
 
-  ///////////////////////////
-  // Hover over bookmarks. //
-  ///////////////////////////
+  ///////////////////
+  // Text markers. //
+  ///////////////////
+
+  $scope.markers = {}
+
+  var currentMarkerKey = null
+    , hoverMarkerKey = null
+    , noMarkers = {}
+
+  $scope.getMarkers = function() {
+    return $scope.editing ? noMarkers : $scope.markers
+  }
 
   $scope.hover = function(key, loc) {
 
@@ -136,14 +146,6 @@ angular.module('main').controller('MainCtrl', [
     delete $scope.markers[hoverMarkerKey]
   }
   
-  ///////////////////////////////////////////////////
-  // Current program statement marker (underline). //
-  ///////////////////////////////////////////////////
-
-  var currentMarkerKey = null
-    , hoverMarkerKey = null
-  $scope.markers = {}
-
   $scope.$watch('programState.currentLoc', function() {
 
     delete $scope.markers[currentMarkerKey]

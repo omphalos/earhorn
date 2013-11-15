@@ -136,19 +136,15 @@ angular.module('main').factory('timeline', [
     if(lastIndex < 0)
       return
 
-    // Move to after this location in history.
-    if(!playing && position <= lastIndex) {
-      console.log('moving position to ', lastIndex + 1, 'from', position)
-      timeline.setPosition(lastIndex + 1)
-    }
+    var lastValid = lastIndex + 1
 
-    console.log('splicing history', timeline.history, position)
+    // Move to after this location in history.
+    if(!playing && position < lastValid)
+      timeline.setPosition(lastValid)
 
     // Finally remove references to this script from history.
-    timeline.history.splice(0, lastIndex + 1)
-    position -= lastIndex
-
-    console.log('spliced history', timeline.history, position)
+    timeline.history.splice(0, lastValid)
+    position -= lastValid + 1
   }
   
   //////////////////

@@ -1,19 +1,25 @@
 _ fix code swap loss
+  _ look for message before current message without reverse
   x dont reset state during message loss
   x on announcement, remove the script from the timeline
   x fix position $watch
     x add getPosition, setPosition
-
+_ fix widgets during edit
+_ fix cursor moving during edit
+_ fix default script selection when script is empty
+_ fix timeline
+  _ dont reset on message loss
+  _ on message loss mark suspicious messages
+  _ identify other bugs
+_ in MainCtrl support editScript different from programState.currentScript
+_ remove .logs indirection in programState
+_ remove script contents (?)
+_ consolidate programState logic such that IT (not timeline) handles script rebuilding during announcement
 
 _ setup error notification
 _ swap underline and bold
 _ fix script dropdown display
 _ fix iframe inspector overlap
-_ in MainCtrl support editScript different from programState.currentScript
-_ fix timeline
-  _ dont reset on message loss
-  _ on message loss mark suspicious messages
-  _ identify other bugs
 _ use earhorn subdirectory
 _ add README for adding to a site
 _ fix reliance on $interval
@@ -22,10 +28,6 @@ _ message loss should just incorporate dropped messages into the tail snapshot
 _ message loss should also show a warning that messages were lost
 _ create multi-script test example
 _ add jquery todomvc example
-_ remove .logs indirection in programState
-_ remove script contents
-_ fix cursor position on startup
-_ consolidate programState logic such that it handles script rebuilding during announcement
 
 x show widget
   x create attribute for widget template id
