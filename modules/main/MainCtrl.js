@@ -51,7 +51,7 @@ angular.module('main').controller('MainCtrl', [
   
   var programState = $scope.programState = timeline.programState
 
-  $scope.hasScripts = function() {
+  $scope.getScriptCount = function() {
     return Object.keys(timeline.programState.scripts).length
   }
   

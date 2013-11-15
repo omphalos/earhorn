@@ -1,20 +1,17 @@
+_ remove script contents
 _ disable editing when no script is selected
 _ in MainCtrl support editScript different from programState.currentScript
 _ remove .logs indirection in programState
-_ remove script contents (?)
-_ consolidate programState logic such that IT (not timeline) handles script rebuilding during announcement
-
 _ setup error notification
 _ swap underline and bold
-_ fix script dropdown display
 _ fix iframe inspector overlap
 _ use earhorn subdirectory
-_ add README for adding to a site
 _ fix reliance on $interval
+_ add README for adding to a site
 _ setup keybindings
+_ create multi-script test example
 _ message loss should just incorporate dropped messages into the tail snapshot
 _ message loss should also show a warning that messages were lost
-_ create multi-script test example
 _ add jquery todomvc example
 
 x show widget
@@ -55,4 +52,6 @@ x fix timeline
   x identify other bugs
 x fix cursor moving during edit
 x fix default script selection when script is empty
+x consolidate programState logic such that IT (not timeline) handles script rebuilding during announcement
+x fix script dropdown display
 

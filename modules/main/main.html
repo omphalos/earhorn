@@ -2,7 +2,7 @@
 
   <nav>
     <div class="top">
-      <span ng-show="hasScripts()">
+      <span ng-show="getScriptCount() > 1">
         <select ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>

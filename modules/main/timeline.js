@@ -20,7 +20,6 @@ angular.module('main').factory('timeline', [
     , settings = settingsService.load({ maxHistoryLength: 100 })
     , position = -1
 
-  timeline.scriptContents = {}
   timeline.history = []
   timeline.programState = programStateFactory.create()
   
@@ -124,8 +123,6 @@ angular.module('main').factory('timeline', [
   
   handlers.announcement = function(record) {
 
-    timeline.scriptContents[record.script] = record.body
-
     // Find the last place in the timeline where the script appeared.
     var lastIndex = _(timeline.history).
       pluck('script').
@@ -156,7 +153,7 @@ angular.module('main').factory('timeline', [
     // If we don't have the script associated with the log,
     // we can't really do anything.  We just note that the
     // script is missing and return.
-    if(!timeline.scriptContents[record.script]) {
+    if(!programState.scripts[record.script]) {
       missingScripts[record.script] = null
       return
     }
