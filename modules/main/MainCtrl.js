@@ -60,10 +60,12 @@ angular.module('main').controller('MainCtrl', [
   }
   
   function updateCode() {
+    if($scope.editing) return
     $scope.code = getCurrentScript().body
   }
   
   function updateLocation() {
+    if($scope.editing) return
     var location = (programState.currentLoc || '').split(',')
     $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
