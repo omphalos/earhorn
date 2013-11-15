@@ -1,8 +1,8 @@
 _ fix code swap loss
   x dont reset state during message loss
   x on announcement, remove the script from the timeline
-  _ fix position $watch
-    add getPosition, setPosition
+  x fix position $watch
+    x add getPosition, setPosition
 
 
 _ setup error notification
@@ -25,6 +25,7 @@ _ add jquery todomvc example
 _ remove .logs indirection in programState
 _ remove script contents
 _ fix cursor position on startup
+_ consolidate programState logic such that it handles script rebuilding during announcement
 
 x show widget
   x create attribute for widget template id

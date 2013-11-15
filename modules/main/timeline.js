@@ -47,13 +47,13 @@ angular.module('main').factory('timeline', [
   }
 
   function movePositionForward(newVal, oldVal) {
-    for(var i = oldVal + 1; i <= newVal; i++)
+    for(var i = oldVal + 1; i <= newVal && i < timeline.history.length; i++)
       programState.forward(timeline.history[i])
   }
   
   function movePositionBackward(newVal, oldVal) {
 
-    for(var i = oldVal; i > newVal; i--)
+    for(var i = oldVal; i > newVal && i >= 0; i--)
       programState.reverse(timeline.history[i])
   }
   
@@ -137,12 +137,18 @@ angular.module('main').factory('timeline', [
       return
 
     // Move to after this location in history.
-    if(!playing && position <= lastIndex)
-      movePosition(lastIndex + 1, position)
+    if(!playing && position <= lastIndex) {
+      console.log('moving position to ', lastIndex + 1, 'from', position)
+      timeline.setPosition(lastIndex + 1)
+    }
+
+    console.log('splicing history', timeline.history, position)
 
     // Finally remove references to this script from history.
-    timeline.splice(0, lastIndex + 1)
+    timeline.history.splice(0, lastIndex + 1)
     position -= lastIndex
+
+    console.log('spliced history', timeline.history, position)
   }
   
   //////////////////

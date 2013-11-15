@@ -17,20 +17,18 @@
 
     var record = JSON.parse(evt.newValue)
 
-    if(record.type === 'announcement-request') {
+    if(record.type === 'announcement-request' &&
+      scripts.hasOwnProperty(record.script)) {
 
-      var scriptName = evt.script
-      if(!scripts[scriptName]) return
-      
-      announce(scriptName)      
+      announce(record.script)      
 
-    } else if(record.type === 'edit' && scripts[record.script]) {
+    } else if(record.type === 'edit' &&
+      scripts.hasOwnProperty(record.script)) {
 
-      if(scripts[record.script]) {
-        localStorage.setItem('earhorn-script-' + record.script, record.body)
-        if(record.reload) // TODO: could do hot code-swapping instead ...
-          location.reload(true)
-      }
+      localStorage.setItem('earhorn-script-' + record.script, record.body)
+      console.log('applying edit')
+      if(record.reload) // TODO: could do hot code-swapping instead ...
+        location.reload(true)
 
     } else if(record.type === 'reset' && scripts[record.script]) {
 
@@ -55,20 +53,22 @@
   function earhorn$(scope, name, fn) {
   
     // Get the function body.
-    var sessionFn = localStorage.getItem('earhorn-script-' + name)
+    var sessionFnKey = 'earhorn-script-' + name
       , fnStr = fn.toString()
       
-    if(sessionFn) console.log('using copy of code in session storage for', name)
-  
-    var body = sessionFn
+    var body
     
-    if(!body) {
+    if(!localStorage.hasOwnProperty(sessionFnKey)) {
       
       body = fnStr.substring(
       fnStr.indexOf('{') + 1,
       fnStr.lastIndexOf('}'))
       
       while(body[0] === '\n') body = body.slice(1)
+    } else {
+      
+      body = localStorage.getItem(sessionFnKey)
+      console.log('using copy of code in session storage for', name)
     }
   
     scripts[name] = body
