@@ -7,6 +7,14 @@ angular.module('main').factory('programStateFactory', [
     this.scripts = {}
   }
   
+  ProgramState.prototype.announce = function(script, body) {
+
+    this.scripts[script] = { body: body, logs: {} }
+    
+    if(!this.currentScript)
+      this.currentScript = script
+  }
+  
   ProgramState.prototype.forward = function(record) {
 
     var self = this

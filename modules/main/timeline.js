@@ -125,26 +125,26 @@ angular.module('main').factory('timeline', [
   handlers.announcement = function(record) {
 
     timeline.scriptContents[record.script] = record.body
-        
-    programState.scripts[record.script] = { body: record.body, logs: {} }
-    
+
     // Find the last place in the timeline where the script appeared.
     var lastIndex = _(timeline.history).
       pluck('script').
       lastIndexOf(record.script)
 
-    if(lastIndex < 0)
-      return
+    if(lastIndex >= 0) {
 
-    var lastValid = lastIndex + 1
-
-    // Move to after this location in history.
-    if(!playing && position < lastValid)
-      timeline.setPosition(lastValid)
-
-    // Finally remove references to this script from history.
-    timeline.history.splice(0, lastValid)
-    position -= lastValid + 1
+      var lastValid = lastIndex + 1
+  
+      // Move to after this location in history.
+      if(!playing && position < lastValid)
+        timeline.setPosition(lastValid)
+      
+      // Finally remove references to this script from history.
+      timeline.history.splice(0, lastValid)
+      position -= lastValid + 1
+    }
+    
+    programState.announce(record.script, record.body)
   }
   
   //////////////////

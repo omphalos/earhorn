@@ -1,5 +1,3 @@
-_ fix cursor moving during edit
-_ fix default script selection when script is empty
 _ disable editing when no script is selected
 _ in MainCtrl support editScript different from programState.currentScript
 _ remove .logs indirection in programState
@@ -55,4 +53,6 @@ x fix timeline
   x dont reset on message loss
   x on message loss mark suspicious messages
   x identify other bugs
+x fix cursor moving during edit
+x fix default script selection when script is empty
 
