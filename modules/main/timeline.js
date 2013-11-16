@@ -134,11 +134,12 @@ angular.module('main').factory('timeline', [
   
       // Move to after this location in history.
       if(!playing && position < lastValid)
-        timeline.setPosition(lastValid)
-      
+        timeline.setPosition(Math.min(lastValid, timeline.history.length - 1))
+
       // Finally remove references to this script from history.
       timeline.history.splice(0, lastValid)
-      position -= lastValid + 1
+      
+      position -= lastValid
     }
     
     programState.announce(record.script, record.body)

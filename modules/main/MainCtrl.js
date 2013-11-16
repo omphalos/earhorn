@@ -259,11 +259,12 @@ angular.module('main').controller('MainCtrl', [
   //////////////////////
 
   $scope.abandonAllChanges = function() {
-    Object.keys(localStorage).filter(function(key) {
-      return !key.indexOf('earhorn-script-')
-    }).forEach(function(key) {
-      localStorage.removeItem(key)
+    
+    Object.keys(programState.scripts).forEach(function(script) {
+      logClient.reset(script)
     })
+    
+    timeline.play()
   }
   
   /////////////////////////////////

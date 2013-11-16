@@ -1,18 +1,32 @@
-_ remove script contents
+_ clean up abandonAllChanges
+  x for each script, reset it
+  _ fix: edit script, then call abandonAll
+_ set current script in title
 _ disable editing when no script is selected
-_ in MainCtrl support editScript different from programState.currentScript
+  _ open without iframe
+  _ verify editing is disabled
 _ remove .logs indirection in programState
+_ support abandoning changes (x next to dropdown)
 _ setup error notification
+_ use earhorn subdirectory
 _ swap underline and bold
 _ fix iframe inspector overlap
-_ use earhorn subdirectory
 _ fix reliance on $interval
 _ add README for adding to a site
-_ setup keybindings
 _ create multi-script test example
+  _ in MainCtrl support editScript different from programState.currentScript
 _ message loss should just incorporate dropped messages into the tail snapshot
 _ message loss should also show a warning that messages were lost
 _ add jquery todomvc example
+_ setup keybindings
+_ fix editing from multiple places
+_ autocomplete
+_ save to file
+_ enhance traversal
+  _ traverse line logs
+  _ go to line
+  _ traverse errors
+  _ step over, step in, step out
 
 x show widget
   x create attribute for widget template id
@@ -54,4 +68,4 @@ x fix cursor moving during edit
 x fix default script selection when script is empty
 x consolidate programState logic such that IT (not timeline) handles script rebuilding during announcement
 x fix script dropdown display
-
+x remove script contents
