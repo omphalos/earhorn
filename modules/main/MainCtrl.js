@@ -71,10 +71,6 @@ angular.module('main').controller('MainCtrl', [
     $scope.currentCh = +location[3]
   }
 
-  $scope.getLogs = function() {
-    return timeline.isPlaying() ? programState.logs : {}
-  }
-  
   $scope.getBookmarks = function() {
     return $scope.editing ? {} : getCurrentScript().logs
   }
@@ -88,7 +84,6 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.$watch('getCurrentScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
-  // $scope.$watch('getCurrentScript().logs', updateLogs, true)
 
   ////////////////
   // Edit code. //
@@ -257,6 +252,10 @@ angular.module('main').controller('MainCtrl', [
   //////////////////////
   // Abandon changes. //
   //////////////////////
+
+  $scope.abandonChanges = function() {
+    logClient.reset(programState.currentScript)
+  }
 
   $scope.abandonAllChanges = function() {
     

@@ -7,12 +7,16 @@ angular.module('main').factory('programStateFactory', [
     this.scripts = {}
   }
   
-  ProgramState.prototype.announce = function(script, body) {
+  ProgramState.prototype.announce = function(announcement) {
 
-    this.scripts[script] = { body: body, logs: {} }
+    this.scripts[announcement.script] = {
+      body: announcement.body,
+      modified: announcement.modified,
+      logs: {}
+    }
     
     if(!this.currentScript)
-      this.currentScript = script
+      this.currentScript = announcement.script
   }
   
   ProgramState.prototype.forward = function(record) {
@@ -28,26 +32,8 @@ angular.module('main').factory('programStateFactory', [
         currentLoc: self.currentLoc,
         currentScript: self.currentScript,
         script: record.script,
-        loc: record.loc,
-        scriptBodies: {},
-        scriptStates: {}
+        loc: record.loc
       }
-
-      // Get the previous script bodies.
-      /*Object.keys(record.announcements).forEach(function(key) {
-      
-        reverse.scriptBodies[key] = 
-          self.scripts[key] ? self.scripts[key].body : null
-      
-        reverse.scriptStates[key] =
-          self.scripts[key] ? self.scripts[key].log : null
-      })*/
-      
-      // Take script snapshots.
-      /* Object.keys(record.lostMessageCounts).forEach(function(key) {
-        reverse.scriptStates[key] = 
-          self.scripts[key] ? self.scripts[key].log : null
-      }) */
       
       // Get the previous value.
       reverse.val =
@@ -63,24 +49,8 @@ angular.module('main').factory('programStateFactory', [
         val: record.val,
         currentLoc: record.loc,
         currentScript: record.script,
-        script: record.script,
-        scriptBodies: {},
-        scriptStates: {}
+        script: record.script
       }
-      
-      /*if(record.announcements) {
-        
-        Object.keys(record.announcements).forEach(function(key) {
-          forward.scriptBodies[key] = record.announcements[key]
-          forward.scriptStates[key] = {}
-        })
-      }*/
-      
-      /* if(record.lostMessageCounts) {
-        Object.keys(record.lostMessageCounts).forEach(function(key) {
-          forward.scriptStates[key] = {}
-        })
-      } */
     }
     
     this.applyChange(record.forward)
@@ -92,17 +62,6 @@ angular.module('main').factory('programStateFactory', [
       throw 'invalid change'
     
     var self = this
-    
-    Object.keys(change.scriptBodies).forEach(function(key) {
-      var script = self.scripts[key] = self.scripts[key] || { logs: {} }
-      script.body = change.scriptBodies[key]
-    })
-    
-    Object.keys(change.scriptStates).forEach(function(key) {
-      console.log('applying script state', key, change.scriptStates[key])
-      var script = self.scripts[key] = self.scripts[key] || { logs: {} }
-      script.logs = change.scriptStates[key]
-    })
     
     var changingScript = this.scripts[change.script]
     this.currentScript = change.currentScript

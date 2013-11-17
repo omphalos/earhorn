@@ -142,7 +142,7 @@ angular.module('main').factory('timeline', [
       position -= lastValid
     }
     
-    programState.announce(record.script, record.body)
+    programState.announce(record)
   }
   
   //////////////////

@@ -2,10 +2,11 @@
 
   <nav>
     <div class="top">
-      <span ng-show="getScriptCount() > 1">
+      <span ng-show="getScriptCount()">
         <select ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
+        <button ng-show="getCurrentScript().modified" ng-click="abandonChanges()" title="Abandon changes.">X</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>

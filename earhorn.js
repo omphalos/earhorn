@@ -17,26 +17,24 @@
 
     var record = JSON.parse(evt.newValue)
 
-    if(record.type === 'announcement-request' &&
-      scripts.hasOwnProperty(record.script)) {
+    if(!scripts.hasOwnProperty(record.script)) 
+      return
 
+    if(record.type === 'announcement-request')
       announce(record.script)      
 
-    } else if(record.type === 'edit' &&
-      scripts.hasOwnProperty(record.script)) {
+    else if(record.type === 'edit') {
 
       localStorage.setItem('earhorn-script-' + record.script, record.body)
       console.log('applying edit', record.script, record.body)
       if(record.reload) // TODO: could do hot code-swapping instead ...
         location.reload(true)
 
-    } else if(record.type === 'reset' && scripts[record.script]) {
+    } else if(record.type === 'reset') {
 
-      if(scripts[record.script]) {
-        localStorage.removeItem('earhorn-script-' + record.script)
-        if(record.reload) // TODO: could do hot code-swapping instead ...
-          location.reload(true)
-      }
+      localStorage.removeItem('earhorn-script-' + record.script)
+      if(record.reload) // TODO: could do hot code-swapping instead ...
+        location.reload(true)
     }
   }
 
@@ -46,7 +44,8 @@
     send({
       type: 'announcement',
       script: name,
-      body: scripts[name]
+      modified: scripts[name].modified,
+      body: scripts[name].body
     })
   }
 
@@ -54,24 +53,28 @@
   
     // Get the function body.
     var sessionFnKey = 'earhorn-script-' + name
+      , modified = localStorage.hasOwnProperty(sessionFnKey)
       , fnStr = fn.toString()
       
     var body
     
-    if(!localStorage.hasOwnProperty(sessionFnKey)) {
+    if(modified) {
+      
+      body = localStorage.getItem(sessionFnKey)
+      console.log('using copy of code in session storage for', name)
+    } else {
       
       body = fnStr.substring(
       fnStr.indexOf('{') + 1,
       fnStr.lastIndexOf('}'))
       
       while(body[0] === '\n') body = body.slice(1)
-    } else {
-      
-      body = localStorage.getItem(sessionFnKey)
-      console.log('using copy of code in session storage for', name)
     }
   
-    scripts[name] = body
+    scripts[name] = {
+      body: body,
+      modified: modified
+    }
     announce(name)
   
     function isExpression(type) {
