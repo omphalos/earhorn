@@ -254,10 +254,14 @@ angular.module('main').controller('MainCtrl', [
   //////////////////////
 
   $scope.abandonChanges = function() {
+    $scope.editing = false
     logClient.reset(programState.currentScript)
+    timeline.play()
   }
 
   $scope.abandonAllChanges = function() {
+    
+    $scope.editing = false
     
     Object.keys(programState.scripts).forEach(function(script) {
       logClient.reset(script)
