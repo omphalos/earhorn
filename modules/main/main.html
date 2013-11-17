@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <span class="continue-message fade-out">Press play to continue.</span-->
+    <span class="continue-message fade-out">Press play to continue.</span>
     <!--span class="error">
       <span title="Go to error" class="error icon"></span>
     </span-->
@@ -51,6 +51,14 @@
       markers="getMarkers()"
       element="editor"/>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
+    <!--iframe ng-if="!iframe">
+      <html>
+      <body>
+        <script>console.log('sandbox')</script>
+        <script src="sandbox.js"></script>
+      </body>
+      </html>
+    </iframe-->
   </div>
 
   <script type="text/ng-template" id="bookmarkTemplate">
