@@ -87,9 +87,9 @@ iframe {
 .main-container .widget-label.Object { color: brown; }
 .main-container .widget-label.Array { color: gray; }
 
-.main-container .bookmark-loc { font-weight: bold; }
-.main-container .current-loc { text-decoration: underline; }
-.main-container .current { text-decoration: underline; }
-.main-container .bookmark:hover { font-weight: bold; }
+.main-container .bookmark-loc { text-decoration: underline; }
+.main-container .current-loc { font-weight: bold; }
+.main-container .current { font-weight: bold; }
+.main-container .bookmark:hover { text-decoration: underline; }
 
 .main-container .continue-message { font-style: italic; }

@@ -2,7 +2,7 @@ _ review/fix extra code change messages
 _ setup error notification
 _ better script display
 _ use earhorn subdirectory
-_ swap underline and bold
+_ better mac styling (gray not black)
 _ fix iframe inspector overlap
 _ fix reliance on $interval
 _ add README for adding to a site
@@ -79,3 +79,4 @@ x clean up abandonAllChanges
 x remove .logs indirection in programState (cancel)
 x support abandoning changes (x next to dropdown)
   x announcement should state when the script is altered
+x swap underline and bold
