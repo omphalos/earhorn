@@ -1,4 +1,4 @@
-<div class="main-container">
+<div ng-class="{ 'main-container': 1, playing: timeline.isPlaying(), paused: !timeline.isPlaying() }">
 
   <nav>
     <div class="top">
@@ -26,7 +26,6 @@
       </div>
     </div>
 
-    <span class="continue-message fade-out">Press play to continue.</span>
     <!--span class="error">
       <span title="Go to error" class="error icon"></span>
     </span-->

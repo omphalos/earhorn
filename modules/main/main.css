@@ -1,6 +1,17 @@
 .main-container { height: 100%; }
 .main-container nav { padding: 1em; height: 7em; }
-.main-container .main-content { border-top: 1px solid #555; }
+.main-container .main-content { border-top: 1px solid; }
+.main-container editor.half .CodeMirror { border-right: 1px solid; }
+.main-container.playing .main-content, .main-container.playing editor.half .CodeMirror {
+  border-color: green;
+  transition: border-color 1s;
+}
+.main-container.paused .main-content, .main-container.paused editor.half .CodeMirror {
+  border-color: orange;
+  transition: border-color 1s;
+}
+.main-container editor.half .CodeMirror { left: 0; right: 50%; }
+.main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
 
 .main-container .CodeMirror {  
   width: auto;
@@ -9,9 +20,6 @@
   bottom: 0;
   height: auto; 
 }
-
-.main-container editor.half .CodeMirror { left: 0; right: 50%; border-right: 1px solid #555; }
-.main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
 
 iframe {
   width:  50%;
@@ -92,4 +100,3 @@ iframe {
 .main-container .current { font-weight: bold; }
 .main-container .bookmark:hover { text-decoration: underline; }
 
-.main-container .continue-message { font-style: italic; }
