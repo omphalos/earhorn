@@ -1,4 +1,3 @@
-_ review/fix extra code change messages
 _ setup error notification
 _ better script display
 _ use earhorn subdirectory
@@ -80,3 +79,4 @@ x remove .logs indirection in programState (cancel)
 x support abandoning changes (x next to dropdown)
   x announcement should state when the script is altered
 x swap underline and bold
+x review/fix extra code change messages

@@ -33,9 +33,9 @@ angular.module('main').directive('editor', [
     var lastReadCodeValue
 
     scope.$watch(attr.code, function(newValue, oldValue) {
-      console.log('code change')
-      if(newValue !== oldValue && newValue !== lastReadCodeValue)
-        editor.setValue(newValue || '')
+      if(newValue === oldValue || newValue === lastReadCodeValue) return
+      // console.log('code change', newValue, oldValue)
+      editor.setValue(newValue || '')
     })
 
     editor.on('change', _.debounce(function() {
