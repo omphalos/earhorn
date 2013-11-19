@@ -12,6 +12,7 @@ angular.module('main').factory('programStateFactory', [
     this.scripts[announcement.script] = {
       body: announcement.body,
       modified: announcement.modified,
+      parseError: announcement.parseError,
       logs: {}
     }
     

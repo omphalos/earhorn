@@ -162,6 +162,18 @@ angular.module('main').controller('MainCtrl', [
     }
   })
 
+  /////////////
+  // Errors. //
+  /////////////
+
+  $scope.hasParseErrors = function() {  
+    return _(programState.scripts).
+      pluck('parseError').
+      filter(function(x) { return x }).
+      value().
+      length
+  }
+
   ////////////////////////////////
   // Support inspection widget. //
   ////////////////////////////////

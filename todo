@@ -1,11 +1,17 @@
-_ stuff required for publication
+_ stuff required for release 1
   _ set up esprima error notification
+    x figure out how i want to present these errors
+    x earhorn should publish parse errors
+    x show red exclamation mark by script box when any script has a parse error
+    _ for a parse error script, the offending line should be highlighted
+    x they should appear at the top (for ease of development)
+    _ clicking on it should navigate the user to the error
+    _ improve dropdown and button styling
   _ fix reliance on $interval
   _ settings
     _ namespace settings
     _ support settings swap
-    _ support settings overrides
-  _ set up error logging, depending on settings
+  _ set up error logging, depending on settings (?)
     _ exceptions should be part of the log
     _ exceptions should show up as red widgets
   _ fix iframe inspector overlap
@@ -37,13 +43,15 @@ _ stuff required for publication
   _ better bookmark ui
     _ support tail-only bookmarks
     _ support inline bookmark editing
+  _ better source map support
+  _ handle operational transform-style multi-window edits (dont need to do ot necessarily)
 _ nice-to-haves
   _ (i) set current script in title
   _ (i) save to file
   _ enhance traversal
     _ traverse line logs
-      _ bookmark should support traversal (prev next goto)
-    _ go to line
+      _ bookmark should support traversal (prev goto next <- (.) -> )
+    _ go to log
     _ traverse errors
     _ step over, step out
   _ (i) harp-style js server
@@ -51,7 +59,8 @@ _ nice-to-haves
     _ instrumentation-based autocomplete
     _ tern-based autocomplete
   _ basic hotswapping
-  _ sophisticated hotswapping
+    _ support settings overrides?
+  _ (i) sophisticated hotswapping
 
 x show widget
   x create attribute for widget template id

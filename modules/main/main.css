@@ -49,8 +49,12 @@ iframe {
 .main-container .fast-backward.icon { background-image: url(../../glyphicons/glyphicons_171_fast_backward.png); }
 .main-container .fast-forward.icon { background-image: url(../../glyphicons/glyphicons_177_fast_forward.png); }
 .main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }
-.main-container .error { float: right; }
+/* .main-container .error { float: right; }
 .main-container .error-inline { background-color: red; opacity: 0.75; color: white; font-weight: bold; }
+*/ 
+.main-container .parse.error { color: red; }
+.main-container .parse.error.message { margin-left: 0.25em; }
+
 .main-container input[type=range] { width: 100%; }
 .main-container .timeline { margin: 1em 0; }
 .main-container .timeline .status { margin: 0 1em 0 0; float: left; }

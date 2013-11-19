@@ -45,7 +45,8 @@
       type: 'announcement',
       script: name,
       modified: scripts[name].modified,
-      body: scripts[name].body
+      body: scripts[name].body,
+      parseError: scripts[name].parseError
     })
   }
 
@@ -61,7 +62,7 @@
     if(modified) {
       
       body = localStorage.getItem(sessionFnKey)
-      console.log('using copy of code in session storage for', name)
+      console.log('using copy of code in localStorage for', name)
     } else {
       
       body = fnStr.substring(
@@ -70,12 +71,6 @@
       
       while(body[0] === '\n') body = body.slice(1)
     }
-  
-    scripts[name] = {
-      body: body,
-      modified: modified
-    }
-    announce(name)
   
     function isExpression(type) {
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
@@ -115,14 +110,27 @@
     
     // Wrap Identifiers with calls to our logger, eh$(...)
     
+    scripts[name] = {
+      body: body,
+      modified: modified
+    }
+    
     var instrumentedCode
     try {
       instrumentedCode = falafel(body, { loc: true, raw: true }, visitNode).toString()
+      scripts[name].parseError = null
+      announce(name)
     } catch(err) {
       console.error(err, body)
+      scripts[name].parseError = {
+        line: err.lineNumber - 1,
+        ch: err.column,
+        message: err.toString()
+      }
+      announce(name)
       throw err
     }
-    
+      
     function visitNode(node) {
      
       if(!node.parent || node.type === 'Literal') return
