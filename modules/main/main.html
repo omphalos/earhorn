@@ -7,7 +7,6 @@
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
         <button ng-show="getCurrentScript().modified" ng-click="abandonChanges()" title="Abandon changes.">X</button>
-        <button class="parse error" ng-show="hasParseErrors()" ng-click="gotoParseError()" title="Go to parse error.">!</button>
         <span class="parse error message">{{getCurrentScript().parseError.message}}</span>
       </span>
 

@@ -24,3 +24,13 @@ a:hover { text-decoration: underline; }
 
 .fade-out { opacity: 0; }
 .fade-in { opacity: 1; transition: opacity 1s ease-in-out; }
+
+select, button {
+  height: 1.5em;
+  border-radius: 7.5px;
+  color: #555;
+  border-color: #555;
+  background-color: #eee;
+  -webkit-appearance: none;
+  padding: 0em 0.5em; 
+}
