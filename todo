@@ -3,21 +3,27 @@ _ stuff required for release 1
     x figure out how i want to present these errors
     x earhorn should publish parse errors
     x show red exclamation mark by script box when any script has a parse error
-    _ improve dropdown and button styling
-      _ gray dropdown border
-      _ gray dropdown text
-      _ fixed button width
-      _ gray button text
-      _ rounded button corners
-    _ for a parse error script, the offending line should be highlighted
-      _ review text marker logic to support inline text markers
-      _ add a text marker on the specified line
+    x improve dropdown and button styling
+      x gray dropdown border
+      x gray dropdown text
+      x fixed button width
+      x gray button text
+      x rounded button corners
+    x remove colons from error
+    _ add floating error icon in codemirror top right
+      _ current script bold
+      _ title shows script (line): error
+      _ click the button navigates to the offending line and script
+    _ show error as line widget
+      _ editor should support linewidgets
+      _ bind line widget to the error
     x they should appear at the top (for ease of development)
     _ clicking on it should navigate the user to the error
   _ fix reliance on $interval
   _ settings
     _ namespace settings
     _ support settings swap
+  _ make button visibility dependent on settings
   _ set up error logging, depending on settings (?)
     _ exceptions should be part of the log
     _ exceptions should show up as red widgets
@@ -51,7 +57,12 @@ _ stuff required for release 1
     _ support tail-only bookmarks
     _ support inline bookmark editing
   _ better source map support
-  _ handle operational transform-style multi-window edits (dont need to do ot necessarily)
+  _ listen to other-window edits
+  _ add links to readme: bret victor, lighttable, yinyang, tailspin
+  _ command-line tool for earhornification
+    _ support earhornify de-earhornify in-place
+    _ support eh directory
+    _ support .eh.js <-> .js
 _ nice-to-haves
   _ (i) set current script in title
   _ (i) save to file
