@@ -136,6 +136,50 @@ angular.module('main').directive('editor', [
       }, true)
     }
 
+    ///////////////////////////////////////
+    // Two-way binding for line widgets. //
+    ///////////////////////////////////////
+    
+    if(attr.hasOwnProperty('lineWidgets')) {
+      
+      var lineWidgets = {}
+      
+      scope.$watch(attr.lineWidgets, function(newValue, oldValue) {
+        
+        var newLineWidgets = scope.$eval(attr.lineWidgets) || {}
+        
+        Object.keys(lineWidgets).forEach(function(key) {
+
+          if(newLineWidgets.hasOwnProperty(key)) return
+          
+          // Delete line widget.
+          lineWidgets[key].widget.clear()
+          lineWidgets[key].scope.$destroy()
+          delete lineWidgets[key]          
+        })
+        
+        Object.keys(newLineWidgets).forEach(function(key) {
+          
+          if(lineWidgets.hasOwnProperty(key)) return
+          
+          // Add line widget.
+          var lineWidget = newLineWidgets[key]
+            , template = $compile($templateCache.get(lineWidget.template))
+            , lineWidgetScope = scope.$new()
+            
+          lineWidgetScope.model = lineWidget.model
+            
+          lineWidgets[key] = {
+            scope: lineWidgetScope,
+            widget: editor.addLineWidget(
+              lineWidget.line,
+              template(lineWidgetScope)[0],
+              lineWidget.options)
+          }
+        })
+      }, true)
+    }
+
     ////////////////////////////////////
     // Two-way binding for bookmarks. //
     ////////////////////////////////////

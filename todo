@@ -10,14 +10,12 @@ _ stuff required for release 1
       x gray button text
       x rounded button corners
     x remove colons from error
-    _ add floating error icon in codemirror top right
-      _ current script bold
-      _ title shows script (line): error
-      _ click the button navigates to the offending line and script
-    _ show error as line widget
-      _ editor should support linewidgets
-      _ bind line widget to the error
     x they should appear at the top (for ease of development)
+    x add floating error icon in codemirror top right
+      x title shows script (line): error
+    x show error as line widget
+      x editor should support linewidgets
+      x bind line widget to the error
     _ clicking on it should navigate the user to the error
   _ fix reliance on $interval
   _ settings
@@ -63,6 +61,7 @@ _ stuff required for release 1
     _ support earhornify de-earhornify in-place
     _ support eh directory
     _ support .eh.js <-> .js
+  _ consolidate add/remove logic in codemirror widget
 _ nice-to-haves
   _ (i) set current script in title
   _ (i) save to file

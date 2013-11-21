@@ -166,14 +166,40 @@ angular.module('main').controller('MainCtrl', [
   // Errors. //
   /////////////
 
-  $scope.hasParseErrors = function() {  
-    return _(programState.scripts).
-      pluck('parseError').
-      filter(function(x) { return x }).
-      value().
-      length
-  }
+  $scope.getParseErrors = function() {
 
+    var scripts = 
+      [programState.currentScript]. // Make sure currentScript is first
+      concat(Object.keys(programState.scripts))
+      
+    return scripts.
+      filter(function(s) { return s && programState.scripts[s].parseError }).
+      map(function(key) {
+        var parseError = programState.scripts[key].parseError
+        return key + ' (' + (parseError.line + 1) + '): ' + parseError.message + '.'
+      })
+  }
+  
+  $scope.getLineWidgets = function() {
+
+    var script = $scope.getCurrentScript()
+      , lineWidgets = {}
+      
+    if(!script.parseError) return lineWidgets
+    
+    var indent = ''
+    for(var i = 1; i < script.parseError.ch; i++)
+      indent += ' '
+    
+    lineWidgets['error@' + script.parseError.line] = {
+      template: 'errorLineWidgetTemplate',
+      line: script.parseError.line,
+      model: indent + script.parseError.message
+    }
+    
+    return lineWidgets
+  }
+  
   ////////////////////////////////
   // Support inspection widget. //
   ////////////////////////////////

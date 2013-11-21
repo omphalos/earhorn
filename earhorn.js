@@ -126,7 +126,7 @@
       var e = err.toString()
         , colon1 = e.indexOf(': ')
         , colon2 = e.indexOf(': ', colon1 + 1)
-        , message = e.substring(colon2 + ': '.length) + '.'
+        , message = e.substring(colon2 + ': '.length)
       
       scripts[name].parseError = {
         line: err.lineNumber - 1,
