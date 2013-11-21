@@ -166,18 +166,34 @@ angular.module('main').controller('MainCtrl', [
   // Errors. //
   /////////////
 
-  $scope.getParseErrors = function() {
-
+  function getParseErrorScripts() {
+    
     var scripts = 
       [programState.currentScript]. // Make sure currentScript is first
       concat(Object.keys(programState.scripts))
       
     return scripts.
-      filter(function(s) { return s && programState.scripts[s].parseError }).
+      filter(function(s) { return s && programState.scripts[s].parseError })
+  }
+
+  $scope.getParseErrors = function() {
+
+    return getParseErrorScripts()
+    
       map(function(key) {
         var parseError = programState.scripts[key].parseError
         return key + ' (' + (parseError.line + 1) + '): ' + parseError.message + '.'
       })
+  }
+
+  $scope.goToError = function() {
+    var script = getParseErrorScripts()[0]
+    timeline.pause()
+    // TODO handle different script than programState.currentScript
+    programState.currentScript = script
+    var error = programState.scripts[script].parseError
+    $scope.currentLine = error.line
+    $scope.currentCh = error.ch
   }
   
   $scope.getLineWidgets = function() {

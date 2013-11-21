@@ -49,7 +49,7 @@ iframe {
 .main-container .fast-backward.icon { background-image: url(../../glyphicons/glyphicons_171_fast_backward.png); }
 .main-container .fast-forward.icon { background-image: url(../../glyphicons/glyphicons_177_fast_forward.png); }
 .main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }
-.main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; font-style: italic; }
+.main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; }
 .main-container .error-alert {
   position: absolute; 
   right: 50%;

@@ -1,27 +1,10 @@
 _ stuff required for release 1
-  _ set up esprima error notification
-    x figure out how i want to present these errors
-    x earhorn should publish parse errors
-    x show red exclamation mark by script box when any script has a parse error
-    x improve dropdown and button styling
-      x gray dropdown border
-      x gray dropdown text
-      x fixed button width
-      x gray button text
-      x rounded button corners
-    x remove colons from error
-    x they should appear at the top (for ease of development)
-    x add floating error icon in codemirror top right
-      x title shows script (line): error
-    x show error as line widget
-      x editor should support linewidgets
-      x bind line widget to the error
-    _ clicking on it should navigate the user to the error
   _ fix reliance on $interval
   _ settings
     _ namespace settings
     _ support settings swap
   _ make button visibility dependent on settings
+  _ fix editor focus on error navigation
   _ set up error logging, depending on settings (?)
     _ exceptions should be part of the log
     _ exceptions should show up as red widgets
@@ -35,13 +18,13 @@ _ stuff required for release 1
     _ change abandon to revert
     _ show revert button when only a single script is present
     _ remove earhorn non-throttling rate
-  _ use earhorn subdirectory
   _ create multi-script test example
     _ in MainCtrl support editScript different from programState.currentScript
     _ message loss should just incorporate dropped messages into the tail snapshot
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
     _ fix editing from multiple places
+  _ use earhorn subdirectory
   _ add README for adding to a site
   _ fix black borders and text on mac
   _ (i) gutter arrow to show current line
@@ -52,16 +35,18 @@ _ stuff required for release 1
   _ earhorn returns same function
   _ (i) setup keybindings in settings
   _ better bookmark ui
-    _ support tail-only bookmarks
+    _ support tail-only bookmarks (?)
     _ support inline bookmark editing
   _ better source map support
   _ listen to other-window edits
-  _ add links to readme: bret victor, lighttable, yinyang, tailspin
+  _ add links in readme: bret victor, lighttable, yinyang, tailspin
   _ command-line tool for earhornification
     _ support earhornify de-earhornify in-place
     _ support eh directory
     _ support .eh.js <-> .js
   _ consolidate add/remove logic in codemirror widget
+  _ colorized icons
+  _ widget transitions
 _ nice-to-haves
   _ (i) set current script in title
   _ (i) save to file
@@ -128,3 +113,21 @@ x support abandoning changes (x next to dropdown)
   x announcement should state when the script is altered
 x swap underline and bold
 x review/fix extra code change messages
+x set up esprima error notification
+  x figure out how i want to present these errors
+  x earhorn should publish parse errors
+  x show red exclamation mark by script box when any script has a parse error
+  x improve dropdown and button styling
+    x gray dropdown border
+    x gray dropdown text
+    x fixed button width
+    x gray button text
+    x rounded button corners
+  x remove colons from error
+  x they should appear at the top (for ease of development)
+  x add floating error icon in codemirror top right
+    x title shows script (line): error
+  x show error as line widget
+    x editor should support linewidgets
+    x bind line widget to the error
+  x clicking on it should navigate the user to the error
