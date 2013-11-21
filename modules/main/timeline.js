@@ -194,10 +194,12 @@ angular.module('main').factory('timeline', [
       timeline.setPosition(getEndPosition())
 
       programState.forward(record)
-
+      
       // Max sure history doesn't overflow its capacity.
-      if(timeline.history.length >= settings.maxHistoryLength)
+      if(timeline.history.length >= settings.maxHistoryLength) {
         timeline.history.shift()
+        position--
+      }
     }
   }
   
