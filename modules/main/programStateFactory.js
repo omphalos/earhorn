@@ -27,31 +27,23 @@ angular.module('main').factory('programStateFactory', [
     if(!record)
       throw 'invalid record'
 
-    if(!record.reverse) {
-      
-      var reverse = record.reverse = {
-        currentLoc: self.currentLoc,
-        currentScript: self.currentScript,
-        script: record.script,
-        loc: record.loc
-      }
-      
-      // Get the previous value.
-      reverse.val =
+    record.reverse = record.reverse || {
+      currentLoc: self.currentLoc,
+      currentScript: self.currentScript,
+      script: record.script,
+      loc: record.loc,
+      val: // Get the previous value.
         self.scripts[record.script] &&
         self.scripts[record.script].logs[record.loc] &&
         self.scripts[record.script].logs[record.loc].val
     }
     
-    if(!record.forward) {
-      
-      var forward = record.forward = {
-        loc: record.loc,
-        val: record.val,
-        currentLoc: record.loc,
-        currentScript: record.script,
-        script: record.script
-      }
+    record.forward = record.forward || {
+      loc: record.loc,
+      val: record.val,
+      currentLoc: record.loc,
+      currentScript: record.script,
+      script: record.script
     }
     
     this.applyChange(record.forward)

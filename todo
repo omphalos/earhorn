@@ -1,19 +1,25 @@
 _ stuff required for release 1
-  _ fix reliance on $interval
   _ settings
-    _ namespace settings
+    _ support namespace settings
     _ support settings swap
-  _ make button visibility dependent on settings
-  _ fix editor focus on error navigation
-  _ set up error logging, depending on settings (?)
-    _ exceptions should be part of the log
-    _ exceptions should show up as red widgets
+    _ make button visibility dependent on settings
+  _ error touch ups
+    _ use local parse errors
+      _ watch code to run a debounced esprima
+      _ point bindings from earhorn parse errors to local errors
+    _ fix editor focus on error navigation
+  _ set up error logging, depending on settings
+    _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
+    _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
+    _ verify all statements are covered
+    _ errors should be red
   _ fix iframe inspector overlap
+  _ fix sandboxed iframe
   _ set up play notification (depends on iframe fix)
     x remove play notification message & css
     x change border to orange when paused
-    _ show paused message at the top
-    _ (i) change play to green, pause to orange
+    _ show play/paused message at the top
+  _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
   _ better script display
     _ change abandon to revert
     _ show revert button when only a single script is present
@@ -26,7 +32,6 @@ _ stuff required for release 1
     _ fix editing from multiple places
   _ use earhorn subdirectory
   _ add README for adding to a site
-  _ fix black borders and text on mac
   _ (i) gutter arrow to show current line
   _ (i) support sandbox when no script is selected
     _ open without iframe specified
@@ -34,20 +39,24 @@ _ stuff required for release 1
   _ (i) add jquery todomvc example
   _ earhorn returns same function
   _ (i) setup keybindings in settings
+    _ adjust focus cmd+`
+    _ play/pause cmd+p
+    _ open cmd+o
+    _ step cmd+, cmd+.
+  _ tie autosave to settings
   _ better bookmark ui
     _ support tail-only bookmarks (?)
-    _ support inline bookmark editing
+    _ support inline bookmark editing (?)
   _ better source map support
+  _ command-line tool for de/earhornification in-place
   _ listen to other-window edits
   _ add links in readme: bret victor, lighttable, yinyang, tailspin
-  _ command-line tool for earhornification
-    _ support earhornify de-earhornify in-place
-    _ support eh directory
-    _ support .eh.js <-> .js
   _ consolidate add/remove logic in codemirror widget
-  _ colorized icons
   _ widget transitions
+  _ change main to app
+
 _ nice-to-haves
+  _ plugins
   _ (i) set current script in title
   _ (i) save to file
   _ enhance traversal
@@ -131,3 +140,7 @@ x set up esprima error notification
     x editor should support linewidgets
     x bind line widget to the error
   x clicking on it should navigate the user to the error
+  11-23-13
+  x fix reliance on $interval
+    x create input range directive
+    x re-enable $interval

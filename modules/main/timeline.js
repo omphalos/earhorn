@@ -115,6 +115,8 @@ angular.module('main').factory('timeline', [
     // let's request them now.  Let's run the request here to coalesce the 
     // messages and cause less traffic between the timeline and logClient.
     logClient.requestScripts(Object.keys(missingScripts))
+    
+    timeline.$broadcast('main.timeline', records.length)
   })
   
   ///////////////////////////

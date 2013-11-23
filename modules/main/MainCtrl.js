@@ -41,8 +41,12 @@ angular.module('main').controller('MainCtrl', [
     timeline.setPosition(+newVal)
   })
   
-  timeline.$watch('getPosition()', function(newVal, oldVal) {
+  $scope.$watch('timeline.getPosition()', function(newVal, oldVal) {
     $scope.timelinePosition = newVal
+  })
+
+  timeline.$on('main.timeline', function() {
+    if(!$scope.$$phase) $scope.$digest()
   })
 
   ////////////////////
@@ -75,7 +79,7 @@ angular.module('main').controller('MainCtrl', [
     return $scope.editing ? {} : getCurrentScript().logs
   }
   
-  timeline.$watch('isPlaying()', function(newVal) {
+  $scope.$watch('timeline.isPlaying()', function(newVal) {
     if(!newVal) return
     $scope.editing = false
     updateCode()
