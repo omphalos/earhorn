@@ -1,17 +1,24 @@
 _ stuff required for release 1
+  _ fix layout
+    _ show play/paused/editing message at the top
+    _ hide (width->0) traversal during edit
+    _ transition button display
+  _ fade directive
   _ error touch ups
     _ use local parse errors
       _ watch code to run a debounced esprima
       _ point bindings from earhorn parse errors to local errors
     _ fix editor focus on error navigation
+    _ show error in header not icon
   _ set up error logging, depending on settings
     _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
     _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
     _ verify all statements are covered
     _ errors should be red
   _ fix iframe inspector overlap
-  _ fix sandboxed iframe
-  _ show play/paused message at the top
+  _ (i) support sandbox when no script is selected
+    _ open without iframe specified
+    _ verify sandbox shows up
   _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
   _ create multi-script test example
     _ in MainCtrl support editScript different from programState.currentScript
@@ -21,17 +28,13 @@ _ stuff required for release 1
     _ fix editing from multiple places
   _ use earhorn subdirectory
   _ add README for adding to a site
-  _ (i) support sandbox when no script is selected
-    _ open without iframe specified
-    _ verify sandbox shows up
   _ (i) add jquery todomvc example
-  _ earhorn returns same function
+  _ earhorn should return same function
   _ (i) setup keybindings in settings
     _ adjust focus cmd+`
     _ play/pause cmd+p
     _ open cmd+o
     _ step cmd+, cmd+.
-  _ tie autosave to settings
   _ better bookmark ui
     _ support tail-only bookmarks (?)
     _ support inline bookmark editing (?)
@@ -141,3 +144,6 @@ x set up esprima error notification
     x change abandon to revert
     x show revert button when only a single script is present
     x remove earhorn non-throttling rate
+  x show REVERT in button
+  x fix traverse from error edit: move mouse, edit, move timeline, check state
+  x tie autosave to settings

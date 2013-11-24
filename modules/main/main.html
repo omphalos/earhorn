@@ -6,7 +6,8 @@
         <select ng-show="getScriptCount() > 1" ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
-        <button ng-show="getCurrentScript().modified" ng-click="revertChanges()" title="Revert changes.">X</button>
+        <button ng-show="getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="Revert changes.">X</button>
+        <button ng-show="getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="Revert changes.">Revert</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
@@ -17,12 +18,12 @@
         <span ng-show="settings.display.fastBackward" title="Fast Backward" class="fast-backward icon" ng-click="timeline.fastBackward()"></span>
         <span ng-show="settings.display.stepBackward" title="Step Backward" class="step-backward icon" ng-click="timeline.stepBackward()"></span>
         <span ng-show="settings.display.pause" title="Pause" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
-        <span ng-show="settings.display.play" title="Play" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="timeline.play()"></span>
+        <span ng-show="settings.display.play" title="Play" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
         <span ng-show="settings.display.stepForward" title="Step Forward" class="step-forward icon" ng-click="timeline.stepForward()"></span>
         <span ng-show="settings.display.fastForward" title="Fast Forward" class="fast-forward icon" ng-click="timeline.fastForward()"></span>
       </div>
       <div class="input-container">
-        <input type="range" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
+        <input type="range" ng-disabled="!timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
       </div>
     </div>
 

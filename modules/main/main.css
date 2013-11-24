@@ -30,9 +30,6 @@ iframe {
   float: right;
 }
 
-.main-container .top { height: 1.5em; }
-
-
 .main-container a.github { float: right; }
 
 .main-container .timeline {
@@ -57,6 +54,7 @@ iframe {
   margin-top: 0.25em;
   margin-right: 1.75em;
 }
+.main-container .top { min-height: 1.5em; }
 .main-container .parse.error { color: red; }
 .main-container .parse.error.message { margin-left: 0.25em; }
 

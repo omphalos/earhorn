@@ -35,7 +35,8 @@ angular.module('main').controller('MainCtrl', [
       pause: true,
       play: true,
       formatDigits: 2
-    }
+    },
+    autosave: false
   })
 
   ///////////////
@@ -105,25 +106,30 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.editing = false
   
-  var debouncedEdit = _.debounce(function(editScript, newVal) {
+  var debouncedEdit = _.debounce(function(newVal) {
+    var editScript = programState.currentScript // TODO    
     logClient.edit(editScript, newVal)
   })
   
   $scope.$watch('code', function(newVal, oldVal) {
     
-    var editScript = programState.currentScript // TODO
+    $scope.editing = newVal !== getCurrentScript().body
     
-    if(newVal === getCurrentScript().body) return
-    
-    $scope.editing = true
+    if(!$scope.editing) return
     
     timeline.pause()
-    
-    debouncedEdit(editScript, newVal)
+
+    if(settings.autosave)    
+      debouncedEdit(newVal)
   })
 
   $scope.reset = function(script) {
     logClient.reset(script || programState.currentScript)
+  }
+  
+  $scope.play = function() {
+    debouncedEdit($scope.code)
+    timeline.play()
   }
 
   ///////////////////
@@ -352,9 +358,9 @@ angular.module('main').controller('MainCtrl', [
     stepBackward: timeline.stepBackward,
     fastBackward: timeline.fastBackward,
     pause: timeline.pause,
-    play: timeline.play,
     stepForward: timeline.stepForward,
     fastForward: timeline.fastForward,   
+    play: $scope.play,
 
     // Miscellaneous utilities.
     revertChanges: $scope.revertChanges,
