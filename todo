@@ -1,8 +1,4 @@
 _ stuff required for release 1
-  _ settings
-    _ support namespace settings
-    _ support settings swap
-    _ make button visibility dependent on settings
   _ error touch ups
     _ use local parse errors
       _ watch code to run a debounced esprima
@@ -15,15 +11,8 @@ _ stuff required for release 1
     _ errors should be red
   _ fix iframe inspector overlap
   _ fix sandboxed iframe
-  _ set up play notification (depends on iframe fix)
-    x remove play notification message & css
-    x change border to orange when paused
-    _ show play/paused message at the top
+  _ show play/paused message at the top
   _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
-  _ better script display
-    _ change abandon to revert
-    _ show revert button when only a single script is present
-    _ remove earhorn non-throttling rate
   _ create multi-script test example
     _ in MainCtrl support editScript different from programState.currentScript
     _ message loss should just incorporate dropped messages into the tail snapshot
@@ -32,7 +21,6 @@ _ stuff required for release 1
     _ fix editing from multiple places
   _ use earhorn subdirectory
   _ add README for adding to a site
-  _ (i) gutter arrow to show current line
   _ (i) support sandbox when no script is selected
     _ open without iframe specified
     _ verify sandbox shows up
@@ -50,13 +38,13 @@ _ stuff required for release 1
   _ better source map support
   _ command-line tool for de/earhornification in-place
   _ listen to other-window edits
-  _ add links in readme: bret victor, lighttable, yinyang, tailspin
+  _ add links in readme: inventing on principle, lighttable, yinyang, tailspin
   _ consolidate add/remove logic in codemirror widget
   _ widget transitions
-  _ change main to app
+  _ change main to app (?)
 
 _ nice-to-haves
-  _ plugins
+  _ (i) plugins
   _ (i) set current script in title
   _ (i) save to file
   _ enhance traversal
@@ -140,7 +128,16 @@ x set up esprima error notification
     x editor should support linewidgets
     x bind line widget to the error
   x clicking on it should navigate the user to the error
-  11-23-13
+  11-23-13 ~58
   x fix reliance on $interval
     x create input range directive
     x re-enable $interval
+  x settings
+    x support settings swap
+    x make button visibility dependent on settings
+  x remove play notification message & css
+  x change border to orange when paused
+  x better script display
+    x change abandon to revert
+    x show revert button when only a single script is present
+    x remove earhorn non-throttling rate

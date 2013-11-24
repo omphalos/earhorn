@@ -26,7 +26,17 @@ angular.module('main').controller('MainCtrl', [
   // Set up our services. //
   //////////////////////////
   
-  settingsService.loadAnd$watch($scope, 'settings', { formatDigits: 2 })
+  settingsService.loadAnd$watch($scope, 'settings', {
+    display: {
+      stepForward: true,
+      stepBackward: true,
+      fastForward: false,
+      fastBackward: false,
+      pause: true,
+      play: true,
+      formatDigits: 2
+    }
+  })
 
   ///////////////
   // Timeline. //
@@ -278,8 +288,8 @@ angular.module('main').controller('MainCtrl', [
       return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
 
     if(log.type === 'Number') {
-      if(!log.value || !settings.formatDigits) return log.value
-      return log.value.toFixed(settings.formatDigits)
+      if(!log.value || !settings.display.formatDigits) return log.value
+      return log.value.toFixed(settings.display.formatDigits)
     }
       
     if(log.type === 'Function')
@@ -308,16 +318,16 @@ angular.module('main').controller('MainCtrl', [
     $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
   
   //////////////////////
-  // Abandon changes. //
+  // Revert changes. //
   //////////////////////
 
-  $scope.abandonChanges = function() {
+  $scope.revertChanges = function() {
     $scope.editing = false
     logClient.reset(programState.currentScript)
     timeline.play()
   }
 
-  $scope.abandonAllChanges = function() {
+  $scope.revertAllChanges = function() {
     
     $scope.editing = false
     
@@ -347,7 +357,8 @@ angular.module('main').controller('MainCtrl', [
     fastForward: timeline.fastForward,   
 
     // Miscellaneous utilities.
-    abandonAllChanges: $scope.abandonAllChanges,
+    revertChanges: $scope.revertChanges,
+    revertAllChanges: $scope.revertAllChanges,
     
     // Expose the $scope for ease of development.
     timeline: timeline,

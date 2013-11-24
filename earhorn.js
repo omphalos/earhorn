@@ -4,13 +4,32 @@
   // earhorn$ //
   //////////////
 
+  // Set up settings object.
+  var settings = JSON.parse(localStorage.getItem('earhorn-settings'))
+
+  if(!settings.hasOwnProperty('instrumentation')) {
+    
+    settings.instrumentation = {
+      maxElements: 3,
+      maxKeys: 200,
+      depth: 2,
+      maxStringLength: 50,
+      bufferSize: 100,
+      flushInterval: 25
+    }
+    
+    localStorage.setItem('earhorn-settings', JSON.stringify(settings))
+  }
+
   // Subscribe to localStorage events.
-  if(window.addEventListener) window.addEventListener('storage', onStorage, false)
-  else if(window.attachEvent) window.attachEvent('onstorage', onStorage)
+  window.addEventListener('storage', onStorage, false)
   
   function onStorage(evt) {
     
     console.log('server receieved message')
+
+    if(evt.key === 'earhorn-settings')
+      return settings = earhorn$.settings = JSON.parse(evt.newValue)
 
     if(evt.key !== 'earhorn-listener')
       return
@@ -175,12 +194,7 @@
     }
   }
   
-  earhorn$.maxElements = 3
-  earhorn$.maxKeys = 200
-  earhorn$.depth = 2
-  earhorn$.maxStringLength = 50
-  earhorn$.bufferSize = 100
-  earhorn$.flushInterval = 100
+  earhorn$.settings = settings
   
   function makeSerializable(obj, depth) {
     
@@ -204,15 +218,15 @@
     if(type === '[object String]') {
       return {
         type: 'String',
-        clipped: obj.length > earhorn$.maxStringLength,
-        value: obj.substring(0, earhorn$.maxStringLength)
+        clipped: obj.length > settings.instrumentation.maxStringLength,
+        value: obj.substring(0, settings.instrumentation.maxStringLength)
       }
     }
     
     if(type === '[object Array]') {
 
       var elements = depth <= 1 ? [] :
-        obj.slice(0, earhorn$.maxElements).map(function(x) {
+        obj.slice(0, settings.instrumentation.maxElements).map(function(x) {
           return makeSerializable(x, depth - 1)
         })
 
@@ -224,7 +238,7 @@
     }
 
     // Object
-    var keys = earhorn$.maxKeys
+    var keys = settings.instrumentation.maxKeys
 
     var result = {
       type: 'Object',
@@ -254,7 +268,7 @@
       type: 'log',
       script: script,
       loc: loc,
-      val: makeSerializable(val, earhorn$.depth)
+      val: makeSerializable(val, settings.instrumentation.depth)
     })
 
     return val
@@ -269,7 +283,7 @@
 
     buffer.push(message)
     
-    if(buffer.length > earhorn$.bufferSize)
+    if(buffer.length > settings.instrumentation.bufferSize)
       flush()
   }
   
@@ -282,10 +296,10 @@
   
   function checkBuffer() {
     flush()    
-    setTimeout(checkBuffer, earhorn$.flushInterval)
+    setTimeout(checkBuffer, settings.instrumentation.flushInterval)
   }
   
-  setTimeout(checkBuffer, earhorn$.flushInterval)
+  setTimeout(checkBuffer, settings.instrumentation.flushInterval)
   
   context.earhorn$ = earhorn$
   context.eh$ = eh$
