@@ -1,8 +1,7 @@
-_ stuff required for release 1
-  _ fix layout
-    _ show play/paused/editing message at the top
-    _ hide (width->0) traversal during edit
-    _ transition button display
+_ stuff required for release 11-23-13
+  _ fix play behavior
+    _ remove jumpiness
+    _ remove code flashing
   _ fade directive
   _ error touch ups
     _ use local parse errors
@@ -39,12 +38,15 @@ _ stuff required for release 1
     _ support tail-only bookmarks (?)
     _ support inline bookmark editing (?)
   _ better source map support
-  _ command-line tool for de/earhornification in-place
   _ listen to other-window edits
   _ add links in readme: inventing on principle, lighttable, yinyang, tailspin
   _ consolidate add/remove logic in codemirror widget
   _ widget transitions
   _ change main to app (?)
+  - earhorn server (i)
+    - node-http-proxy js url
+      - fs.readfile -> res.write(...earhorn+)
+    - node-http-proxy specified url
 
 _ nice-to-haves
   _ (i) plugins
@@ -147,3 +149,8 @@ x set up esprima error notification
   x show REVERT in button
   x fix traverse from error edit: move mouse, edit, move timeline, check state
   x tie autosave to settings
+  11-29-13 ~50
+  x fix layout
+    x show play/paused/editing message at the top center
+    x disable traversal during edit
+    x disable icons with css

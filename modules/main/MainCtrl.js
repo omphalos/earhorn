@@ -60,6 +60,19 @@ angular.module('main').controller('MainCtrl', [
     if(!$scope.$$phase) $scope.$digest()
   })
 
+  // Conditionally allow traversal.
+  var traversalFns = [
+    'stepForward',
+    'stepBackward',
+    'fastForward',
+    'fastBackward'
+  ]
+  traversalFns.forEach(function(fn) {
+    $scope[fn] = function() {
+      if(!$scope.editing && timeline.history.length) timeline[fn]()
+    }
+  });
+
   ////////////////////
   // Program state. //
   ////////////////////
@@ -99,6 +112,19 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.$watch('getCurrentScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
+
+  ///////////
+  // Mode. //
+  ///////////
+  
+  $scope.getMode = function() {
+    return (
+      $scope.editing ? 'Editing' :
+      timeline.isPlaying() ? 'Playing' :
+      'Paused'
+    )
+  }
+
 
   ////////////////
   // Edit code. //
@@ -355,11 +381,11 @@ angular.module('main').controller('MainCtrl', [
     settings: $scope.settings,
     
     // Timeline functions.
-    stepBackward: timeline.stepBackward,
-    fastBackward: timeline.fastBackward,
+    stepBackward: $scope.stepBackward,
+    fastBackward: $scope.fastBackward,
     pause: timeline.pause,
-    stepForward: timeline.stepForward,
-    fastForward: timeline.fastForward,   
+    stepForward: $scope.stepForward,
+    fastForward: $scope.fastForward,   
     play: $scope.play,
 
     // Miscellaneous utilities.

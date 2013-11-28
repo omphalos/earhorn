@@ -1,4 +1,4 @@
-<div ng-class="{ 'main-container': 1, playing: timeline.isPlaying(), paused: !timeline.isPlaying() }">
+<div ng-class="{ 'main-container': 1, editing: getMode() == 'Editing', playing: getMode() == 'Playing', paused: getMode() == 'Paused' }">
 
   <nav>
     <div class="top">
@@ -14,20 +14,24 @@
     </div>
 
     <div class="timeline">
-      <div class="status">
-        <span ng-show="settings.display.fastBackward" title="Fast Backward" class="fast-backward icon" ng-click="timeline.fastBackward()"></span>
-        <span ng-show="settings.display.stepBackward" title="Step Backward" class="step-backward icon" ng-click="timeline.stepBackward()"></span>
+      <div class="buttons">
+        <span ng-show="settings.display.fastBackward" title="Fast Backward" class="fast-backward icon" ng-click="fastBackward()"></span>
+        <span ng-show="settings.display.stepBackward" title="Step Backward" class="step-backward icon" ng-click="stepBackward()"></span>
         <span ng-show="settings.display.pause" title="Pause" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
         <span ng-show="settings.display.play" title="Play" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
-        <span ng-show="settings.display.stepForward" title="Step Forward" class="step-forward icon" ng-click="timeline.stepForward()"></span>
-        <span ng-show="settings.display.fastForward" title="Fast Forward" class="fast-forward icon" ng-click="timeline.fastForward()"></span>
+        <span ng-show="settings.display.stepForward" title="Step Forward" class="step-forward icon" ng-click="stepForward()"></span>
+        <span ng-show="settings.display.fastForward" title="Fast Forward" class="fast-forward icon" ng-click="fastForward()"></span>
       </div>
       <div class="input-container">
-        <input type="range" ng-disabled="!timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
+        <input type="range" ng-disabled="editing || !timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
       </div>
     </div>
 
   </nav>
+
+  <div class="status">
+    {{getMode()}}
+  </div>
 
   <div class="main-content" ng-click="widgetKey = null">
     <editor

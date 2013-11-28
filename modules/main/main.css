@@ -1,22 +1,40 @@
 .main-container { height: 100%; }
-.main-container nav { padding: 1em; height: 7em; }
+.main-container nav { padding: 1em 1em 0em; }
+.main-container .status {
+  text-align: center;
+  padding: 0.25em 0em;
+  border-top: 1px solid;
+  font-style: italic;
+  color: white;
+}
 .main-container .main-content { border-top: 1px solid; }
 .main-container editor.half .CodeMirror { border-right: 1px solid; }
-.main-container.playing .main-content, .main-container.playing editor.half .CodeMirror {
-  border-color: green;
-  transition: border-color 1s;
-}
-.main-container.paused .main-content, .main-container.paused editor.half .CodeMirror {
-  border-color: orange;
-  transition: border-color 1s;
-}
+
+/* Playing */
+.main-container.playing .main-content,
+.main-container.playing .status,
+.main-container.playing editor.half .CodeMirror { border-color: orange; }
+.main-container.playing .status { color: orange; }
+
+/* Paused */
+.main-container.paused .main-content,
+.main-container.paused .status,
+.main-container.paused editor.half .CodeMirror { border-color: #99f; }
+.main-container.paused .status { color: #99f; }
+
+/* Editing */
+.main-container.editing .main-content,
+.main-container.editing .status,
+.main-container.editing editor.half .CodeMirror { border-color: gray; }
+.main-container.editing .status { color: gray; }
+
 .main-container editor.half .CodeMirror { left: 0; right: 50%; }
 .main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
 
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
-  top: 145px;
+  top: 125px;
   bottom: 0;
   height: auto; 
 }
@@ -39,6 +57,12 @@ iframe {
   -webkit-user-select: none;
 }
 
+.main-container.editing .step-backward.icon,
+.main-container.editing .step-forward.icon,
+.main-container.editing .fast-backward.icon,
+.main-container.editing .fast-forward.icon { cursor: default; opacity: 0.2; }
+
+.main-container .buttons { cursor: default; }
 .main-container .pause.icon { background-image: url(../../glyphicons/glyphicons_174_pause.png); }
 .main-container .play.icon { background-image: url(../../glyphicons/glyphicons_173_play.png); }
 .main-container .step-forward.icon { background-image: url(../../glyphicons/glyphicons_178_step_forward.png); }
@@ -60,8 +84,8 @@ iframe {
 
 .main-container input[type=range] { width: 100%; }
 .main-container .timeline { margin: 1em 0; }
-.main-container .timeline .status { margin: 0 1em 0 0; float: left; }
-.main-container .timeline .input-container { overflow: hidden;; }
+.main-container .timeline .buttons { margin: 0 1em 0 0; float: left; }
+.main-container .timeline .input-container { overflow: hidden; padding-top: 5px;}
 
 .main-container .CodeMirror { line-height: normal;}
 .main-container .script-view { display: none; }
@@ -86,7 +110,6 @@ iframe {
   -ms-border-radius: 1em;
   border-radius: 1em;
   border: 1px solid lightblue;
-  color: blue;
 }
 .main-container .widget {
   background-color: white;
@@ -106,4 +129,5 @@ iframe {
 .main-container .current-loc { font-weight: bold; }
 .main-container .current { font-weight: bold; }
 .main-container .bookmark:hover { text-decoration: underline; }
+
 
