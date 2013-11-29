@@ -1,7 +1,7 @@
 angular.module('app').config(['$routeProvider', function($routeProvider) {
   // The default is main.html.
   $routeProvider.otherwise({
-    templateUrl:'/modules/main/main.html',
+    templateUrl:'/earhorn/modules/main/main.html',
     controller:'MainCtrl'
   })
 }])
