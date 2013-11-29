@@ -123,15 +123,39 @@ angular.module('main').controller('MainCtrl', [
     logClient.edit(editScript, newVal)
   })
   
+  var debouncedValidate = _.debounce(function(newVal) {
+
+    try {
+      
+      esprima.parse(newVal)
+      $scope.parseError = null
+    } catch(err) {
+
+      var message = err.toString()
+      message = message.substring(message.indexOf(': ') + 2)
+      message = message.substring(message.indexOf(': ') + 2)
+      
+      $scope.parseError = {
+        line: err.lineNumber - 1,
+        ch: err.column - 1,
+        message: message,
+        script: programState.currentScript, // TODO
+        key: err.toString()
+      }
+    }
+  }, 250)
+  
   $scope.$watch('code', function(newVal, oldVal) {
     
+    debouncedValidate(newVal)
+
     $scope.editing = newVal !== getCurrentScript().body
     
     if(!$scope.editing) return
     
     timeline.pause()
-    getCurrentScript().body = newVal
     timeline.clear()
+    getCurrentScript().body = newVal
 
     if(settings.autosave)    
       debouncedEdit(newVal)
@@ -213,7 +237,7 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.getParseErrors = function() {
 
-    return getParseErrorScripts()
+    return getParseErrorScripts().
     
       map(function(key) {
         var parseError = programState.scripts[key].parseError
@@ -229,23 +253,23 @@ angular.module('main').controller('MainCtrl', [
     var error = programState.scripts[script].parseError
     $scope.currentLine = error.line
     $scope.currentCh = error.ch
+    $scope.$emit('focusEvent')
   }
   
   $scope.getLineWidgets = function() {
 
-    var script = $scope.getCurrentScript()
-      , lineWidgets = {}
+    var lineWidgets = {}
       
-    if(!script.parseError) return lineWidgets
+    if(!$scope.parseError) return lineWidgets
     
     var indent = ''
-    for(var i = 1; i < script.parseError.ch; i++)
+    for(var i = 1; i < $scope.parseError.ch; i++)
       indent += ' '
     
-    lineWidgets['error@' + script.parseError.line] = {
+    lineWidgets['error@' + $scope.parseError.key] = {
       template: 'errorLineWidgetTemplate',
-      line: script.parseError.line,
-      model: indent + script.parseError.message
+      line: $scope.parseError.line,
+      model: indent + $scope.parseError.message
     }
     
     return lineWidgets

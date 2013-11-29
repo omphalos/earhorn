@@ -30,7 +30,7 @@
   </nav>
 
   <div class="status">
-    {{getMode()}}
+    <span class="error-summary" ng-click="goToError()" title="{{getParseErrors()[0]}}" ng-show="getParseErrors().length">{{parseError.message}}</span>
   </div>
 
   <div class="main-content" ng-click="widgetKey = null">
@@ -51,8 +51,8 @@
       widget-template="widgetTemplate"
       markers="getMarkers()"
       line-widgets="getLineWidgets()"
+      focus-event="focusEvent"
       element="editor" >
-      <span ng-click="goToError()" title="{{getParseErrors()[0]}}" ng-show="getParseErrors().length" class="error-alert error icon"></span>
     </editor>
     <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
     <!--iframe ng-if="!iframe">

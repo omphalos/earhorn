@@ -25,6 +25,16 @@ angular.module('main').directive('editor', [
     
     if(attr.hasOwnProperty('element'))
       $parse(attr.element).assign(scope, editor)
+      
+    ////////////////////////////
+    // Listen to focus event. //
+    ////////////////////////////
+
+    if(attr.hasOwnProperty('focusEvent')) {
+      scope.$on(attr.focusEvent, function() {
+        editor.focus()
+      })
+    }
     
     ///////////////////////////////
     // Two-way binding for code. //
@@ -194,7 +204,8 @@ angular.module('main').directive('editor', [
 
         Object.keys(bookmarks).forEach(function(key) {
 
-          if(newBookmarks.hasOwnProperty(key)) return console.log('already present', key)
+          if(newBookmarks.hasOwnProperty(key)) return
+          
           // Delete bookmark.
           bookmarks[key].destroy()
         })

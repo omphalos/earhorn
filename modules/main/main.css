@@ -1,12 +1,9 @@
 .main-container { height: 100%; }
 .main-container nav { padding: 1em 1em 0em; }
-.main-container .status {
-  text-align: center;
-  padding: 0.25em 0em;
-  border-top: 1px solid;
-  font-style: italic;
-  color: white;
-}
+
+.main-container .status { height: 1.25em; padding: 0 1.25em 0.25em; }
+.main-container .error-summary { color: red; font-style: italic; cursor: pointer; }
+
 .main-container .main-content { border-top: 1px solid; }
 .main-container editor.half .CodeMirror { border-right: 1px solid; }
 
@@ -14,19 +11,16 @@
 .main-container.playing .main-content,
 .main-container.playing .status,
 .main-container.playing editor.half .CodeMirror { border-color: orange; }
-.main-container.playing .status { color: orange; }
 
 /* Paused */
 .main-container.paused .main-content,
 .main-container.paused .status,
 .main-container.paused editor.half .CodeMirror { border-color: #99f; }
-.main-container.paused .status { color: #99f; }
 
 /* Editing */
 .main-container.editing .main-content,
 .main-container.editing .status,
 .main-container.editing editor.half .CodeMirror { border-color: gray; }
-.main-container.editing .status { color: gray; }
 
 .main-container editor.half .CodeMirror { left: 0; right: 50%; }
 .main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
@@ -34,7 +28,7 @@
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
-  top: 125px;
+  top: 121px;
   bottom: 0;
   height: auto; 
 }
@@ -66,13 +60,13 @@ iframe {
 .main-container .fast-forward.icon { background-image: url(../../glyphicons/glyphicons_177_fast_forward.png); }
 .main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }
 .main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; }
-.main-container .error-alert {
+/* .main-container .error-alert {
   position: absolute; 
   right: 50%;
   z-index: 1;
   margin-top: 0.25em;
   margin-right: 1.75em;
-}
+} */
 .main-container .top { min-height: 1.5em; }
 .main-container .parse.error { color: red; }
 .main-container .parse.error.message { margin-left: 0.25em; }

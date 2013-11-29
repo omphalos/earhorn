@@ -1,44 +1,38 @@
 _ stuff required for release
-  _ error touch ups
-    _ use local parse errors
-      _ watch code to run a debounced esprima
-      _ point bindings from earhorn parse errors to local errors
-    _ fix editor focus on error navigation
-    _ show error in header not icon
-  _ set up error logging, depending on settings
-    _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
-    _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
-    _ verify all statements are covered
-    _ errors should be red
-  _ fix iframe inspector overlap
-  _ (i) support sandbox when no script is selected
-    _ open without iframe specified
-    _ verify sandbox shows up
-  _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
   _ create multi-script test example
     _ in MainCtrl support editScript different from programState.currentScript
     _ message loss should just incorporate dropped messages into the tail snapshot
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
     _ fix editing from multiple places
+  _ listen to other-window edits
   _ use earhorn subdirectory
   _ add README for adding to a site
-  _ (i) add jquery todomvc example
   _ earhorn should return same function
+  _ set up error logging, depending on settings
+    _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
+    _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
+    _ verify all statements are covered
+    _ errors should be red
+  _ log all errors the same way
+  _ fix iframe inspector overlap
+  _ better bookmark ui
+    _ bookmark transitions
+    _ support tail-only bookmarks (?)
+    _ support inline bookmark editing (?)
+  _ consolidate add/remove logic in codemirror widget
+  _ (i) support sandbox when no script is selected
+    _ open without iframe specified
+    _ verify sandbox shows up
+  _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
+  _ (i) add jquery todomvc example
   _ (i) setup keybindings in settings
     _ adjust focus cmd+`
     _ play/pause cmd+p
     _ open cmd+o
     _ step cmd+, cmd+.
-  _ better bookmark ui
-    _ support tail-only bookmarks (?)
-    _ support inline bookmark editing (?)
   _ (i) better source map support
-  _ listen to other-window edits
-  _ add links in readme: inventing on principle, lighttable, yinyang, tailspin
-  _ consolidate add/remove logic in codemirror widget
-  _ widget transitions
-  _ change main to app (?)
+  _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
   - earhorn server (i)
     - node-http-proxy js url
       - fs.readfile -> res.write(...earhorn+)
@@ -129,6 +123,7 @@ x set up esprima error notification
     x editor should support linewidgets
     x bind line widget to the error
   x clicking on it should navigate the user to the error
+
   11-23-13 ~58
   x fix reliance on $interval
     x create input range directive
@@ -145,6 +140,7 @@ x set up esprima error notification
   x show REVERT in button
   x fix traverse from error edit: move mouse, edit, move timeline, check state
   x tie autosave to settings
+
   11-29-13 ~50
   x fix layout
     x show play/paused/editing message at the top center
@@ -159,3 +155,10 @@ x set up esprima error notification
     x copy+paste directive boilerplate
     x watch attr -> set fade in / fade out
   x refactor to use disabled icons (share disabled class)
+  x error touch ups
+    x use local parse errors
+      x watch code to run a debounced esprima
+      x bind to local error not log error
+    x show error in header
+    x remove error icon
+  x fix editor focus on error navigation
