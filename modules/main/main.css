@@ -57,11 +57,6 @@ iframe {
   -webkit-user-select: none;
 }
 
-.main-container.editing .step-backward.icon,
-.main-container.editing .step-forward.icon,
-.main-container.editing .fast-backward.icon,
-.main-container.editing .fast-forward.icon { cursor: default; opacity: 0.2; }
-
 .main-container .buttons { cursor: default; }
 .main-container .pause.icon { background-image: url(../../glyphicons/glyphicons_174_pause.png); }
 .main-container .play.icon { background-image: url(../../glyphicons/glyphicons_173_play.png); }

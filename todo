@@ -1,6 +1,4 @@
 _ stuff required for release
-  _ refactor to use fade directive instead of two css classes
-  _ refactor to use disabled icons (share disabled class)
   _ error touch ups
     _ use local parse errors
       _ watch code to run a debounced esprima
@@ -35,7 +33,7 @@ _ stuff required for release
   _ better bookmark ui
     _ support tail-only bookmarks (?)
     _ support inline bookmark editing (?)
-  _ better source map support
+  _ (i) better source map support
   _ listen to other-window edits
   _ add links in readme: inventing on principle, lighttable, yinyang, tailspin
   _ consolidate add/remove logic in codemirror widget
@@ -155,3 +153,9 @@ x set up esprima error notification
   x fix play behavior
     x fix add a line to addition program
     x fix code flashing - old code being added
+  x refactor to use fade directive instead of two css classes
+    x create fade directive file
+    x add to index.html
+    x copy+paste directive boilerplate
+    x watch attr -> set fade in / fade out
+  x refactor to use disabled icons (share disabled class)

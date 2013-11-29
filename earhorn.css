@@ -21,9 +21,10 @@ a:hover { text-decoration: underline; }
 .icon { margin: 5px }
 .icon:hover { opacity: 0.35; }
 .icon:active, .icon.active { opacity: 0.5; }
+.disabled.icon { opacity: 0.2; cursor: default; }
 
-.fade-out { opacity: 0; }
-.fade-in { opacity: 1; transition: opacity 1s ease-in-out; }
+.fade.out { opacity: 0; }
+.fade.in { opacity: 1; transition: opacity 1s ease-in-out; }
 
 select, button {
   height: 1.5em;
