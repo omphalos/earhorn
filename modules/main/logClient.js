@@ -40,14 +40,29 @@ angular.module('main').factory('logClient', [
 
   function onStorage(evt) {
 
-    if(evt.key !== 'earhorn-log')
-      return
+    switch(evt.key) {
+      
+      case 'earhorn-log':
+      
+        // Read the records
+        var records = JSON.parse(evt.newValue)
+        
+        // Publish the records to anyone listening.
+        logClient.$broadcast('main.logClient.logs', records)
 
-    // Read the records
-    var records = JSON.parse(evt.newValue)
-    
-    // Publish the records to anyone listening.
-    logClient.$broadcast('main.logClient', records)
+        return
+        
+      case 'earhorn-listener':
+
+        var record = JSON.parse(evt.newValue)
+            
+        if(record.type === 'edit') {
+          logClient.$broadcast('main.logClient.edit', record)
+          console.log('main.logClient.edit broadcast')
+        }
+        
+        return
+    }
   }
   
   //////////////////////////////////////

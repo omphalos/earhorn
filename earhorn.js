@@ -45,7 +45,7 @@
     else if(record.type === 'edit') {
 
       localStorage.setItem('earhorn-script-' + record.script, record.body)
-      console.log('applying edit', record.script, record.body)
+      // console.log('applying edit', record.script, record.body)
       if(record.reload) // TODO: could do hot code-swapping instead ...
         location.reload(true)
 

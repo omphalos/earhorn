@@ -145,6 +145,23 @@ angular.module('main').controller('MainCtrl', [
     }
   }, 250)
   
+  logClient.$on('main.logClient.edit', function(evt, record) {
+    
+    console.log('main.logClient.edit event received')
+    
+    // TODO: maybe timeline should handle edit state as well?
+    
+    var target = programState.scripts[record.script]
+    if(!target) return
+    
+    target.body = record.body
+
+    if($scope.editing && record.script === programState.currentScript) // TODO: right value?
+      $scope.code = record.body
+      
+    if(!$scope.$$phase) $scope.$digest() // necessary?
+  })
+  
   $scope.$watch('code', function(newVal, oldVal) {
     
     debouncedValidate(newVal)

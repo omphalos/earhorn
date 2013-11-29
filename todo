@@ -1,42 +1,42 @@
 _ stuff required for release
-  _ create multi-script test example
-    _ in MainCtrl support editScript different from programState.currentScript
-    _ message loss should just incorporate dropped messages into the tail snapshot
-    _ message loss should also show a warning that messages were lost
-    _ clean up reset to handle multiple scripts
-    _ fix editing from multiple places
-  _ listen to other-window edits
   _ use earhorn subdirectory
   _ add README for adding to a site
   _ earhorn should return same function
-  _ set up error logging, depending on settings
+  _ set up error logging
     _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
     _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
     _ verify all statements are covered
     _ errors should be red
   _ log all errors the same way
   _ fix iframe inspector overlap
-  _ better bookmark ui
-    _ bookmark transitions
-    _ support tail-only bookmarks (?)
-    _ support inline bookmark editing (?)
+  _ bookmark transitions
   _ consolidate add/remove logic in codemirror widget
-  _ (i) support sandbox when no script is selected
-    _ open without iframe specified
-    _ verify sandbox shows up
-  _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
-  _ (i) add jquery todomvc example
-  _ (i) setup keybindings in settings
-    _ adjust focus cmd+`
-    _ play/pause cmd+p
-    _ open cmd+o
-    _ step cmd+, cmd+.
-  _ (i) better source map support
-  _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
-  - earhorn server (i)
-    - node-http-proxy js url
-      - fs.readfile -> res.write(...earhorn+)
-    - node-http-proxy specified url
+  _ refactor so that timeline handles editing?
+  _ internet conneciton
+    _ (i) add jquery todomvc example
+      _ test jquery todomvc example 
+        _ in MainCtrl support editScript different from programState.currentScript
+        _ message loss should just incorporate dropped messages into the tail snapshot
+        _ message loss should also show a warning that messages were lost
+        _ clean up reset to handle multiple scripts
+        _ fix editing from multiple places
+    _ (i) support sandbox when no script is selected
+      _ open without iframe specified
+      _ verify sandbox shows up
+    _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
+    _ (i) setup keybindings in settings
+      _ adjust focus cmd+`
+      _ play/pause cmd+p
+      _ open cmd+o
+      _ step cmd+, cmd+.
+      _ fast cmd-m, cmd-/
+      _ add tooltips
+    _ (i) better source map support
+    _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
+    - earhorn server (i)
+      - node-http-proxy js url
+        - fs.readfile -> res.write(...earhorn+)
+      - node-http-proxy specified url
 
 _ nice-to-haves
   _ (i) plugins
@@ -162,3 +162,6 @@ x set up esprima error notification
     x show error in header
     x remove error icon
   x fix editor focus on error navigation
+  x listen to other-window edits
+    x logClient: support on-other-window-edit event
+    x when event fires, if in edit mode, update code

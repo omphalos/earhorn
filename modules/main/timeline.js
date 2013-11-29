@@ -110,7 +110,7 @@ angular.module('main').factory('timeline', [
 
   var lostMessageCounts = {}
 
-  logClient.$on('main.logClient', function(evt, records) {
+  logClient.$on('main.logClient.logs', function(evt, records) {
 
     var missingScripts = {} // Scripts whose contents haven't been received.
 
