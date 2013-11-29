@@ -1,6 +1,4 @@
 _ stuff required for release
-  _ use earhorn subdirectory
-  _ add README for adding to a site
   _ earhorn should return same function
   _ set up error logging
     _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
@@ -33,10 +31,11 @@ _ stuff required for release
       _ add tooltips
     _ (i) better source map support
     _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
-    - earhorn server (i)
+    - (i) earhorn server
       - node-http-proxy js url
         - fs.readfile -> res.write(...earhorn+)
       - node-http-proxy specified url
+    - (i) test suite for instrumented javascript
 
 _ nice-to-haves
   _ (i) plugins
@@ -165,3 +164,5 @@ x set up esprima error notification
   x listen to other-window edits
     x logClient: support on-other-window-edit event
     x when event fires, if in edit mode, update code
+  x use earhorn subdirectory
+  x add README for adding to a site
