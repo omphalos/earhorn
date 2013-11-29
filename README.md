@@ -19,7 +19,7 @@ First add earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
-Add a reference to earhorn.js to your page.  (A bundled version is coming soon.)
+Add a reference to esprima.js and earhorn.js to your page.  (A bundled version is coming soon.)
 
 Let's say you have a JavaScript file you want to instrument, and it looks like this:
 
@@ -41,17 +41,12 @@ Just wrap it in a call to earhorn:
 
     })()
 
-(You need to do more work if you depend on global var and function declarations.  In this example, if you have other scripts that rely on the x, y, and sum global variables, you would probably want to manually hoist their declarations by adding a line "var x, y, sum;" before the call to earhorn.)
-
 Navigagte to /earhorn/index.html.  Open your the html hosting your JavaScript in a separate tab.  Alteratively, you can tell earhorn to open your page in an iframe by appending #/iframe=your-iframe-url to /earhorn/index.html.
 
 Related Links
 =============
 
-Inventing on Principle is the primary inspiration for this.
-YinYang is one take on showing code instrumentation in the UI.
-LightTable has a lot of this stuff gong on in ClojureScript, and some rudimentary JavaScript support as of this writing.  (It seems to use Chromium's API to work its magic.)  Worth checking out.
-Finally, TailSpin is an awesome project I stumbled across while working on earhorn.  Similar in intent but different in approach.
+TODO
 
 License
 =======
