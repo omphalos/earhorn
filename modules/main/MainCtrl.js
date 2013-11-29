@@ -60,19 +60,6 @@ angular.module('main').controller('MainCtrl', [
     if(!$scope.$$phase) $scope.$digest()
   })
 
-  // Conditionally allow traversal.
-  var traversalFns = [
-    'stepForward',
-    'stepBackward',
-    'fastForward',
-    'fastBackward'
-  ]
-  traversalFns.forEach(function(fn) {
-    $scope[fn] = function() {
-      if(!$scope.editing && timeline.history.length) timeline[fn]()
-    }
-  });
-
   ////////////////////
   // Program state. //
   ////////////////////
@@ -125,7 +112,6 @@ angular.module('main').controller('MainCtrl', [
     )
   }
 
-
   ////////////////
   // Edit code. //
   ////////////////
@@ -144,6 +130,8 @@ angular.module('main').controller('MainCtrl', [
     if(!$scope.editing) return
     
     timeline.pause()
+    getCurrentScript().body = newVal
+    timeline.clear()
 
     if(settings.autosave)    
       debouncedEdit(newVal)
@@ -154,6 +142,7 @@ angular.module('main').controller('MainCtrl', [
   }
   
   $scope.play = function() {
+    timeline.clear()
     debouncedEdit($scope.code)
     timeline.play()
   }
@@ -381,12 +370,12 @@ angular.module('main').controller('MainCtrl', [
     settings: $scope.settings,
     
     // Timeline functions.
-    stepBackward: $scope.stepBackward,
-    fastBackward: $scope.fastBackward,
+    stepBackward: timeline.stepBackward,
+    fastBackward: timeline.fastBackward,
     pause: timeline.pause,
-    stepForward: $scope.stepForward,
-    fastForward: $scope.fastForward,   
-    play: $scope.play,
+    stepForward: timeline.stepForward,
+    fastForward: timeline.fastForward,   
+    play: $scope.play, // TODO: can this be a $watch instead?
 
     // Miscellaneous utilities.
     revertChanges: $scope.revertChanges,

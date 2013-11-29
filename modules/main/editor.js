@@ -194,24 +194,18 @@ angular.module('main').directive('editor', [
 
         Object.keys(bookmarks).forEach(function(key) {
 
-          if(newBookmarks.hasOwnProperty(key)) return
-
-          // Delete widget.
-          var bookmark = bookmarks[key]
-          bookmark.bookmark.clear() // TODO rename widget to textMarker
-          bookmark.scope.$destroy()
-          delete bookmarks[key]
+          if(newBookmarks.hasOwnProperty(key)) return console.log('already present', key)
+          // Delete bookmark.
+          bookmarks[key].destroy()
         })
         
         Object.keys(newBookmarks).forEach(function(key) {
 
           if(bookmarks.hasOwnProperty(key)) {
-            
             // Update
             bookmarks[key].scope.log = newBookmarks[key]
             
           } else {
-
             // Add widget.
             var bookmarkScope = scope.$new()
               , log = newBookmarks[key]
@@ -226,7 +220,12 @@ angular.module('main').directive('editor', [
             bookmarks[key] = {
               scope: bookmarkScope,
               bookmark: editor.setBookmark(pos, options),
-              widget: widget
+              widget: widget,
+              destroy: function() {
+                this.bookmark.clear() // TODO rename bookmark to textMarker (?)
+                this.scope.$destroy()
+                delete bookmarks[key]
+              }
             }
           }
         })

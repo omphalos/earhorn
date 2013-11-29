@@ -15,12 +15,12 @@
 
     <div class="timeline">
       <div class="buttons">
-        <span ng-show="settings.display.fastBackward" title="Fast Backward" class="fast-backward icon" ng-click="fastBackward()"></span>
-        <span ng-show="settings.display.stepBackward" title="Step Backward" class="step-backward icon" ng-click="stepBackward()"></span>
+        <span ng-show="settings.display.fastBackward" title="Fast Backward" class="fast-backward icon" ng-click="timeline.fastBackward()"></span>
+        <span ng-show="settings.display.stepBackward" title="Step Backward" class="step-backward icon" ng-click="timeline.stepBackward()"></span>
         <span ng-show="settings.display.pause" title="Pause" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
         <span ng-show="settings.display.play" title="Play" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
-        <span ng-show="settings.display.stepForward" title="Step Forward" class="step-forward icon" ng-click="stepForward()"></span>
-        <span ng-show="settings.display.fastForward" title="Fast Forward" class="fast-forward icon" ng-click="fastForward()"></span>
+        <span ng-show="settings.display.stepForward" title="Step Forward" class="step-forward icon" ng-click="timeline.stepForward()"></span>
+        <span ng-show="settings.display.fastForward" title="Fast Forward" class="fast-forward icon" ng-click="timeline.fastForward()"></span>
       </div>
       <div class="input-container">
         <input type="range" ng-disabled="editing || !timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">

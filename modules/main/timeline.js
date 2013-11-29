@@ -75,6 +75,7 @@ angular.module('main').factory('timeline', [
   }
   
   timeline.step = function(stepSize) {
+    if(!timeline.history.length) return
     timeline.pause()
     var candidate = position + stepSize
     if(candidate < 0 || candidate >= timeline.history.length) return
@@ -95,6 +96,12 @@ angular.module('main').factory('timeline', [
 
   timeline.fastBackward = function() {
     timeline.step(-position)
+  }
+  
+  timeline.clear = function() {
+    timeline.history.length = 0
+    position = -1
+    programState.clearLogs()
   }
 
   /////////////////////
@@ -130,33 +137,23 @@ angular.module('main').factory('timeline', [
       pluck('script').
       lastIndexOf(record.script)
 
-    // console.log('lastIndex', lastIndex)
-
     if(lastIndex >= 0) {
-
+      
       var lastValid = lastIndex + 1
-  
-      // console.log('lastValid', lastValid)
       
       // Move to after this location in history.
       if(!playing && position < lastValid) {
         var newPosition = Math.min(lastValid, timeline.history.length - 1)
-        // console.log('setting position to', newPosition, 'from', position)
         timeline.setPosition(newPosition)
       }
-
-      // console.log('splicing', lastValid, 'from history', timeline.history)
-
-      // Finally remove references to this script from history.
+  
+      // Remove references to this script from history.
       timeline.history.splice(0, lastValid)
       
-      // console.log('adjusting position from', position, 'to', position - lastValid)
-      
+      // Adjust our position accordingly.
       position -= lastValid
     }
-    
-    // console.log('announcing', record)
-    
+      
     programState.announce(record)
   }
   

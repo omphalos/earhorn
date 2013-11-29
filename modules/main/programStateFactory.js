@@ -91,6 +91,20 @@ angular.module('main').factory('programStateFactory', [
     this.applyChange(record.reverse)
   }
   
+  ProgramState.prototype.clearLogs = function() {
+    
+    var self = this
+    
+    Object.keys(self.scripts).forEach(function(script) {
+
+      var logs = self.scripts[script].logs
+      
+      Object.keys(logs).forEach(function(key) {
+        delete logs[key]
+      })
+    })
+  }
+  
   return {
     create: function() { return new ProgramState() }
   }  

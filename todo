@@ -1,8 +1,6 @@
-_ stuff required for release 11-23-13
-  _ fix play behavior
-    _ remove jumpiness
-    _ remove code flashing
-  _ fade directive
+_ stuff required for release
+  _ refactor to use fade directive instead of two css classes
+  _ refactor to use disabled icons (share disabled class)
   _ error touch ups
     _ use local parse errors
       _ watch code to run a debounced esprima
@@ -154,3 +152,6 @@ x set up esprima error notification
     x show play/paused/editing message at the top center
     x disable traversal during edit
     x disable icons with css
+  x fix play behavior
+    x fix add a line to addition program
+    x fix code flashing - old code being added
