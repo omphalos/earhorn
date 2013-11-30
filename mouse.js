@@ -1,4 +1,4 @@
-earhorn$(this, 'mouse.js', function() {var x, y
+earhorn$('mouse.js', function() {var x, y
 
 $(document).on('mousemove', function(evt) {
   
@@ -9,6 +9,5 @@ $(document).on('mousemove', function(evt) {
   else
     y = evt.clientY
 })
-})
 
-earhorn$.flushInterval = 0 // Okay since there's so little code
+})()

@@ -69,7 +69,7 @@
     })
   }
 
-  function earhorn$(scope, name, fn) {
+  function earhorn$(name, fn) {
   
     // Get the function body.
     var sessionFnKey = 'earhorn-script-' + name
@@ -187,10 +187,10 @@
     instrumentedCode += '//@ sourceURL=' + name
     
     try {
-      return new Function(instrumentedCode).apply(scope)
+      return new Function(instrumentedCode)
     } catch(e) {
       console.error(instrumentedCode)
-      return new Function(instrumentedCode).apply(scope)
+      return new Function(instrumentedCode)
     }
   }
   
