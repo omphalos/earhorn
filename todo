@@ -1,10 +1,11 @@
 _ stuff required for release
   _ set up error logging
-    _ rewrite fn entry to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
+    _ rewrite fn body to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
     _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
-    _ verify all statements are covered
     _ errors should be red
+    _ verify all statement types are covered
   _ log all errors the same way
+  _ show find prev/next error
   _ fix iframe inspector overlap
   _ bookmark transitions
   _ consolidate add/remove logic in codemirror widget

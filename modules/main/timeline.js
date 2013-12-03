@@ -21,7 +21,7 @@ angular.module('main').factory('timeline', [
     , position = -1
 
   timeline.history = []
-  timeline.programState = programStateFactory.create()
+  var programState = timeline.programState = programStateFactory.create()
   
   ///////////////////////
   // Player interface. //

@@ -15,7 +15,8 @@
       depth: 2,
       maxStringLength: 50,
       bufferSize: 100,
-      flushInterval: 25
+      flushInterval: 25,
+      handleErrors: true
     }
     
     localStorage.setItem('earhorn-settings', JSON.stringify(settings))
@@ -159,22 +160,46 @@
     function visitNode(node) {
      
       if(!node.parent || node.type === 'Literal') return
-       
+      
+      if(settings.instrumentation.handleErrors &&
+        node.parent.type === 'BlockStatement' && node.parent.parent && (
+        node.parent.parent.type === 'FunctionDeclaration' || 
+        node.parent.parent.type === 'FunctionExpression')) {
+        
+        if(node.parent.body[0] === node) {
+          node.update('var eh$log; try {' + node.source())
+        }
+        
+        if(node.parent.body[node.parent.body.length - 1] === node) {
+          node.update(node.source() + '} catch(err) { eh$("' + name +  '",eh$loc,err); throw err; }')
+        }
+        
+        return
+      }
+
       if(
-        (node.parent.type === 'CallExpression' && node !== node.parent.callee) ||
-        (node.parent.type === 'IfStatement' && node === node.parent.test) ||
-        (node.parent.type === 'WhileStatement' && node === node.parent.test) ||
-        (node.parent.type === 'DoWhileStatement' && node === node.parent.test) ||
-        (node.parent.type === 'SwitchCase' && node === node.parent.test) ||
-        (node.parent.type === 'SwitchStatement' && node === node.parent.discriminant) ||
+        (node.parent.type === 'CallExpression' && 
+          node !== node.parent.callee) ||
+        (node.parent.type === 'IfStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'WhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'DoWhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchCase' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchStatement' && 
+          node === node.parent.discriminant) ||
+        (node.parent.type === 'MemberExpression' && 
+          node === node.parent.object) ||
         instrumentedExpressions.indexOf(node.type) >= 0 ||
-        (node.type !== 'MemberExpression' &&
-          instrumentedParentTypes.indexOf(node.parent.type) >= 0) ||
+        (instrumentedParentTypes.
+          indexOf(node.parent.type) >= 0) ||
         (node.type === 'MemberExpression' && 
           skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
           
         node.update('eh$("' +
-          name + '","' +
+          name + '",eh$loc="' +
           (node.loc.start.line - 1) + ',' +
           node.loc.start.column + ',' +
           (node.loc.end.line - 1) + ',' +
@@ -183,6 +208,8 @@
         ')')
       }
     }
+  
+    console.log(instrumentedCode)
   
     instrumentedCode += '//@ sourceURL=' + name
     
@@ -238,8 +265,6 @@
     }
 
     // Object
-    var keys = settings.instrumentation.maxKeys
-
     var result = {
       type: 'Object',
       constructor: obj.constructor ? obj.constructor.name : null,
@@ -247,14 +272,25 @@
       properties: { }
     }
 
-    if(depth > 1)
-      for(var key in obj)
-        if(keys --> 0)
-          result.properties[key] = makeSerializable(obj[key], depth - 1)
-        else {
+    if(depth > 1 && obj !== window) {
+
+      var keys = settings.instrumentation.maxKeys
+
+      for(var key in obj) {
+
+        if(keys --> 0) {
+          try {
+            var value = obj[key]
+            result.properties[key] = makeSerializable(obj[key], depth - 1)
+          } catch(err) {
+            result.properties[key] = makeSerializable(err, depth - 1)
+          }
+        } else {
           result.complete = false
           break
         }
+      }
+    }
       
     return result
   }

@@ -368,7 +368,7 @@ angular.module('main').controller('MainCtrl', [
             
     return log.type
   }  
-  
+
   /////////////////////////////////////
   // Build an iframe when requested. //
   /////////////////////////////////////
@@ -378,7 +378,7 @@ angular.module('main').controller('MainCtrl', [
 
   if(iframeIndex >= 0)
     $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
-  
+
   //////////////////////
   // Revert changes. //
   //////////////////////
