@@ -65,20 +65,20 @@
     </iframe-->
   </div>
 
-  <script type="text/ng-template" id="bookmarkTemplate">
-    <span
-      ng-mouseenter="hover(key,log.loc)"
-      ng-mouseleave="unhover()"
-      ng-class="{ bookmark: 1, current: key == programState.currentLoc}"
-      ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
-  </script>
-
   <script type="text/ng-template" id="errorLineWidgetTemplate">
     <div class="error-inline"><pre>{{model}}</pre></div>
   </script>
 
+  <script type="text/ng-template" id="bookmarkTemplate">
+    <span
+      ng-mouseenter="hover(key,log.loc)"
+      ng-mouseleave="unhover()"
+      ng-class="{ bookmark: 1, current: key == programState.currentLoc, caught: log.caught }"
+      ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
+  </script>
+
   <script type="text/ng-template" id="widgetTemplate">
-    <span ng-show="getWidgetLog() && widgetScript == programState.currentScript" class="widget">
+    <span ng-show="getWidgetLog() && widgetScript == programState.currentScript" ng-class="{ widget: 1, caught: getWidgetLog().caught }">
       <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">
         <!-- TODO: use ng-switch -->
 

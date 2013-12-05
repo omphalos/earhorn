@@ -83,11 +83,12 @@ iframe {
 .main-container .var-assignment { color: gray; }
 
 .main-container .bookmark { cursor: pointer; }
-.main-container .bookmark, .widget-inner {
-  background-color: rgba(173, 216, 230, .25); 
+.main-container .bookmark, .main-container .widget-inner {
   padding: 0 0.5em;
 }
-.main-container .bookmark, .widget {  
+.main-container .bookmark,
+.main-container .widget {  
+  background-color: #eef;
   user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
@@ -101,7 +102,6 @@ iframe {
   border: 1px solid lightblue;
 }
 .main-container .widget {
-  background-color: white;
   z-index: 2;
   margin-top : 0.25em;
   max-height: 25em;
@@ -113,6 +113,13 @@ iframe {
 .main-container .widget-label.Function { color: green; }
 .main-container .widget-label.Object { color: brown; }
 .main-container .widget-label.Array { color: gray; }
+
+.main-container .bookmark.caught, .main-container .widget.caught { 
+  border-color: #fbb;
+  background-color: #fee;
+  color: #f00;
+  font-weight: normal;
+}
 
 .main-container .bookmark-loc { text-decoration: underline; }
 .main-container .current-loc { font-weight: bold; }

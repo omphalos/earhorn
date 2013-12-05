@@ -1,26 +1,21 @@
 _ stuff required for release
   _ set up error logging
-    _ rewrite fn body to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
-    _ change eh$ instrumenation to: $eh(eh$loc='loc',val)
-    _ errors should be red
+    x errors should be red
+    _ show caught error strings
     _ verify all statement types are covered
   _ log all errors the same way
   _ show find prev/next error
   _ fix iframe inspector overlap
   _ bookmark transitions
   _ consolidate add/remove logic in codemirror widget
-  _ refactor so that timeline handles editing?
-  _ (i) add jquery todomvc example
-    _ test jquery todomvc example 
-      _ in MainCtrl support editScript different from programState.currentScript
-      _ message loss should just incorporate dropped messages into the tail snapshot
-      _ message loss should also show a warning that messages were lost
-      _ clean up reset to handle multiple scripts
-      _ fix editing from multiple places
+  _ refactor timeline so that it handles editing?
+  _ refactor programState monkey patching
+  _ programStateFactory -> programState
   _ (i) support sandbox when no script is selected
     _ open without iframe specified
     _ verify sandbox shows up
   _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
+  _ (i) better source map support
   _ (i) setup keybindings in settings
     _ adjust focus cmd+`
     _ play/pause cmd+p
@@ -28,13 +23,23 @@ _ stuff required for release
     _ step cmd+, cmd+.
     _ fast cmd-m, cmd-/
     _ add tooltips
-  _ (i) better source map support
+  _ (i) add jquery todomvc example
+    _ test jquery todomvc example 
+      _ in MainCtrl support editScript different from programState.currentScript
+      _ message loss should just incorporate dropped messages into the tail snapshot
+      _ message loss should also show a warning that messages were lost
+      _ clean up reset to handle multiple scripts
+      _ fix editing from multiple places
+    _ performance improvements
+      _ better log binding
+      _ session-stored parsing
   _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
   - (i) earhorn server
     - node-http-proxy js url
       - fs.readfile -> res.write(...earhorn+)
     - node-http-proxy specified url
   - (i) test suite for instrumented javascript
+  _ update readme
 
 _ nice-to-haves
   _ (i) plugins
@@ -53,6 +58,7 @@ _ nice-to-haves
   _ basic hotswapping
     _ support settings overrides?
   _ (i) sophisticated hotswapping
+  _ node-falafel performance improvement
 
 x show widget
   x create attribute for widget template id
@@ -166,3 +172,10 @@ x set up esprima error notification
   x use earhorn subdirectory
   x add README for adding to a site
   x earhorn should return same function
+
+  12-3-13
+  x rewrite fn body to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
+  x change eh$ instrumenation to: $eh(eh$loc='loc',val)
+
+  12-5-13 ~39
+

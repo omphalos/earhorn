@@ -156,10 +156,30 @@
       announce(name)
       throw err
     }
-      
+
+    function getLocationUpdate(node) {
+      return 'eh$loc="' +
+        (node.loc.start.line - 1) + ',' +
+        node.loc.start.column + ',' +
+        (node.loc.end.line - 1) + ',' +
+        node.loc.end.column + '"'
+    }
+
+    var tryPrefix = 'var eh$log; try {'
+      , catchSuffix = 
+        '} catch(err) { eh$("' + name +  '",eh$loc,err,true); throw err; }'
+    
     function visitNode(node) {
      
-      if(!node.parent || node.type === 'Literal') return
+      if(!node.parent) return
+      
+      if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
+        node.update(getLocationUpdate(node) + ',' + node.source())
+        return
+      }
+        
+      if(node.type === 'Literal')
+        return
       
       if(settings.instrumentation.handleErrors &&
         node.parent.type === 'BlockStatement' && node.parent.parent && (
@@ -167,11 +187,11 @@
         node.parent.parent.type === 'FunctionExpression')) {
         
         if(node.parent.body[0] === node) {
-          node.update('var eh$log; try {' + node.source())
+          node.update(tryPrefix + node.source())
         }
         
         if(node.parent.body[node.parent.body.length - 1] === node) {
-          node.update(node.source() + '} catch(err) { eh$("' + name +  '",eh$loc,err); throw err; }')
+          node.update(node.source() + catchSuffix)
         }
         
         return
@@ -199,20 +219,21 @@
           skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
           
         node.update('eh$("' +
-          name + '",eh$loc="' +
-          (node.loc.start.line - 1) + ',' +
-          node.loc.start.column + ',' +
-          (node.loc.end.line - 1) + ',' +
-          node.loc.end.column + '",' +
+          name + '",' + 
+          getLocationUpdate(node) + ',' +
           node.source() +
         ')')
       }
     }
   
+    instrumentedCode =
+      tryPrefix +
+      instrumentedCode +
+      catchSuffix +
+      '//@ sourceURL=' + name // Source mapping.
+    
     console.log(instrumentedCode)
   
-    instrumentedCode += '//@ sourceURL=' + name
-    
     try {
       return new Function(instrumentedCode)
     } catch(e) {
@@ -298,13 +319,14 @@
   var buffer = []
   
   // Log and return the value.
-  function eh$(script, loc, val) {
+  function eh$(script, loc, val, caught) {
   
     send({
       type: 'log',
       script: script,
       loc: loc,
-      val: makeSerializable(val, settings.instrumentation.depth)
+      val: makeSerializable(val, settings.instrumentation.depth),
+      caught: caught || false
     })
 
     return val

@@ -27,15 +27,17 @@ angular.module('main').factory('programStateFactory', [
     if(!record)
       throw 'invalid record'
 
+    var hasRecord =
+      self.scripts[record.script] &&
+      self.scripts[record.script].logs[record.loc]
+        
     record.reverse = record.reverse || {
       currentLoc: self.currentLoc,
       currentScript: self.currentScript,
       script: record.script,
       loc: record.loc,
-      val: // Get the previous value.
-        self.scripts[record.script] &&
-        self.scripts[record.script].logs[record.loc] &&
-        self.scripts[record.script].logs[record.loc].val
+      caught: hasRecord && self.scripts[record.script].logs[record.loc].caught,
+      val: hasRecord && self.scripts[record.script].logs[record.loc].val
     }
     
     record.forward = record.forward || {
@@ -43,7 +45,8 @@ angular.module('main').factory('programStateFactory', [
       val: record.val,
       currentLoc: record.loc,
       currentScript: record.script,
-      script: record.script
+      script: record.script,
+      caught: record.caught
     }
     
     this.applyChange(record.forward)
@@ -79,6 +82,7 @@ angular.module('main').factory('programStateFactory', [
       }
 
       changingLog.val = change.val
+      changingLog.caught = change.caught
 
     } else {
       
