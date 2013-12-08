@@ -5,6 +5,8 @@ _ stuff required for release
     _ step cmd+, cmd+.
     _ fast cmd-m, cmd-/
     _ add tooltips
+  _ editor focus after mouseclick icon
+  _ editor focus after mouseup timeline
   _ refactor
     _ consolidate add/remove logic in codemirror widget
     _ refactor timeline so that it handles editing?

@@ -36,7 +36,14 @@ angular.module('main').controller('MainCtrl', [
       play: true,
       formatDigits: 2
     },
-    autosave: false
+    autosave: false,
+    keys: {
+      'mod+p': 'play()',
+      'mod+m': 'timeline.fastBackward()',
+      'mod+,': 'timeline.stepBackward()',
+      'mod+.': 'timeline.stepForward()',
+      'mod+/': 'timeline.fastForward()'
+    }
   })
 
   ///////////////
@@ -399,6 +406,27 @@ angular.module('main').controller('MainCtrl', [
     
     timeline.play()
   }
+  
+  ///////////////////////////
+  // Support key-bindings. //
+  ///////////////////////////
+  
+  $scope.$watch('settings.keys', function(newVal, oldVal) {
+
+    Mousetrap.reset()
+
+    Object.keys(settings.keys || {}).forEach(function(key) {
+      console.log('listening to', key)
+      Mousetrap.bind(key, function(evt) {
+        console.log('invoked', key)
+        $scope.$eval(settings.keys[key])
+        if(!$scope.$$phase) $scope.$digest()
+        if(evt.preventDefault) 
+          evt.preventDefault()
+        else evt.returnValue = false
+      })
+    })
+  })
   
   /////////////////////////////////
   // Create a console interface. //
