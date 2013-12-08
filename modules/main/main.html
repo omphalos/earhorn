@@ -6,8 +6,8 @@
         <select ng-show="getScriptCount() > 1" ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
-        <button ng-show="getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="Revert changes.">X</button>
-        <button ng-show="getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="Revert changes.">Revert</button>
+        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="Revert changes.">X</button>
+        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="Revert changes.">Revert</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
@@ -54,15 +54,8 @@
       focus-event="focusEvent"
       element="editor" >
     </editor>
-    <iframe ng-if="!!iframe" src="{{iframe}}">IFRAME</iframe>
-    <!--iframe ng-if="!iframe">
-      <html>
-      <body>
-        <script>console.log('sandbox')</script>
-        <script src="sandbox.js"></script>
-      </body>
-      </html>
-    </iframe-->
+    <iframe ng-if="!!iframe" src="{{iframe}}"></iframe>
+    <iframe ng-if="!iframe" src="sandbox.html"></iframe>
   </div>
 
   <script type="text/ng-template" id="errorLineWidgetTemplate">

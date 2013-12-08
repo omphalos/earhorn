@@ -1,12 +1,12 @@
 _ stuff required for release
-  _ fix iframe inspector overlap
-  _ consolidate add/remove logic in codemirror widget
-  _ refactor timeline so that it handles editing?
-  _ refactor programState monkey patching
-  _ programStateFactory -> programState
   _ (i) support sandbox when no script is selected
     _ open without iframe specified
     _ verify sandbox shows up
+  _ refactor
+    _ consolidate add/remove logic in codemirror widget
+    _ refactor timeline so that it handles editing?
+    _ refactor programState monkey patching
+    _ programStateFactory -> programState
   _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
   _ (i) better source map support
   _ (i) setup keybindings in settings
@@ -179,4 +179,5 @@ x set up esprima error notification
   x set up error logging
     x show caught error strings
   x fix timeline resetting to 0
+  x fix revert (shouldnt occur when editing)
 

@@ -16,7 +16,8 @@
       maxStringLength: 50,
       bufferSize: 100,
       flushInterval: 25,
-      handleErrors: true
+      handleErrors: true,
+      logModifiedCode: true
     }
     
     localStorage.setItem('earhorn-settings', JSON.stringify(settings))
@@ -76,23 +77,25 @@
   function earhorn$(name, fn) {
   
     // Get the function body.
-    var sessionFnKey = 'earhorn-script-' + name
-      , modified = localStorage.hasOwnProperty(sessionFnKey)
+    var fnKey = 'earhorn-script-' + name
       , fnStr = fn.toString()
-      
-    var body
-    
-    if(modified) {
-      
-      body = localStorage.getItem(sessionFnKey)
-      console.log('using copy of code in localStorage for', name)
-    } else {
-      
-      body = fnStr.substring(
+      , modified = false
+
+    var body = fnStr.substring(
       fnStr.indexOf('{') + 1,
       fnStr.lastIndexOf('}'))
       
-      while(body[0] === '\n') body = body.slice(1)
+    while(body[0] === '\n') body = body.slice(1)
+    
+    if(localStorage.hasOwnProperty(fnKey)) {
+      
+      var storedVersion = localStorage.getItem(fnKey)
+      if(storedVersion !== body) {
+        modified = true
+        body = storedVersion
+        if(settings.instrumentation.logModifiedCode)
+          console.log('using copy of code in localStorage for', name)
+      }
     }
   
     function isExpression(type) {
@@ -137,6 +140,12 @@
       body: body,
       modified: modified
     }
+
+    var handleErrors = settings.instrumentation.handleErrors
+      , tryPrefix = handleErrors ? 'var eh$log; try {' : ''
+      , catchSuffix = handleErrors ?
+        '} catch(err) { eh$("' + name +  '",eh$loc,err,true); throw err; }' :
+        ''
     
     var instrumentedCode
     try {
@@ -168,10 +177,6 @@
         node.loc.end.column + '"'
     }
 
-    var tryPrefix = 'var eh$log; try {'
-      , catchSuffix = 
-        '} catch(err) { eh$("' + name +  '",eh$loc,err,true); throw err; }'
-    
     function visitNode(node) {
      
       if(!node.parent) return
@@ -184,7 +189,7 @@
       if(node.type === 'Literal')
         return
       
-      if(settings.instrumentation.handleErrors &&
+      if(
         node.parent.type === 'BlockStatement' && node.parent.parent && (
         node.parent.parent.type === 'FunctionDeclaration' || 
         node.parent.parent.type === 'FunctionExpression')) {
@@ -234,8 +239,9 @@
       instrumentedCode +
       catchSuffix +
       '//@ sourceURL=' + name // Source mapping.
-    
-    console.log(instrumentedCode)
+ 
+    if(settings.instrumentation.logCode)
+      console.log(instrumentedCode)
   
     try {
       return new Function(instrumentedCode)
