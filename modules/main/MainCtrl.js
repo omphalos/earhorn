@@ -410,23 +410,40 @@ angular.module('main').controller('MainCtrl', [
   ///////////////////////////
   // Support key-bindings. //
   ///////////////////////////
-  
+
+  var commandToKey = {};
+
   $scope.$watch('settings.keys', function(newVal, oldVal) {
+
+    commandToKey = {}  
 
     Mousetrap.reset()
 
     Object.keys(settings.keys || {}).forEach(function(key) {
-      console.log('listening to', key)
-      Mousetrap.bind(key, function(evt) {
-        console.log('invoked', key)
-        $scope.$eval(settings.keys[key])
-        if(!$scope.$$phase) $scope.$digest()
+
+      var command = settings.keys[key]
+
+      commandToKey[command] = key
+
+      Mousetrap.bindGlobal(key, function(evt) {
+
+        eval(command)
+
+        if(!$scope.$$phase)
+          $scope.$digest()
+
         if(evt.preventDefault) 
           evt.preventDefault()
         else evt.returnValue = false
       })
     })
-  })
+  }, true)
+
+  $scope.tooltipFor = function(label, command) {
+    var key = commandToKey[command]
+    if(!key) return label
+    return label + ' ( ' + key + ' )'
+  }
   
   /////////////////////////////////
   // Create a console interface. //

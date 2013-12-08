@@ -1,10 +1,4 @@
 _ stuff required for release
-  _ (i) setup keybindings in settings
-    _ play/pause cmd+p
-    _ open cmd+o
-    _ step cmd+, cmd+.
-    _ fast cmd-m, cmd-/
-    _ add tooltips
   _ editor focus after mouseclick icon
   _ editor focus after mouseup timeline
   _ refactor
@@ -24,6 +18,7 @@ _ stuff required for release
     _ performance improvements
       _ better log binding
       _ session-stored parsing
+  _ keypress to open cmd+o
   _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
   - (i) earhorn server
     - node-http-proxy js url
@@ -181,4 +176,9 @@ x set up esprima error notification
   x (i) support sandbox when no script is selected
     x open without iframe specified
     x verify sandbox shows up
+  x setup keybindings in settings
+    x play/pause cmd+p
+    x step cmd+, cmd+.
+    x fast cmd-m, cmd-/
+    x add tooltips
 

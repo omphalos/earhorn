@@ -6,8 +6,8 @@
         <select ng-show="getScriptCount() > 1" ng-model="programState.currentScript">
           <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
         </select>
-        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="Revert changes.">X</button>
-        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="Revert changes.">Revert</button>
+        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
+        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
@@ -15,12 +15,12 @@
 
     <div class="timeline">
       <div class="buttons">
-        <span ng-show="settings.display.fastBackward" title="Fast Backward" ng-class="{ 'fast-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastBackward()"></span>
-        <span ng-show="settings.display.stepBackward" title="Step Backward" ng-class="{ 'step-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepBackward()"></span>
-        <span ng-show="settings.display.pause" title="Pause" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
-        <span ng-show="settings.display.play" title="Play" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
-        <span ng-show="settings.display.stepForward" title="Step Forward" ng-class="{ 'step-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepForward()"></span>
-        <span ng-show="settings.display.fastForward" title="Fast Forward" ng-class="{ 'fast-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastForward()"></span>
+        <span ng-show="settings.display.fastBackward" title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" ng-class="{ 'fast-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastBackward()"></span>
+        <span ng-show="settings.display.stepBackward" title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}"  ng-class="{ 'step-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepBackward()"></span>
+        <span ng-show="settings.display.pause" title="{{tooltipFor('Pause', 'timeline.pause()')}}" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
+        <span ng-show="settings.display.play" title="{{tooltipFor('Play', 'play()')}}" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
+        <span ng-show="settings.display.stepForward" title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" ng-class="{ 'step-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepForward()"></span>
+        <span ng-show="settings.display.fastForward" title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" ng-class="{ 'fast-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastForward()"></span>
       </div>
       <div class="input-container">
         <input type="range" ng-disabled="editing || !timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
