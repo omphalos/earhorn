@@ -28,6 +28,9 @@
   function onStorage(evt) {
     
     console.log('server receieved message')
+    
+    if(!evt.newValue)
+      return
 
     if(evt.key === 'earhorn-settings')
       return settings = earhorn$.settings = JSON.parse(evt.newValue)
@@ -292,6 +295,9 @@
       complete: true,
       properties: { }
     }
+
+    if(obj instanceof Error)
+      result.errorMessage = obj.toString()
 
     if(depth > 1 && obj !== window) {
 

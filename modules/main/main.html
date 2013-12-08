@@ -84,6 +84,7 @@
 
         <!-- Object widgets -->
         <span ng-if="getWidgetLog().val.type == 'Object'">
+          <div ng-if="getWidgetLog().val.errorMessage" class="error-string">{{getWidgetLog().val.errorMessage}}</div>
           <div ng-repeat="(key, value) in getWidgetLog().val.properties" title="value.type">
             <span class="widget-label {{value.type}}">
               {{key}}<span ng-if="value.type == 'Function'">()</span>

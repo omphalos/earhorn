@@ -1,12 +1,5 @@
 _ stuff required for release
-  _ set up error logging
-    x errors should be red
-    _ show caught error strings
-    _ verify all statement types are covered
-  _ log all errors the same way
-  _ show find prev/next error
   _ fix iframe inspector overlap
-  _ bookmark transitions
   _ consolidate add/remove logic in codemirror widget
   _ refactor timeline so that it handles editing?
   _ refactor programState monkey patching
@@ -39,6 +32,7 @@ _ stuff required for release
       - fs.readfile -> res.write(...earhorn+)
     - node-http-proxy specified url
   - (i) test suite for instrumented javascript
+  _ verify all statement types are covered by errors
   _ update readme
 
 _ nice-to-haves
@@ -59,6 +53,7 @@ _ nice-to-haves
     _ support settings overrides?
   _ (i) sophisticated hotswapping
   _ node-falafel performance improvement
+  _ bookmark transitions
 
 x show widget
   x create attribute for widget template id
@@ -178,4 +173,10 @@ x set up esprima error notification
   x change eh$ instrumenation to: $eh(eh$loc='loc',val)
 
   12-5-13 ~39
+  x errors should be red
+
+  12-7-13 ~41
+  x set up error logging
+    x show caught error strings
+  x fix timeline resetting to 0
 
