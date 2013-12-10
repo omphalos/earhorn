@@ -4,10 +4,18 @@
     <div class="top">
       <span ng-show="getScriptCount()">
         <select ng-show="getScriptCount() > 1" ng-model="programState.currentScript">
-          <option ng-repeat="(script, log) in timeline.programState.scripts" value="{{script}}">{{script}}</option>
+          <option 
+            ng-repeat="(script, log) in timeline.programState.scripts" 
+            value="{{script}}">{{script}}</option>
         </select>
-        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" ng-click="revertChanges()" title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
-        <button ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" ng-click="revertChanges()" title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
+        <button 
+          ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" 
+          ng-click="revertChanges()" 
+          title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
+        <button 
+          ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" 
+          ng-click="revertChanges()" 
+          title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
@@ -15,23 +23,49 @@
 
     <div class="timeline">
       <div class="buttons">
-        <span ng-show="settings.display.fastBackward" title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" ng-class="{ 'fast-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastBackward()"></span>
-        <span ng-show="settings.display.stepBackward" title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}"  ng-class="{ 'step-backward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepBackward()"></span>
-        <span ng-show="settings.display.pause" title="{{tooltipFor('Pause', 'timeline.pause()')}}" class="pause icon" ng-class="{ active: !timeline.isPlaying() }" ng-click="timeline.pause()"></span>
-        <span ng-show="settings.display.play" title="{{tooltipFor('Play', 'play()')}}" class="play icon" ng-class="{ active: timeline.isPlaying() }" ng-click="play()"></span>
-        <span ng-show="settings.display.stepForward" title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" ng-class="{ 'step-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.stepForward()"></span>
-        <span ng-show="settings.display.fastForward" title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" ng-class="{ 'fast-forward': 1, icon: 1, disabled: editing }" ng-click="timeline.fastForward()"></span>
+        <span 
+          ng-show="settings.display.fastBackward" 
+          ng-class="{ 'fast-backward': 1, icon: 1, disabled: editing }" 
+          title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" 
+          ng-click="timeline.fastBackward()"></span>
+        <span 
+          ng-show="settings.display.stepBackward" 
+          ng-class="{ 'step-backward': 1, icon: 1, disabled: editing }" 
+          title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}" 
+          ng-click="timeline.stepBackward()"></span>
+        <span 
+          ng-show="settings.display.pause" 
+          ng-class="{ pause: 1, icon: 1, active: !timeline.isPlaying() }" 
+          title="{{tooltipFor('Pause', 'timeline.pause()')}}" 
+          ng-click="timeline.pause()"></span>
+        <span 
+          ng-show="settings.display.play" 
+          class="play icon" 
+          ng-class="{ active: timeline.isPlaying() }" 
+          title="{{tooltipFor('Play', 'play()')}}" 
+          ng-click="play()"></span>
+        <span 
+          ng-show="settings.display.stepForward" 
+          ng-class="{ 'step-forward': 1, icon: 1, disabled: editing }" 
+          title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" 
+          ng-click="timeline.stepForward()"></span>
+        <span 
+          ng-show="settings.display.fastForward" 
+          ng-class="{ 'fast-forward': 1, icon: 1, disabled: editing }" 
+          title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" 
+          ng-click="timeline.fastForward()"></span>
       </div>
       <div class="input-container">
-        <input type="range" ng-disabled="editing || !timeline.history.length" range-input="timelinePosition" range-min="0" range-max="timeline.history.length - 1">
+        <input 
+          type="range" 
+          ng-disabled="editing || !timeline.history.length" 
+          range-input="timelinePosition" 
+          range-min="0" 
+          range-max="timeline.history.length - 1">
       </div>
     </div>
 
   </nav>
-
-  <div class="status">
-    <span class="error-summary" ng-click="goToError()" title="{{getParseErrors()[0]}}" ng-show="getParseErrors().length">{{parseError.message}}</span>
-  </div>
 
   <div class="main-content" ng-click="widgetKey = null">
     <editor
@@ -51,7 +85,7 @@
       widget-template="widgetTemplate"
       markers="getMarkers()"
       line-widgets="getLineWidgets()"
-      focus-event="focusEvent"
+      focus="editorFocus"
       element="editor" >
     </editor>
     <iframe ng-if="!!iframe" src="{{iframe}}"></iframe>
@@ -64,19 +98,25 @@
 
   <script type="text/ng-template" id="bookmarkTemplate">
     <span
-      ng-mouseenter="hover(key,log.loc)"
+      ng-cloak
+      ng-mouseenter="hover(key,model.loc)"
       ng-mouseleave="unhover()"
-      ng-class="{ bookmark: 1, current: key == programState.currentLoc, caught: log.caught }"
-      ng-click="toggleWidget($event, key)">{{getLogText(log.val)}}</span>
+      ng-class="{ bookmark: 1, current: key == programState.currentLoc, caught: model.caught }"
+      ng-bind="model.text"
+      ng-click="toggleWidget($event, key)"></span>
   </script>
 
   <script type="text/ng-template" id="widgetTemplate">
-    <span ng-show="getWidgetLog() && widgetScript == programState.currentScript" ng-class="{ widget: 1, caught: getWidgetLog().caught }">
+    <span 
+      ng-show="getWidgetLog() && widgetScript == programState.currentScript" 
+      ng-class="{ widget: 1, caught: getWidgetLog().caught }">
+
       <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">
         <!-- TODO: use ng-switch -->
 
         <!-- Object widgets -->
         <span ng-if="getWidgetLog().val.type == 'Object'">
+          <div>{{getLogText(getWidgetLog().val)}}</div>
           <div ng-if="getWidgetLog().val.errorMessage" class="error-string">{{getWidgetLog().val.errorMessage}}</div>
           <div ng-repeat="(key, value) in getWidgetLog().val.properties" title="value.type">
             <span class="widget-label {{value.type}}">

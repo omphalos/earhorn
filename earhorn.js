@@ -28,7 +28,7 @@
   
   function onStorage(evt) {
     
-    console.log('server receieved message')
+    // console.log('server receieved message', window.location)
     
     if(!evt.newValue)
       return
@@ -149,6 +149,7 @@
     
     var instrumentedCode
     try {
+      console.log('parsing', name)
       instrumentedCode = falafel(body, { loc: true, raw: true }, visitNode).toString()
       scripts[name].parseError = null
       announce(name)

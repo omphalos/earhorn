@@ -35,3 +35,8 @@ select, button {
   -webkit-appearance: none;
   padding: 0em 0.5em; 
 }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+

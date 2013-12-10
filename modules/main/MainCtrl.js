@@ -63,9 +63,9 @@ angular.module('main').controller('MainCtrl', [
     $scope.timelinePosition = newVal
   })
 
-  timeline.$on('main.timeline', function() {
+  timeline.$on('main.timeline', _.debounce(function() {
     if(!$scope.$$phase) $scope.$digest()
-  })
+  }, 100))
 
   ////////////////////
   // Program state. //
@@ -94,7 +94,25 @@ angular.module('main').controller('MainCtrl', [
   }
 
   $scope.getBookmarks = function() {
-    return $scope.editing ? {} : getCurrentScript().logs
+
+    if($scope.editing) return {}
+
+    var bookmarks = {}
+      , logs = getCurrentScript().logs || {}
+      
+    Object.keys(logs).forEach(function(key) {
+
+      var log = logs[key]
+
+      bookmarks[key] = {
+        key: key,
+        loc: log.loc,
+        caught: log.caught,
+        text: $scope.getLogText(log.val)
+      }
+    })
+    
+    return bookmarks
   }
   
   $scope.$watch('timeline.isPlaying()', function(newVal) {
@@ -277,7 +295,7 @@ angular.module('main').controller('MainCtrl', [
     var error = programState.scripts[script].parseError
     $scope.currentLine = error.line
     $scope.currentCh = error.ch
-    $scope.$emit('focusEvent')
+    $scope.editorFocus = true
   }
   
   $scope.getLineWidgets = function() {

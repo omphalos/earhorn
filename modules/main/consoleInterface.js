@@ -19,7 +19,7 @@ angular.module('main').factory('consoleInterface', ['$interval', function($inter
     })
     
     // User shouldn't have to call digest when working with this interface.
-    $interval(function() {}, 100)
+//    $interval(function() {}, 100)
     
     // Attach a clean up event.
     $scope.$on('$destroy', function() {
