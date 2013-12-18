@@ -111,7 +111,8 @@
       'UpdateExpression',
       'UnaryExpression',
       'PostfixExpression',
-      'BinaryExpression'
+      'BinaryExpression',
+      'AssignmentExpression'
       // TODO function arguments
       // TODO CatchClause
       // TODO ForStatement
@@ -130,8 +131,8 @@
       'AssignmentExpression',
       'UnaryExpression',
       'UpdateExpression',
-      'CallExpression',
-      'NewExpression'
+      'CallExpression', /*
+      'NewExpression' */
     ]
     
     // Wrap Identifiers with calls to our logger, eh$(...)
@@ -226,12 +227,20 @@
           indexOf(node.parent.type) >= 0) ||
         (node.type === 'MemberExpression' && 
           skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
+
+        var parenStart
+          , parenEnd
           
-        node.update('eh$("' +
+        if(node.parent.type === 'NewExpression') {
+          parenStart = '('
+          parenEnd = ')'
+        } else parenStart = parenEnd = ''
+        
+        node.update(parenStart + 'eh$("' +
           name + '",' + 
           getLocationUpdate(node) + ',' +
           node.source() +
-        ')')
+        ')' + parenEnd)
       }
     }
   

@@ -1,18 +1,20 @@
 _ stuff required for release
   _ add jquery todomvc example
+    _ fix broken widget
     _ fix log binding performance
-      try debouncing cursor
-      fix bookmarks: deep $watch + dont return log object
-      debounced digests?
-      performance issue seems to be due to timeline.digest
+      x debounced codemirror rebuild
+      _ fix bookmarks: deep $watch + dont return log object
+    _ fix focus on current line
     _ fix crash: maybe better error handling in eh$?
     _ session-stored parsing
     _ test jquery todomvc example 
       _ in MainCtrl support editScript different from programState.currentScript
+      _ only auto-navigate when paused
       _ message loss should just incorporate dropped messages into the tail snapshot
       _ message loss should also show a warning that messages were lost
       _ clean up reset to handle multiple scripts
     _ keypress to open cmd+o
+    _ reinstate interval
   - (i) earhorn server
     - node-http-proxy js url
       - fs.readfile -> res.write(...earhorn+)
@@ -194,3 +196,7 @@ x set up esprima error notification
 
   12-9-13 ~37
     x create jquery todomvc
+    x try debouncing cursor
+
+  12-16-13 ~39
+    x use focus, blur events instead o interval

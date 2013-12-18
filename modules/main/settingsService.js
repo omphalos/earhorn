@@ -31,16 +31,27 @@ angular.module('main').factory('settingsService', [
         settings[key] = defaults[key]
     })
     
+    if(!settings.save)
+      Object.defineProperty(settings, "save", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function() { 
+          localStorage.setItem('earhorn-settings', JSON.stringify(settings))
+          console.log('settings saved')
+        }
+      })
+    
     return settings
   }
 
   // Save changes in $scope to localStorage.
   function $watch($scope, pathInScope) {
-  
+
     // Persist changes to localStorage.
     $scope.$watch(pathInScope, function(newVal, oldVal) {
       if(newVal === oldVal) return
-      localStorage.setItem('earhorn-settings', JSON.stringify(newVal))
+      settings.save()
     }, true)
   }
   

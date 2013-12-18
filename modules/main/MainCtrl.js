@@ -87,8 +87,8 @@ angular.module('main').controller('MainCtrl', [
   }
   
   function updateLocation() {
-    if($scope.editing) return
-    var location = (programState.currentLoc || '').split(',')
+    if($scope.editing || !programState.currentLoc) return
+    var location = programState.currentLoc.split(',')
     $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
   }
