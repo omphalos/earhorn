@@ -3,9 +3,10 @@ _ stuff required for release
     _ fix broken widget
     _ fix log binding performance
       x debounced codemirror rebuild
+      _ windowed bookmarks
       _ fix bookmarks: deep $watch + dont return log object
     _ fix focus on current line
-    _ fix crash: maybe better error handling in eh$?
+    x fix crash: maybe better error handling in eh$?
     _ session-stored parsing
     _ test jquery todomvc example 
       _ in MainCtrl support editScript different from programState.currentScript
@@ -59,6 +60,7 @@ _ nice-to-haves
   _ (i) sophisticated hotswapping
   _ node-falafel performance improvement
   _ bookmark transitions
+  _ instant execution
 
 x show widget
   x create attribute for widget template id

@@ -64,16 +64,13 @@ angular.module('main').directive('editor', [
       // Widget.
       if(pending.widget) {
   
-        function updateWidget() {
-  
-          if(widgetObj) widgetObj.clear() // TODO check this
-  
-          var line = scope.$eval(attr.widgetLine) || 0
-            , ch = scope.$eval(attr.widgetCh) || 0
-            , pos = { line: line, ch: ch }
-  
-          widgetObj = editor.addWidget(pos, widgetElement)
-        }
+        if(widgetObj) widgetObj.clear() // TODO check this
+
+        var line = scope.$eval(attr.widgetLine) || 0
+          , ch = scope.$eval(attr.widgetCh) || 0
+          , pos = { line: line, ch: ch }
+
+        widgetObj = editor.addWidget(pos, widgetElement)
       }
       
       // Markers.
