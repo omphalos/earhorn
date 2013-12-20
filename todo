@@ -1,6 +1,9 @@
 _ stuff required for release
   _ add jquery todomvc example
+    _ use edit script
+    _ remove getCurrentScript
     _ fix broken widget
+    _ fix script editing
     _ fix log binding performance
       x debounced codemirror rebuild
       _ windowed bookmarks

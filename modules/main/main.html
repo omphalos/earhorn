@@ -3,17 +3,17 @@
   <nav>
     <div class="top">
       <span ng-show="getScriptCount()">
-        <select ng-show="getScriptCount() > 1" ng-model="programState.currentScript">
+        <select ng-show="getScriptCount() > 1" ng-model="editScript">
           <option 
             ng-repeat="(script, log) in timeline.programState.scripts" 
             value="{{script}}">{{script}}</option>
         </select>
         <button 
-          ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() > 1" 
+          ng-show="editScript !== 'sandbox' && getEditScript().modified && getScriptCount() > 1" 
           ng-click="revertChanges()" 
           title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
         <button 
-          ng-show="programState.currentScript !== 'sandbox' && getCurrentScript().modified && getScriptCount() == 1" 
+          ng-show="editScript !== 'sandbox' && getEditScript().modified && getScriptCount() == 1" 
           ng-click="revertChanges()" 
           title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
       </span>
@@ -108,7 +108,7 @@
 
   <script type="text/ng-template" id="widgetTemplate">
     <span 
-      ng-show="getWidgetLog() && widgetScript == programState.currentScript" 
+      ng-show="getWidgetLog() && widgetScript == editScript" 
       ng-class="{ widget: 1, caught: getWidgetLog().caught }">
 
       <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">

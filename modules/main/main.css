@@ -126,4 +126,6 @@ iframe {
 .main-container .current { font-weight: bold; }
 .main-container .bookmark:hover { text-decoration: underline; }
 
+.main-container .CodeMirror-activeline-background { background: lightblue; }
+
 

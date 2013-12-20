@@ -64,6 +64,7 @@ angular.module('main').controller('MainCtrl', [
   })
 
   timeline.$on('main.timeline', _.debounce(function() {
+    updateLocation()
     if(!$scope.$$phase) $scope.$digest()
   }, 100))
 
@@ -77,20 +78,25 @@ angular.module('main').controller('MainCtrl', [
     return Object.keys(timeline.programState.scripts).length
   }
   
-  var getCurrentScript = $scope.getCurrentScript = function() {
-    return programState.scripts[programState.currentScript] || {}
+  var getEditScript = $scope.getEditScript = function() {
+    return programState.scripts[$scope.editScript] || {}
   }
   
   function updateCode() {
     if($scope.editing) return
-    $scope.code = getCurrentScript().body
+    $scope.code = getEditScript().body
   }
   
   function updateLocation() {
     if($scope.editing || !programState.currentLoc) return
     var location = programState.currentLoc.split(',')
+    $scope.editScript = programState.currentScript
     $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
+    console.log('updateLocation', 
+      $scope.editScript, 
+      $scope.currentLine, 
+      $scope.currentCh)
   }
 
   $scope.getBookmarks = function() {
@@ -98,7 +104,7 @@ angular.module('main').controller('MainCtrl', [
     if($scope.editing) return {}
 
     var bookmarks = {}
-      , logs = getCurrentScript().logs || {}
+      , logs = getEditScript().logs || {}
       
     Object.keys(logs).forEach(function(key) {
 
@@ -128,7 +134,7 @@ angular.module('main').controller('MainCtrl', [
     updateLocation()
   })
 
-  $scope.$watch('getCurrentScript().body', updateCode)
+  $scope.$watch('getEditScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
 
   ///////////
@@ -150,8 +156,7 @@ angular.module('main').controller('MainCtrl', [
   $scope.editing = false
   
   var debouncedEdit = _.debounce(function(newVal) {
-    var editScript = programState.currentScript // TODO    
-    logClient.edit(editScript, newVal)
+    logClient.edit($scope.editScript, newVal)
   })
   
   var debouncedValidate = _.debounce(function(newVal) {
@@ -170,7 +175,7 @@ angular.module('main').controller('MainCtrl', [
         line: err.lineNumber - 1,
         ch: err.column - 1,
         message: message,
-        script: programState.currentScript, // TODO
+        script: $scope.editScript,
         key: err.toString()
       }
     }
@@ -187,7 +192,7 @@ angular.module('main').controller('MainCtrl', [
     
     target.body = record.body
 
-    if($scope.editing && record.script === programState.currentScript) // TODO: right value?
+    if($scope.editing && record.script === $scope.editScript)
       $scope.code = record.body
       
     if(!$scope.$$phase) $scope.$digest() // necessary?
@@ -197,20 +202,19 @@ angular.module('main').controller('MainCtrl', [
     
     debouncedValidate(newVal)
 
-    $scope.editing = newVal !== getCurrentScript().body
+    $scope.editing = newVal !== getEditScript().body
     
     if(!$scope.editing) return
     
     timeline.pause()
     timeline.clear()
-    getCurrentScript().body = newVal
 
     if(settings.autosave)    
       debouncedEdit(newVal)
   })
 
   $scope.reset = function(script) {
-    logClient.reset(script || programState.currentScript)
+    logClient.reset(script)
   }
   
   $scope.play = function() {
@@ -276,7 +280,7 @@ angular.module('main').controller('MainCtrl', [
   function getParseErrorScripts() {
     
     var scripts = 
-      [programState.currentScript]. // Make sure currentScript is first
+      [$scope.editScript]. // Make sure editScript is first
       concat(Object.keys(programState.scripts))
       
     return scripts.
@@ -297,8 +301,8 @@ angular.module('main').controller('MainCtrl', [
     var script = getParseErrorScripts()[0]
     timeline.pause()
     // TODO handle different script than programState.currentScript
-    programState.currentScript = script
     var error = programState.scripts[script].parseError
+    $scope.editScript = script
     $scope.currentLine = error.line
     $scope.currentCh = error.ch
     $scope.editorFocus = true
@@ -334,7 +338,7 @@ angular.module('main').controller('MainCtrl', [
     if($scope.widgetKey === key)
       return delete $scope.widgetKey
     
-    $scope.widgetScript = programState.currentScript
+    $scope.widgetScript = $scope.editScript
     $scope.widgetKey = key
     var log = $scope.getWidgetLog()
     $scope.widgetLine = log.loc.to.line
@@ -343,13 +347,13 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.getWidgetLog = function() {
 
-    var currentScript = $scope.getCurrentScript()
+    var script = $scope.getEditScript()
     
     var widgetLog =
       $scope.widgetKey && 
-      currentScript &&
-      currentScript.logs && 
-      currentScript.logs[$scope.widgetKey]
+      script &&
+      script.logs && 
+      script.logs[$scope.widgetKey]
       
     return widgetLog
   }
@@ -416,7 +420,7 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.revertChanges = function() {
     $scope.editing = false
-    logClient.reset(programState.currentScript)
+    logClient.reset($scope.editScript)
     timeline.play()
   }
 
@@ -494,7 +498,8 @@ angular.module('main').controller('MainCtrl', [
     // Expose the $scope for ease of development.
     timeline: timeline,
     programState: programState,
-    MainCtrl: $scope
+    MainCtrl: $scope,
+    getEditScript: $scope.getEditScript
   }
   
   consoleInterface.expose($scope, 'consoleInterface')

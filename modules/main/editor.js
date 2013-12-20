@@ -41,6 +41,7 @@ angular.module('main').directive('editor', [
       , markers = {}
       , lineWidgets = {}     
       , bookmarks = {}
+      , isRebuildingEditor = false
 
     var rebuildEditor = function() {
       
@@ -48,13 +49,15 @@ angular.module('main').directive('editor', [
       if(pending.focus) {
         var focus = scope.$eval(attr.focus)
         if(focus) editor.focus()
+        delete pending.focus
       }
       
       // Code.
       if(pending.code) {
         var code = scope.$eval(attr.code) || ''
         if(code !== editor.getValue())
-          editor.setValue(code)        
+          editor.setValue(code)
+        delete pending.code
       }
       
       // Cursor.
@@ -63,9 +66,16 @@ angular.module('main').directive('editor', [
         , ch = pending.ch ? scope.$eval(attr.ch) : oldCursor.ch
         
       if(line !== oldCursor.line || ch !== oldCursor.ch) {
-        editor.scrollTo(0)
+
+        console.log('setCursor', line, ch)
         editor.setCursor({ line: line, ch: ch })
+
+        // If the cursor moves, we need to update bookmarks.
+        pending.bookmarks = true
       }
+      
+      delete pending.line
+      delete pending.ch
       
       // Widget.
       if(pending.widget) {
@@ -77,6 +87,7 @@ angular.module('main').directive('editor', [
           , pos = { line: line, ch: ch }
 
         widgetObj = editor.addWidget(pos, widgetElement)
+        delete pending.widget
       }
       
       // Markers.
@@ -104,6 +115,8 @@ angular.module('main').directive('editor', [
             marker.to, 
             marker.options) 
         })
+        
+        delete pending.markers
       }
       
       // Line widgets.
@@ -140,6 +153,8 @@ angular.module('main').directive('editor', [
               lineWidget.options)
           }
         })
+        
+        delete pending.lineWidgets
       }
       
       // Bookmarks.
@@ -202,7 +217,7 @@ angular.module('main').directive('editor', [
               }
                   
               if(operations++ > settings.editor.maxOperations) {
-                pending = { bookmarks: true }
+                console.log('postponing operations')
                 rebuildEditorDebounced()
                 return 
               }
@@ -211,15 +226,32 @@ angular.module('main').directive('editor', [
             }*/
           }
         }
+        
+        delete pending.bookmarks
       }
-      
-      pending = {}
     }
 
-    var rebuildEditorOperator = function() {
-      editor.operation(rebuildEditor)
+    var requestFrame = window.requestAnimationFrame || function(fn) { fn() }
+
+    function rebuildEditorOperation() {
+      requestFrame(function() {
+
+        isRebuildingEditor = true
+      
+        editor.scrollTo(0) // Move to the left as much as possible.
+        /*
+        // http://codemirror.977696.n3.nabble.com/Is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-window-td4025123.html
+        var y = editor.charCoords({ line: line, ch: 0 }, 'local').y
+          , halfHeight = editor.getScrollerElement().offsetHeight / 2 
+        editor.scrollTo(null, y - halfHeight - 5)
+*/
+        editor.operation(rebuildEditor)
+
+        isRebuildingEditor = false
+      })
     }    
-    var rebuildEditorDebounced = _.debounce(rebuildEditor, 25)
+    
+    var rebuildEditorDebounced = _.debounce(rebuildEditorOperation, 25)
 
     function watch(prop, uiComponent, fullWatch) {
       scope.$watch(prop, function(newValue, oldValue) {
@@ -250,6 +282,7 @@ angular.module('main').directive('editor', [
     if(attr.code) {
 
       editor.on('change', function() {
+        if(isRebuildingEditor) return
         scope[attr.code] = editor.getValue()
         if(!scope.$$phase) scope.$digest()
       })
@@ -260,6 +293,8 @@ angular.module('main').directive('editor', [
     // Bind cursor.
     editor.on('cursorActivity', function() {
       var cursor = editor.getCursor()
+      console.log('cursorActivity', cursor)
+      if(isRebuildingEditor) return // TODO: move to top of fn
       if(attr.line)
         $parse(attr.line).assign(scope, cursor.line)
       if(attr.ch)
@@ -288,6 +323,7 @@ angular.module('main').directive('editor', [
     if(attr.bookmarks) {
       
       editor.on('viewportChange', function() {
+        if(isRebuildingEditor) return
         pending.bookmarks = true
         rebuildEditorDebounced()
       })
