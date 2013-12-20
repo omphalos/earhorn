@@ -3,14 +3,20 @@ angular.module('main').directive('editor', [
   '$parse', 
   '$templateCache', 
   '$compile', 
-  '$interval', function(
+  '$interval',
+  'settingsService', function(
   consoleInterface,
   $parse,
   $templateCache,
   $compile,
-  $interval) {  
+  $interval,
+  settingsService) {  
 
   function link(scope, element, attr) {      
+
+    var settings = settingsService.load({
+      editor: { maxOperations: 10 }
+    })
 
     ////////////////////////////////////////////
     // Create the CodeMirror editor instance. //
@@ -138,47 +144,73 @@ angular.module('main').directive('editor', [
       
       // Bookmarks.
       if(pending.bookmarks) {
-        
-        var newBookmarks = scope.$eval(attr.bookmarks) || {}
 
-        Object.keys(bookmarks).forEach(function(key) {
+        var viewport = editor.getViewport()
+          , newBookmarks = scope.$eval(attr.bookmarks) || {}
+          , operations = 0
 
-          if(newBookmarks.hasOwnProperty(key)) return
+        for(var key in bookmarks) {
+
+          var isInNewBookmarks = newBookmarks.hasOwnProperty(key)
+            , bookmark = bookmarks[key]
+            , loc = bookmark.scope.model.loc
+            , isAbove = loc.to.line <= viewport.to
+            , isBelow = loc.to.line >= viewport.from
+            , isInViewport = isAbove && isBelow
+
+          if(isInNewBookmarks && isInViewport) continue
           
           // Delete bookmark.
-          bookmarks[key].destroy()
-        })
-        
-        Object.keys(newBookmarks).forEach(function(key) {
+          bookmark.destroy()
+        }
 
-          if(bookmarks.hasOwnProperty(key)) {
-            // Update
-            bookmarks[key].scope.log = newBookmarks[key]
+        for(var key in newBookmarks) {
+          
+          var existingBookmark = bookmarks[key]
+
+          if(existingBookmark) {
+                
+            // Update bookark.
+            bookmarks[key].scope.model = newBookmarks[key]
             
           } else {
-            // Add widget.
-            var bookmarkScope = scope.$new()
-              , log = newBookmarks[key]
-              , pos = { line: log.loc.to.line, ch: log.loc.to.column }
-              , template = $compile($templateCache.get(attr.bookmarkTemplate))
-              , widget = template(bookmarkScope)[0]
-              , options = angular.extend({ widget: widget, insertLeft: 1 }, log)
-  
-            bookmarkScope.model = log
-            bookmarkScope.key = key
-  
-            bookmarks[key] = {
-              scope: bookmarkScope,
-              bookmark: editor.setBookmark(pos, options),
-              widget: widget,
-              destroy: function() {
-                this.bookmark.clear() // TODO rename bookmark to textMarker (?)
-                this.scope.$destroy()
-                delete bookmarks[key]
+
+            var log = newBookmarks[key]
+            if(
+              log.loc.to.line <= viewport.to &&
+              log.loc.to.line >= viewport.from) {
+                
+              // Add bookmark.
+              var bookmarkScope = scope.$new()
+                , pos = { line: log.loc.to.line, ch: log.loc.to.column }
+                , template = $compile($templateCache.get(attr.bookmarkTemplate))
+                , widget = template(bookmarkScope)[0]
+                , options = angular.extend({ widget: widget, insertLeft: 1 }, log)
+    
+              bookmarkScope.model = log
+              bookmarkScope.key = key
+    
+              bookmarks[key] = {
+                scope: bookmarkScope,
+                bookmark: editor.setBookmark(pos, options),
+                widget: widget,
+                destroy: function() {
+                  delete bookmarks[this.scope.key];
+                  this.scope.$destroy()
+                  this.bookmark.clear() // TODO rename bookmark to textMarker (?)
+                }
               }
-            }
+                  
+              if(operations++ > settings.editor.maxOperations) {
+                pending = { bookmarks: true }
+                rebuildEditorDebounced()
+                return 
+              }
+            } /* else {
+              console.log('not adding out of viewport', key)
+            }*/
           }
-        })
+        }
       }
       
       pending = {}
@@ -187,7 +219,7 @@ angular.module('main').directive('editor', [
     var rebuildEditorOperator = function() {
       editor.operation(rebuildEditor)
     }    
-    var rebuildEditorDebounced = _.debounce(rebuildEditor, 100)
+    var rebuildEditorDebounced = _.debounce(rebuildEditor, 25)
 
     function watch(prop, uiComponent, fullWatch) {
       scope.$watch(prop, function(newValue, oldValue) {
@@ -253,8 +285,15 @@ angular.module('main').directive('editor', [
       watch(attr.lineWidgets, 'lineWidgets', true)
       
     // Bind bookmarks.
-    if(attr.bookmarks)
+    if(attr.bookmarks) {
+      
+      editor.on('viewportChange', function() {
+        pending.bookmarks = true
+        rebuildEditorDebounced()
+      })
+      
       watch(attr.bookmarks, 'bookmarks', true)
+    }
   }
   
   return { restrict: 'E', link: link }

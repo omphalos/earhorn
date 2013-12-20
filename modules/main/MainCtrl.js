@@ -111,6 +111,12 @@ angular.module('main').controller('MainCtrl', [
         text: $scope.getLogText(log.val)
       }
     })
+
+    /*
+    var newKeys = Object.keys(bookmarks).join(' ')
+    if($scope.bookmarkLog !== newKeys)
+      console.log('bookmarks', $scope.bookmarkLog = newKeys)
+    */
     
     return bookmarks
   }

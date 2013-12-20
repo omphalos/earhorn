@@ -148,119 +148,111 @@
         '} catch(err) { eh$("' + name +  '",eh$loc,err,true); throw err; }' :
         ''
 
-    var cache = {}
-    if(settings.instrumentation.useSessionCache)
-      cache = JSON.parse(sessionStorage.getItem('eh-' + name) || '{}')
-
     var instrumentedCode
 
-    if(cache.handleErrors === handleErrors && cache.body === body) {
-      instrumentedCode = cache.instrumentedCode
-    } else {
-    
-      try {
+    try {
+      if(!settings.instrumentation.quiet)
         console.log('parsing', name)
-        instrumentedCode = falafel(body, { loc: true, raw: true }, visitNode).toString()
-        scripts[name].parseError = null
-        announce(name)
-      } catch(err) {
-        console.error(err, body)
-        
-        var e = err.toString()
-          , colon1 = e.indexOf(': ')
-          , colon2 = e.indexOf(': ', colon1 + 1)
-          , message = e.substring(colon2 + ': '.length)
-        
-        scripts[name].parseError = {
-          line: err.lineNumber - 1,
-          ch: err.column,
-          message: message
-        }
-        announce(name)
-        throw err
+      instrumentedCode = falafel(body, { loc: true, raw: true }, visitNode).toString()
+      scripts[name].parseError = null
+      announce(name)
+    } catch(err) {
+      console.error(err, body)
+      
+      var e = err.toString()
+        , colon1 = e.indexOf(': ')
+        , colon2 = e.indexOf(': ', colon1 + 1)
+        , message = e.substring(colon2 + ': '.length)
+      
+      scripts[name].parseError = {
+        line: err.lineNumber - 1,
+        ch: err.column,
+        message: message
       }
-  
-      function getLocationUpdate(node) {
-        return 'eh$loc="' +
-          (node.loc.start.line - 1) + ',' +
-          node.loc.start.column + ',' +
-          (node.loc.end.line - 1) + ',' +
-          node.loc.end.column + '"'
-      }
-  
-      function visitNode(node) {
-       
-        if(!node.parent) return
-        
-        if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
-          node.update(getLocationUpdate(node) + ',' + node.source())
-          return
-        }
-          
-        if(node.type === 'Literal')
-          return
-        
-        if(
-          node.parent.type === 'BlockStatement' && node.parent.parent && (
-          node.parent.parent.type === 'FunctionDeclaration' || 
-          node.parent.parent.type === 'FunctionExpression')) {
-          
-          if(node.parent.body[0] === node) {
-            node.update(tryPrefix + node.source())
-          }
-          
-          if(node.parent.body[node.parent.body.length - 1] === node) {
-            node.update(node.source() + catchSuffix)
-          }
-          
-          return
-        }
-  
-        if(
-          (node.parent.type === 'CallExpression' && 
-            node !== node.parent.callee) ||
-          (node.parent.type === 'IfStatement' && 
-            node === node.parent.test) ||
-          (node.parent.type === 'WhileStatement' && 
-            node === node.parent.test) ||
-          (node.parent.type === 'DoWhileStatement' && 
-            node === node.parent.test) ||
-          (node.parent.type === 'SwitchCase' && 
-            node === node.parent.test) ||
-          (node.parent.type === 'SwitchStatement' && 
-            node === node.parent.discriminant) ||
-          (node.parent.type === 'MemberExpression' && 
-            node === node.parent.object) ||
-          instrumentedExpressions.indexOf(node.type) >= 0 ||
-          (instrumentedParentTypes.
-            indexOf(node.parent.type) >= 0) ||
-          (node.type === 'MemberExpression' && 
-            skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
-  
-          var parenStart
-            , parenEnd
-            
-          if(node.parent.type === 'NewExpression') {
-            parenStart = '('
-            parenEnd = ')'
-          } else parenStart = parenEnd = ''
-          
-          node.update(parenStart + 'eh$("' +
-            name + '",' + 
-            getLocationUpdate(node) + ',' +
-            node.source() +
-          ')' + parenEnd)
-        }
-      }
-    
-      instrumentedCode =
-        tryPrefix +
-        instrumentedCode +
-        catchSuffix +
-        '//@ sourceURL=' + name // Source mapping.
+      announce(name)
+      throw err
     }
- 
-    if(settings.instrumentation.logCode)
+
+    function getLocationUpdate(node) {
+      return 'eh$loc="' +
+        (node.loc.start.line - 1) + ',' +
+        node.loc.start.column + ',' +
+        (node.loc.end.line - 1) + ',' +
+        node.loc.end.column + '"'
+    }
+
+    function visitNode(node) {
+     
+      if(!node.parent) return
+      
+      if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
+        node.update(getLocationUpdate(node) + ',' + node.source())
+        return
+      }
+        
+      if(node.type === 'Literal')
+        return
+      
+      if(
+        node.parent.type === 'BlockStatement' && node.parent.parent && (
+        node.parent.parent.type === 'FunctionDeclaration' || 
+        node.parent.parent.type === 'FunctionExpression')) {
+        
+        if(node.parent.body[0] === node) {
+          node.update(tryPrefix + node.source())
+        }
+        
+        if(node.parent.body[node.parent.body.length - 1] === node) {
+          node.update(node.source() + catchSuffix)
+        }
+        
+        return
+      }
+
+      if(
+        (node.parent.type === 'CallExpression' && 
+          node !== node.parent.callee) ||
+        (node.parent.type === 'IfStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'WhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'DoWhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchCase' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchStatement' && 
+          node === node.parent.discriminant) ||
+        (node.parent.type === 'MemberExpression' && 
+          node === node.parent.object) ||
+        instrumentedExpressions.indexOf(node.type) >= 0 ||
+        (instrumentedParentTypes.
+          indexOf(node.parent.type) >= 0) ||
+        (node.type === 'MemberExpression' && 
+          skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
+
+        var parenStart
+          , parenEnd
+          
+        if(node.parent.type === 'NewExpression') {
+          parenStart = '('
+          parenEnd = ')'
+        } else parenStart = parenEnd = ''
+        
+        node.update(parenStart + 'eh$("' +
+          name + '",' + 
+          getLocationUpdate(node) + ',' +
+          node.source() +
+        ')' + parenEnd)
+      }
+    }
+
+    instrumentedCode =
+      tryPrefix +
+      instrumentedCode +
+      catchSuffix +
+      '//@ sourceURL=' + name // Source mapping.
+
+    if(settings.instrumentation.verbose)
       console.log(instrumentedCode)
   
     try {

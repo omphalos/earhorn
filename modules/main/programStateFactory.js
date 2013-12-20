@@ -22,6 +22,8 @@ angular.module('main').factory('programStateFactory', [
   
   ProgramState.prototype.forward = function(record) {
 
+    // console.log('forward', record)
+
     var self = this
     
     if(!record)
@@ -53,6 +55,8 @@ angular.module('main').factory('programStateFactory', [
   }
   
   ProgramState.prototype.applyChange = function(change) {
+
+    // console.log('applying change')
     
     if(!change) 
       throw 'invalid change'
@@ -64,7 +68,7 @@ angular.module('main').factory('programStateFactory', [
     this.currentLoc = change.currentLoc
 
     if(!changingScript)
-      return console.log('no changing script')
+      throw 'no changing script'
     
     if(change.val) {
 
@@ -89,9 +93,12 @@ angular.module('main').factory('programStateFactory', [
       // Delete log
       delete changingScript.logs[change.loc]
     }
+    
+    // console.log('logs after change', changingScript.logs)
   }
   
   ProgramState.prototype.reverse = function(record) {
+    // console.log('reverse', record)
     this.applyChange(record.reverse)
   }
   
