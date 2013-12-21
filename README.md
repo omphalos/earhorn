@@ -1,7 +1,7 @@
 earhorn
 =======
 
-Reversibly instrumented JavaScript.
+JavaScript execution logs.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
