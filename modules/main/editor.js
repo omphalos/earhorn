@@ -66,8 +66,9 @@ angular.module('main').directive('editor', [
       var oldCursor = editor.getCursor()
         , line = pending.line ? scope.$eval(attr.line) : oldCursor.line
         , ch = pending.ch ? scope.$eval(attr.ch) : oldCursor.ch
+        , cursorNeedsUpdate = line !== oldCursor.line || ch !== oldCursor.ch
         
-      if(line !== oldCursor.line || ch !== oldCursor.ch) {
+      if(cursorNeedsUpdate) {
 
         // http://codemirror.977696.n3.nabble.com/Is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-window-td4025123.html
         var coords = editor.charCoords({ line: line, ch: 0 }, 'local')
@@ -79,6 +80,9 @@ angular.module('main').directive('editor', [
 
         // Update bookmarks in case the viewport changes.        
         pending.bookmarks = true
+        
+        delete pending.line
+        delete pending.ch
       }
       
       editor.operation(function() {
@@ -150,15 +154,18 @@ angular.module('main').directive('editor', [
               , lineWidgetScope = scope.$new()
               
             lineWidgetScope.model = lineWidget.model
-            lineWidgetScope.$digest()
+            
+            var lineWidgetElement = template(lineWidgetScope)[0]
               
             lineWidgets[key] = {
               scope: lineWidgetScope,
               widget: editor.addLineWidget(
                 lineWidget.line,
-                template(lineWidgetScope)[0],
+                lineWidgetElement,
                 lineWidget.options)
             }
+            
+            lineWidgetScope.$digest()
           })
           
           delete pending.lineWidgets
@@ -240,14 +247,11 @@ angular.module('main').directive('editor', [
         }
       })
 
-      if(pending.line || pending.ch) {
+      if(cursorNeedsUpdate) {
         
         // Workaround to show full bookmark.
         editor.setCursor({ line: line, ch: ch + 1 })
         editor.setCursor({ line: line, ch: ch })
-        
-        delete pending.line
-        delete pending.ch
       }
     }
 
@@ -306,9 +310,8 @@ angular.module('main').directive('editor', [
     
     // Bind cursor.
     editor.on('cursorActivity', function() {
+      if(isRebuildingEditor) return
       var cursor = editor.getCursor()
-      //console.log('cursorActivity', cursor, 'isRebuildingEditor', isRebuildingEditor)
-      if(isRebuildingEditor) return // TODO: move to top of fn
       if(attr.line) $parse(attr.line).assign(scope, cursor.line)
       if(attr.ch) $parse(attr.ch).assign(scope, cursor.ch)
       if(!scope.$$phase) scope.$digest()

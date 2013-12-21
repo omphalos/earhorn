@@ -1,6 +1,6 @@
 _ stuff required for release
   _ add jquery todomvc example
-    _ fix errors
+    _ fix selection
     _ fix script editing
     _ test jquery todomvc example 
       x in MainCtrl support editScript different from programState.currentScript
@@ -217,3 +217,4 @@ x set up esprima error notification
   12-21-13 ~39
     x center cursor navigation
     x execute templated scope
+    x fix errors

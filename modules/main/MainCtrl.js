@@ -180,6 +180,9 @@ angular.module('main').controller('MainCtrl', [
         key: err.toString()
       }
     }
+    
+    if(!$scope.$$phase) $scope.$digest()
+
   }, 250)
   
   logClient.$on('main.logClient.edit', function(evt, record) {
@@ -318,10 +321,10 @@ angular.module('main').controller('MainCtrl', [
     for(var i = 1; i < $scope.parseError.ch; i++)
       indent += ' '
     
-    lineWidgets['error@' + $scope.parseError.key] = {
+    lineWidgets[$scope.parseError.key] = {
       template: 'errorLineWidgetTemplate',
       line: $scope.parseError.line,
-      model: indent + $scope.parseError.message
+      model: indent + '* ' + $scope.parseError.message
     }
     
     return lineWidgets
