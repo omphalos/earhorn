@@ -19,7 +19,7 @@ First add earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
-Add a reference to esprima.js, umd-falafel.js, and earhorn.js to your page.  (A bundled version is coming soon.)
+Add a reference to earhorn.js to your page.
 
 Let's say you have a JavaScript file you want to instrument, and it looks like this:
 

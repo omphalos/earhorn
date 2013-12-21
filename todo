@@ -6,20 +6,14 @@ _ stuff required for release
     _ dropdown navigation should wait for ui refresh
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
-    _ handle localstorage errors
     _ keypress to open cmd+o
     _ reinstate interval
-    _ fix small width styling
     _ fix html escaping
     _ fix newlines
     _ verify all statement types are covered by errors
     _ (i) test suite for instrumented javascript
+    _ handle localstorage errors
   _ features
-    _ javascript bundle
-      _ mv earhorn.js earhorn-core.js
-      _ nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
-      _ esmangle earhorn.js
-      _ change sandbox, mouse to use just earhorn.js
     _ better source map support
     _ error navigation
       _ buttons appear when there is an error
@@ -32,11 +26,10 @@ _ stuff required for release
       _ review
       _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
     _ refactor
+      _ maybe editor shouldnt know about viewport boundaries
       _ consolidate add/remove logic in codemirror widget
-      _ refactor timeline so that it handles editing?
       _ refactor programState monkey patching
       _ programStateFactory -> programState
-      _ clean up settings
       _ organize examples, including jquery todomvc
 
 _ nice-to-haves
@@ -239,3 +232,9 @@ x set up esprima error notification
       x when no url
         x hide editor
         x message pointing to sandbox or run earhorn scripts in the same domain
+      x clean up settings
+    x javascript bundle
+      x mv earhorn.js earhorn-core.js
+      x nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
+      x change mouse to use just earhorn.js
+    x fix small width styling
