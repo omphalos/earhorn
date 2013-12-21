@@ -10,16 +10,16 @@ Demo
 
 Check out the [demo](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html).
 
-Use on a real project
-=====================
+Use on your code
+================
 
-It's possible to use earhorn outside of a sandbox, on actual code, although theres a few set up steps required to do so.
+It's possible to use earhorn outside of a sandbox, on your code, although theres a few set up steps required to do so.
 
 First add earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
-Add a reference to esprima.js and earhorn.js to your page.  (A bundled version is coming soon.)
+Add a reference to esprima.js, umd-falafel.js, and earhorn.js to your page.  (A bundled version is coming soon.)
 
 Let's say you have a JavaScript file you want to instrument, and it looks like this:
 
@@ -41,12 +41,7 @@ Just wrap it in a call to earhorn:
 
     })()
 
-Navigagte to /earhorn/index.html.  Open your the html hosting your JavaScript in a separate tab.  Alteratively, you can tell earhorn to open your page in an iframe by appending #/iframe=your-iframe-url to /earhorn/index.html.
-
-Related Links
-=============
-
-TODO
+Navigate to /earhorn/index.html.  Open your the html hosting your JavaScript in a separate tab.  Alteratively, you can tell earhorn to open your page in an iframe by appending #/iframe=your-iframe-url to /earhorn/index.html.
 
 License
 =======
