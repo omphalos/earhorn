@@ -273,8 +273,9 @@ angular.module('main').directive('editor', [
 
     // Bind read-only.
     if(attr.readOnly) {
-      scope.$watch(attr.readonly, function(newValue) {
-        editor.setOption('readonly', newValue)
+      scope.$watch(attr.readOnly, function(newValue) {
+        console.log('readOnly', newValue)
+        editor.setOption('readOnly', newValue)
       })
     }
     

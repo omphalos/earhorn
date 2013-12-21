@@ -41,7 +41,6 @@
     if(evt.key === 'earhorn-settings') {
       settings = earhorn$.settings =
         applyDefaults(JSON.parse(evt.newValue || '{}'))
-      console.log('settings evt', settings)
       return
     }
 

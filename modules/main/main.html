@@ -9,11 +9,11 @@
             value="{{script}}">{{script}}</option>
         </select>
         <button 
-          ng-show="editScript !== 'sandbox' && getEditScript().modified && getScriptCount() > 1" 
+          ng-show="getEditScript().modified && getScriptCount() > 1" 
           ng-click="revertChanges()" 
           title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
         <button 
-          ng-show="editScript !== 'sandbox' && getEditScript().modified && getScriptCount() == 1" 
+          ng-show="getEditScript().modified && getScriptCount() == 1" 
           ng-click="revertChanges()" 
           title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
       </span>
@@ -21,7 +21,12 @@
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
     </div>
 
-    <div class="timeline">
+    <p class="no-scripts-message" ng-show="!getScriptCount()">
+      No scripts loaded.  You can visit the <a href="#/hideFrame=true,iframe=sandbox.html">sandbox</a>
+      or run a script in the current domain using the earhorn$() function.
+    </p>
+
+    <div class="timeline" ng-show="getScriptCount()">
       <div class="buttons">
         <span 
           ng-show="settings.display.fastBackward" 
@@ -67,9 +72,9 @@
 
   </nav>
 
-  <div class="main-content" ng-click="widgetKey = null">
+  <div class="main-content" ng-click="widgetKey = null" ng-show="getScriptCount()">
     <editor
-      ng-class="{ full: !iframe, half: !!iframe }"
+      ng-class="{ full: hideFrame || !iframe, half: !hideFrame && iframe }"
       code="code"
       line="currentLine"
       ch="currentCh"
@@ -78,7 +83,6 @@
       init-mode="text/javascript"
       init-full-screen="true"
       init-line-numbers="true"
-      readonly="getScriptCount()"
       bookmarks="getBookmarks()"
       bookmark-template="bookmarkTemplate"
       widget-line="widgetLine"
@@ -89,8 +93,7 @@
       focus="editorFocus"
       element="editor" >
     </editor>
-    <iframe ng-if="!!iframe" src="{{iframe}}"></iframe>
-    <iframe ng-if="!iframe" src="sandbox.html"></iframe>
+    <iframe ng-if="iframe" src="{{iframe}}"></iframe>
   </div>
 
   <script type="text/ng-template" id="errorLineWidgetTemplate">

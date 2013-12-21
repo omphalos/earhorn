@@ -36,7 +36,10 @@ angular.module('main').controller('MainCtrl', [
       play: true,
       formatDigits: 2
     },
-    autosave: false,
+    main: {
+      autosave: false,
+      autoNavigateWhenPlaying: false
+    },
     keys: {
       'mod+p': 'play()',
       'mod+m': 'timeline.fastBackward()',
@@ -89,6 +92,10 @@ angular.module('main').controller('MainCtrl', [
   
   function updateLocation() {
     if($scope.editing || !programState.currentLoc) return
+    if(
+      timeline.isPlaying() && 
+      !settings.main.autoNavigateWhenPlaying && 
+      $scope.editScript) return
     var location = programState.currentLoc.split(',')
     $scope.editScript = programState.currentScript
     $scope.currentLine = +location[2]
@@ -208,7 +215,7 @@ angular.module('main').controller('MainCtrl', [
     timeline.pause()
     timeline.clear()
 
-    if(settings.autosave)    
+    if(settings.main.autosave)    
       debouncedEdit(newVal)
   })
 
@@ -406,14 +413,22 @@ angular.module('main').controller('MainCtrl', [
   // Build an iframe when requested. //
   /////////////////////////////////////
   
-  var path = $location.path()
+  var path = $location.path().substring($location.path().indexOf('/') + 1)
   if(path) {
     
-    var iframeIndex = path.lastIndexOf('#')
-    $scope.iframe = iframeIndex >= 0 ?
-      path.substring(iframeIndex + '#'.length) :
-      path
+    var iframeIndex = path.lastIndexOf('iframe=')
+      , paramString
     
+    if(iframeIndex >= 0) {
+      $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
+      paramString = path.substring(0, iframeIndex)
+    } else paramString = path
+
+    paramString.
+      split(',').
+      filter(function(x) { return x }).
+      map(function(x) { return x.split('=') }).
+      forEach(function(x) { $scope[x[0]] = eval(x[1]) })
   }
 
   //////////////////////

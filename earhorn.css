@@ -1,15 +1,15 @@
 html { height: 100%; }
 body {
   font-size: 1em;
-  min-width: 640px;
+  xmin-width: 640px;
   height: 100%;
   box-sizing: border-box;
   color: #555;
 }
 main { height: 100%; }
 
-a { text-decoration: none; color: #555; }
-a:hover { text-decoration: underline; }
+a { color: #555; }
+a:hover { color: black; }
 
 .icon {
   height: 1em; width: 1em;  

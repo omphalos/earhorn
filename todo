@@ -1,13 +1,9 @@
 _ stuff required for release
   _ bugs
-    _ fix iframe logic
-      _ sandbox must be specifically requested
-      _ when iframe is empty show a message pointing to the sandbox or waiting for scripts
     _ fix mouse update demo
       _ set bookmarks during timeline update event (?)
       _ consolidate 'current' detection
     _ dropdown navigation should wait for ui refresh
-    _ only auto-navigate when paused
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
     _ handle localstorage errors
@@ -25,10 +21,16 @@ _ stuff required for release
       _ esmangle earhorn.js
       _ change sandbox, mouse to use just earhorn.js
     _ better source map support
+    _ error navigation
+      _ buttons appear when there is an error
+      _ should navigate parse errors, caught errors
     _ use colorized font awesome icons: play to green, pause to orange, error to red
     _ better focus style (border or something)
     _ editor focus after mouseclick icon
     _ editor focus after mouseup timeline
+    _ update readme
+      _ review
+      _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
     _ refactor
       _ consolidate add/remove logic in codemirror widget
       _ refactor timeline so that it handles editing?
@@ -36,12 +38,6 @@ _ stuff required for release
       _ programStateFactory -> programState
       _ clean up settings
       _ organize examples, including jquery todomvc
-    _ update readme
-      _ review
-      _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
-    _ error navigation
-      _ buttons appear when there is an error
-      _ should navigate parse errors, caught errors
 
 _ nice-to-haves
   _ (i) plugins
@@ -233,3 +229,13 @@ x set up esprima error notification
     x fix script editing
     x fix cursor behavior when editing
     x add jquery todomvc example
+    x fix settings bugs
+    x only auto-navigate when paused
+    x fix iframe logic
+      x iframe url = firstIndexOf 'iframe='
+      x params = before 'iframe=' or entire path
+      x parse params (a=b,c=d)
+      x hideFrame param
+      x when no url
+        x hide editor
+        x message pointing to sandbox or run earhorn scripts in the same domain
