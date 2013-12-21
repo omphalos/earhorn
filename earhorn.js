@@ -5,11 +5,11 @@
   //////////////
 
   // Set up settings object.
-  var settings = JSON.parse(localStorage.getItem('earhorn-settings'))
-
-  if(!settings.hasOwnProperty('instrumentation')) {
+  function applyDefaults(target) {
     
-    settings.instrumentation = {
+    if(target.instrumentation) return target
+      
+    target.instrumentation = {
       maxElements: 3,
       maxKeys: 200,
       depth: 2,
@@ -20,8 +20,13 @@
       logModifiedCode: true
     }
     
-    localStorage.setItem('earhorn-settings', JSON.stringify(settings))
+    localStorage.setItem('earhorn-settings', JSON.stringify(target))
+    
+    return target
   }
+
+  var settings = applyDefaults(
+    JSON.parse(localStorage.getItem('earhorn-settings') || '{}'))
 
   // Subscribe to localStorage events.
   window.addEventListener('storage', onStorage, false)
@@ -33,8 +38,12 @@
     if(!evt.newValue)
       return
 
-    if(evt.key === 'earhorn-settings')
-      return settings = earhorn$.settings = JSON.parse(evt.newValue)
+    if(evt.key === 'earhorn-settings') {
+      settings = earhorn$.settings =
+        applyDefaults(JSON.parse(evt.newValue || '{}'))
+      console.log('settings evt', settings)
+      return
+    }
 
     if(evt.key !== 'earhorn-listener')
       return

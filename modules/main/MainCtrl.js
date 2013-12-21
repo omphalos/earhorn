@@ -66,7 +66,7 @@ angular.module('main').controller('MainCtrl', [
   timeline.$on('main.timeline', _.debounce(function() {
     updateLocation()
     if(!$scope.$$phase) $scope.$digest()
-  }, 100))
+  }), 100)
 
   ////////////////////
   // Program state. //
@@ -75,7 +75,7 @@ angular.module('main').controller('MainCtrl', [
   var programState = $scope.programState = timeline.programState
 
   $scope.getScriptCount = function() {
-    return Object.keys(timeline.programState.scripts).length
+    return Object.keys(programState.scripts).length
   }
   
   var getEditScript = $scope.getEditScript = function() {
@@ -93,10 +93,6 @@ angular.module('main').controller('MainCtrl', [
     $scope.editScript = programState.currentScript
     $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
-    /* console.log('updateLocation', 
-      $scope.editScript, 
-      $scope.currentLine, 
-      $scope.currentCh) */
   }
 
   $scope.getBookmarks = function() {
@@ -129,7 +125,6 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('timeline.isPlaying()', function(newVal) {
     if(!newVal) return
-    console.log('not editing')
     $scope.editing = false
     updateCode()
     updateLocation()
@@ -412,10 +407,14 @@ angular.module('main').controller('MainCtrl', [
   /////////////////////////////////////
   
   var path = $location.path()
-    , iframeIndex = path.lastIndexOf('iframe=')
-
-  if(iframeIndex >= 0)
-    $scope.iframe = path.substring(iframeIndex + 'iframe='.length)
+  if(path) {
+    
+    var iframeIndex = path.lastIndexOf('#')
+    $scope.iframe = iframeIndex >= 0 ?
+      path.substring(iframeIndex + '#'.length) :
+      path
+    
+  }
 
   //////////////////////
   // Revert changes. //

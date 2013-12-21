@@ -6,11 +6,13 @@ angular.module('main').factory('settingsService', [
 
   // Create settings object.
   var settings = JSON.parse(localStorage.getItem('earhorn-settings') || '{}')
+    , allDefaults = []
 
   // Apply changes from other windows.
   function onStorage(evt) {
     if(evt.key !== 'earhorn-settings') return
-    angular.copy(JSON.parse(evt.newValue), settings)
+    settings = JSON.parse(evt.newValue || '{}')
+    applyDefaults()
     if(!$rootScope.$$phase) $rootScope.$digest()
   }
   
@@ -21,18 +23,17 @@ angular.module('main').factory('settingsService', [
     window.removeEventListener('storage', onStorage, false)
   })
 
-  // Get reference to settings, applying defaults.
-  function load(defaults) {
+  function applyDefaults() {
 
-    defaults = defaults || {}
-    
-    Object.keys(defaults).forEach(function(key) {
-      if(!settings.hasOwnProperty(key))
+    allDefaults.forEach(function(defaults) {
+      Object.keys(defaults).forEach(function(key) {
+        if(settings.hasOwnProperty(key)) return
         settings[key] = defaults[key]
+      })
     })
     
     if(!settings.save)
-      Object.defineProperty(settings, "save", {
+      Object.defineProperty(settings, 'save', {
         enumerable: false,
         configurable: false,
         writable: false,
@@ -42,6 +43,13 @@ angular.module('main').factory('settingsService', [
         }
       })
     
+  }
+
+  // Get reference to settings, applying defaults.
+  function load(defaults) {
+
+    if(defaults) allDefaults.push(defaults)
+    applyDefaults()
     return settings
   }
 

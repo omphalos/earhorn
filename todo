@@ -1,43 +1,47 @@
 _ stuff required for release
-  _ add jquery todomvc example
-    _ fix selection
-    _ fix script editing
-    _ test jquery todomvc example 
-      x in MainCtrl support editScript different from programState.currentScript
-      _ only auto-navigate when paused
-      _ message loss should also show a warning that messages were lost
-      _ clean up reset to handle multiple scripts
-      _ handle localstorage errors
+  _ bugs
+    _ fix iframe logic
+      _ sandbox must be specifically requested
+      _ when iframe is empty show a message pointing to the sandbox or waiting for scripts
+    _ fix mouse update demo
+      _ set bookmarks during timeline update event (?)
+      _ consolidate 'current' detection
+    _ dropdown navigation should wait for ui refresh
+    _ only auto-navigate when paused
+    _ message loss should also show a warning that messages were lost
+    _ clean up reset to handle multiple scripts
+    _ handle localstorage errors
     _ keypress to open cmd+o
     _ reinstate interval
-  - (i) earhorn server
-    - node-http-proxy js url
-      - fs.readfile -> res.write(...earhorn+)
-    - node-http-proxy specified url
-  _ javascript bundle
-  _ refactor
-    _ consolidate add/remove logic in codemirror widget
-    _ refactor timeline so that it handles editing?
-    _ refactor programState monkey patching
-    _ programStateFactory -> programState
-  _ (i) use colorized font awesome icons: play to green, pause to orange, error to red
-  _ (i) better source map support
-  - (i) test suite for instrumented javascript
-  _ update readme
-    _ review
-    _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
-  _ verify all statement types are covered by errors
-  _ better focus style (border or something)
-  _ editor focus after mouseclick icon
-  _ editor focus after mouseup timeline
-  _ bookmark should shrink beforechange
-  _ error navigation
-    _ buttons appear when there is an error
-    _ should navigate parse errors, caught errors
-  _ clean up url: just use iframe url without parameter
-  _ dropdown navigation should wait for ui refresh
-  _ remove sandbox from timeline when new scripts arrive
-  _ readonly while sandbox is loading
+    _ fix small width styling
+    _ fix html escaping
+    _ fix newlines
+    _ verify all statement types are covered by errors
+    _ (i) test suite for instrumented javascript
+  _ features
+    _ javascript bundle
+      _ mv earhorn.js earhorn-core.js
+      _ nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
+      _ esmangle earhorn.js
+      _ change sandbox, mouse to use just earhorn.js
+    _ better source map support
+    _ use colorized font awesome icons: play to green, pause to orange, error to red
+    _ better focus style (border or something)
+    _ editor focus after mouseclick icon
+    _ editor focus after mouseup timeline
+    _ refactor
+      _ consolidate add/remove logic in codemirror widget
+      _ refactor timeline so that it handles editing?
+      _ refactor programState monkey patching
+      _ programStateFactory -> programState
+      _ clean up settings
+      _ organize examples, including jquery todomvc
+    _ update readme
+      _ review
+      _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
+    _ error navigation
+      _ buttons appear when there is an error
+      _ should navigate parse errors, caught errors
 
 _ nice-to-haves
   _ (i) plugins
@@ -60,6 +64,10 @@ _ nice-to-haves
   _ instant execution
   _ message loss should just incorporate dropped messages into the tail snapshot
   _ search
+  - (i) earhorn server
+    - node-http-proxy js url
+      - fs.readfile -> res.write(...earhorn+)
+    - node-http-proxy specified url
 
 x show widget
   x create attribute for widget template id
@@ -213,8 +221,15 @@ x set up esprima error notification
     x fix focus on current line
     x use edit script
     x remove getCurrentScript
+    x in MainCtrl support editScript different from programState.currentScript
 
   12-21-13 ~39
     x center cursor navigation
     x execute templated scope
     x fix errors
+    x fix selection
+    x readonly while sandbox is loading
+    x clean up url: just use iframe url without parameter
+    x fix script editing
+    x fix cursor behavior when editing
+    x add jquery todomvc example

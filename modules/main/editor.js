@@ -58,6 +58,8 @@ angular.module('main').directive('editor', [
         if(code !== editor.getValue()) {
           editor.setValue(code)
           editor.clearHistory()
+          pending.line = true
+          pending.ch = true
         }
         delete pending.code
       }
@@ -66,9 +68,9 @@ angular.module('main').directive('editor', [
       var oldCursor = editor.getCursor()
         , line = pending.line ? scope.$eval(attr.line) : oldCursor.line
         , ch = pending.ch ? scope.$eval(attr.ch) : oldCursor.ch
-        , cursorNeedsUpdate = line !== oldCursor.line || ch !== oldCursor.ch
+        , cursorUpdating = line !== oldCursor.line || ch !== oldCursor.ch
         
-      if(cursorNeedsUpdate) {
+      if(cursorUpdating) {
 
         // http://codemirror.977696.n3.nabble.com/Is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-window-td4025123.html
         var coords = editor.charCoords({ line: line, ch: 0 }, 'local')
@@ -233,13 +235,10 @@ angular.module('main').directive('editor', [
                 bookmarkScope.$digest()
                     
                 if(operations++ > settings.editor.maxOperations) {
-                  console.log('postponing operations')
                   rebuildEditorDebounced()
                   return 
                 }
-              } /* else {
-                console.log('not adding out of viewport', key)
-              }*/
+              }
             }
           }
           
@@ -247,7 +246,7 @@ angular.module('main').directive('editor', [
         }
       })
 
-      if(cursorNeedsUpdate) {
+      if(cursorUpdating) {
         
         // Workaround to show full bookmark.
         editor.setCursor({ line: line, ch: ch + 1 })

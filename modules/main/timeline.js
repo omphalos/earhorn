@@ -17,7 +17,7 @@ angular.module('main').factory('timeline', [
   var timeline = $rootScope.$new()  
     , handlers = {}
     , playing = true
-    , settings = settingsService.load({ maxHistoryLength: 100 })
+    , settings = settingsService.load({ timeline: { maxHistoryLength: 100 } })
     , position = -1
 
   timeline.history = []
@@ -103,7 +103,7 @@ angular.module('main').factory('timeline', [
     position = -1
     programState.clearLogs()
   }
-
+  
   /////////////////////
   // Route messages. //
   /////////////////////
@@ -113,9 +113,11 @@ angular.module('main').factory('timeline', [
   logClient.$on('main.logClient.logs', function(evt, records) {
 
     var missingScripts = {} // Scripts whose contents haven't been received.
+      , recordCount = 0
 
     records.forEach(function(record) {
       handlers[record.type](record, missingScripts)
+      recordCount++
     })
     
     // If we are receiving logs for scripts we haven't received yet,
@@ -123,7 +125,7 @@ angular.module('main').factory('timeline', [
     // messages and cause less traffic between the timeline and logClient.
     logClient.requestScripts(Object.keys(missingScripts))
     
-    timeline.$broadcast('main.timeline', records.length)
+    if(recordCount) timeline.$broadcast('main.timeline', recordCount)
   })
   
   ///////////////////////////
@@ -175,7 +177,8 @@ angular.module('main').factory('timeline', [
     // message would exceed the maximum history capacity.
     // Otherwise, information that's important to the user could
     // be pushed out of the timeline.
-    if(!playing && timeline.history.length >= settings.maxHistoryLength - 1) {
+    if(!playing &&
+      timeline.history.length >= settings.timeline.maxHistoryLength - 1) {
       lostMessageCounts[record.script] = lostMessageCounts[record.script] || 0
       lostMessageCounts[record.script]++
       return
@@ -193,7 +196,7 @@ angular.module('main').factory('timeline', [
       timeline.setPosition(getEndPosition())
 
       // Max sure history doesn't overflow its capacity.
-      if(timeline.history.length >= settings.maxHistoryLength) {
+      if(timeline.history.length >= settings.timeline.maxHistoryLength) {
         timeline.history.shift()
         position--
       }
