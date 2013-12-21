@@ -1,15 +1,13 @@
 _ stuff required for release
   _ add jquery todomvc example
-    x use edit script
-    x remove getCurrentScript
-    _ center cursor navigation
-    _ execute templated scope
+    _ fix errors
     _ fix script editing
     _ test jquery todomvc example 
       x in MainCtrl support editScript different from programState.currentScript
       _ only auto-navigate when paused
       _ message loss should also show a warning that messages were lost
       _ clean up reset to handle multiple scripts
+      _ handle localstorage errors
     _ keypress to open cmd+o
     _ reinstate interval
   - (i) earhorn server
@@ -37,6 +35,9 @@ _ stuff required for release
     _ buttons appear when there is an error
     _ should navigate parse errors, caught errors
   _ clean up url: just use iframe url without parameter
+  _ dropdown navigation should wait for ui refresh
+  _ remove sandbox from timeline when new scripts arrive
+  _ readonly while sandbox is loading
 
 _ nice-to-haves
   _ (i) plugins
@@ -55,9 +56,10 @@ _ nice-to-haves
     _ support settings overrides?
   _ (i) sophisticated hotswapping
   _ node-falafel performance improvement
-  _ bookmark transitions
+  _ support logs + editing together
   _ instant execution
   _ message loss should just incorporate dropped messages into the tail snapshot
+  _ search
 
 x show widget
   x create attribute for widget template id
@@ -209,3 +211,9 @@ x set up esprima error notification
 
   12-20-13 ~40
     x fix focus on current line
+    x use edit script
+    x remove getCurrentScript
+
+  12-21-13 ~39
+    x center cursor navigation
+    x execute templated scope

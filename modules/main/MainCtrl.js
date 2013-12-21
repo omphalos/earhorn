@@ -93,10 +93,10 @@ angular.module('main').controller('MainCtrl', [
     $scope.editScript = programState.currentScript
     $scope.currentLine = +location[2]
     $scope.currentCh = +location[3]
-    console.log('updateLocation', 
+    /* console.log('updateLocation', 
       $scope.editScript, 
       $scope.currentLine, 
-      $scope.currentCh)
+      $scope.currentCh) */
   }
 
   $scope.getBookmarks = function() {
@@ -129,6 +129,7 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('timeline.isPlaying()', function(newVal) {
     if(!newVal) return
+    console.log('not editing')
     $scope.editing = false
     updateCode()
     updateLocation()
@@ -202,9 +203,9 @@ angular.module('main').controller('MainCtrl', [
     
     debouncedValidate(newVal)
 
-    $scope.editing = newVal !== getEditScript().body
-    
-    if(!$scope.editing) return
+    if(newVal !== getEditScript().body)
+      $scope.editing = true
+    else return
     
     timeline.pause()
     timeline.clear()
@@ -279,8 +280,7 @@ angular.module('main').controller('MainCtrl', [
 
   function getParseErrorScripts() {
     
-    var scripts = 
-      [$scope.editScript]. // Make sure editScript is first
+    var scripts = // Make sure editScript is first
       concat(Object.keys(programState.scripts))
       
     return scripts.

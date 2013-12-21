@@ -122,12 +122,15 @@ iframe {
 }
 
 .main-container .bookmark-loc { text-decoration: underline; }
-.main-container .current-loc { font-weight: bold; }
+.main-container .current-loc { font-weight: bold; background-color: lightblue; }
 .main-container .current { font-weight: bold; }
+.main-container .current.bookmark {
+  border: 1px solid blue;
+}
 .main-container .bookmark:hover { text-decoration: underline; }
 
 .main-container .CodeMirror-activeline-background {
-  background: lightblue; 
+  xbackground: lightblue; 
 }
 
 

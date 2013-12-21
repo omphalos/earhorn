@@ -15,7 +15,7 @@ angular.module('main').directive('editor', [
   function link(scope, element, attr) {      
 
     var settings = settingsService.load({
-      editor: { maxOperations: 10 }
+      editor: { maxOperations: 100 }
     })
 
     ////////////////////////////////////////////
@@ -45,8 +45,6 @@ angular.module('main').directive('editor', [
 
     var rebuildEditor = function() {
 
-      console.log('rebuildEditor')
-      
       // Focus.
       if(pending.focus) {
         var focus = scope.$eval(attr.focus)
@@ -57,8 +55,10 @@ angular.module('main').directive('editor', [
       // Code.
       if(pending.code) {
         var code = scope.$eval(attr.code) || ''
-        if(code !== editor.getValue())
+        if(code !== editor.getValue()) {
           editor.setValue(code)
+          editor.clearHistory()
+        }
         delete pending.code
       }
       
@@ -69,20 +69,17 @@ angular.module('main').directive('editor', [
         
       if(line !== oldCursor.line || ch !== oldCursor.ch) {
 
-        console.log('setCursor', line, ch)
-        //editor.scrollTo(0) // Move to the left as much as possible.
         // http://codemirror.977696.n3.nabble.com/Is-it-possible-to-scroll-to-a-line-so-that-it-is-in-the-middle-of-window-td4025123.html
         var coords = editor.charCoords({ line: line, ch: 0 }, 'local')
           , y = coords.top
           , halfHeight = editor.getScrollerElement().offsetHeight / 2 
-        console.log('scroll', coords, y, halfHeight)
         editor.scrollTo(0, y - halfHeight * 0.75)
+        
         editor.setCursor({ line: line, ch: ch })
+
+        // Update bookmarks in case the viewport changes.        
         pending.bookmarks = true
       }
-      
-      delete pending.line
-      delete pending.ch
       
       editor.operation(function() {
 
@@ -153,6 +150,7 @@ angular.module('main').directive('editor', [
               , lineWidgetScope = scope.$new()
               
             lineWidgetScope.model = lineWidget.model
+            lineWidgetScope.$digest()
               
             lineWidgets[key] = {
               scope: lineWidgetScope,
@@ -173,8 +171,6 @@ angular.module('main').directive('editor', [
             , newBookmarks = scope.$eval(attr.bookmarks) || {}
             , operations = 0
   
-          console.log('drawing bookmarks', viewport.from, viewport.to)
-          
           for(var key in bookmarks) {
   
             var isInNewBookmarks = newBookmarks.hasOwnProperty(key)
@@ -243,6 +239,16 @@ angular.module('main').directive('editor', [
           delete pending.bookmarks
         }
       })
+
+      if(pending.line || pending.ch) {
+        
+        // Workaround to show full bookmark.
+        editor.setCursor({ line: line, ch: ch + 1 })
+        editor.setCursor({ line: line, ch: ch })
+        
+        delete pending.line
+        delete pending.ch
+      }
     }
 
     function rebuildEditorOperation() {
@@ -252,7 +258,7 @@ angular.module('main').directive('editor', [
     }    
     
     var rebuildEditorDebounced = _.debounce(
-      rebuildEditorOperation, 25)
+      rebuildEditorOperation, 50)
 
     function watch(prop, uiComponent, fullWatch) {
       scope.$watch(prop, function(newValue, oldValue) {
@@ -261,6 +267,13 @@ angular.module('main').directive('editor', [
         rebuildEditorDebounced()
       }, fullWatch)
     } 
+
+    // Bind read-only.
+    if(attr.readOnly) {
+      scope.$watch(attr.readonly, function(newValue) {
+        editor.setOption('readonly', newValue)
+      })
+    }
     
     // Bind focus.     
     if(attr.focus) {
@@ -294,7 +307,7 @@ angular.module('main').directive('editor', [
     // Bind cursor.
     editor.on('cursorActivity', function() {
       var cursor = editor.getCursor()
-      console.log('cursorActivity', cursor, 'isRebuildingEditor', isRebuildingEditor)
+      //console.log('cursorActivity', cursor, 'isRebuildingEditor', isRebuildingEditor)
       if(isRebuildingEditor) return // TODO: move to top of fn
       if(attr.line) $parse(attr.line).assign(scope, cursor.line)
       if(attr.ch) $parse(attr.ch).assign(scope, cursor.ch)
