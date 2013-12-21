@@ -1,20 +1,13 @@
 _ stuff required for release
   _ add jquery todomvc example
-    _ use edit script
-    _ remove getCurrentScript
-    _ fix broken widget
+    x use edit script
+    x remove getCurrentScript
+    _ center cursor navigation
+    _ execute templated scope
     _ fix script editing
-    _ fix log binding performance
-      x debounced codemirror rebuild
-      _ windowed bookmarks
-      _ fix bookmarks: deep $watch + dont return log object
-    _ fix focus on current line
-    x fix crash: maybe better error handling in eh$?
-    _ session-stored parsing
     _ test jquery todomvc example 
-      _ in MainCtrl support editScript different from programState.currentScript
+      x in MainCtrl support editScript different from programState.currentScript
       _ only auto-navigate when paused
-      _ message loss should just incorporate dropped messages into the tail snapshot
       _ message loss should also show a warning that messages were lost
       _ clean up reset to handle multiple scripts
     _ keypress to open cmd+o
@@ -64,6 +57,7 @@ _ nice-to-haves
   _ node-falafel performance improvement
   _ bookmark transitions
   _ instant execution
+  _ message loss should just incorporate dropped messages into the tail snapshot
 
 x show widget
   x create attribute for widget template id
@@ -205,3 +199,13 @@ x set up esprima error notification
 
   12-16-13 ~39
     x use focus, blur events instead o interval
+    x fix crash: maybe better error handling in eh$?
+    x debounced codemirror rebuild
+    x fix broken widget
+    x fix log binding performance
+      x windowed bookmarks
+      x fix bookmarks: deep $watch + dont return log object
+    x (try) session-stored parsing
+
+  12-20-13 ~40
+    x fix focus on current line
