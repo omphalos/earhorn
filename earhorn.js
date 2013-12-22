@@ -1,4 +1,4 @@
-;(function(context) {
+ ;(function(context) {
 
   //////////////
   // earhorn$ //
@@ -6,7 +6,7 @@
 
   // Set up settings object.
   function applyDefaults(target) {
-    
+
     if(target.instrumentation) return target
       
     target.instrumentation = {
