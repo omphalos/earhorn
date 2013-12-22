@@ -3,6 +3,7 @@ _ stuff required for release
     _ fix mouse update demo
       _ set bookmarks during timeline update event (?)
       _ consolidate 'current' detection
+      _ refactor viewport event to Ctrl (?)
     _ dropdown navigation should wait for ui refresh
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
@@ -26,7 +27,6 @@ _ stuff required for release
       _ review
       _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
     _ refactor
-      _ maybe editor shouldnt know about viewport boundaries
       _ consolidate add/remove logic in codemirror widget
       _ refactor programState monkey patching
       _ programStateFactory -> programState
