@@ -83,6 +83,8 @@ angular.module('main').factory('logClient', [
 
   logClient.edit = function(script, code) {
 
+    if(!script) throw 'no script'
+
     localStorage.removeItem('earhorn-listener')
     localStorage.setItem('earhorn-listener', JSON.stringify({
       type: 'edit',

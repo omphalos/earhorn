@@ -7,7 +7,7 @@ angular.module('app').config(['$routeProvider', function($routeProvider) {
 }])
 
 angular.module('main').controller('MainCtrl', [
-  '$scope',
+   '$scope',
   '$location',
   'logClient',
   'timeline',
@@ -35,10 +35,6 @@ angular.module('main').controller('MainCtrl', [
       pause: true,
       play: true,
       formatDigits: 2
-    },
-    main: {
-      autosave: false,
-      autoNavigateWhenPlaying: false
     },
     keys: {
       'mod+p': 'play()',
@@ -86,20 +82,30 @@ angular.module('main').controller('MainCtrl', [
   }
   
   function updateCode() {
+
     if($scope.editing) return
+
     $scope.code = getEditScript().body
   }
   
-  function updateLocation() {
-    if($scope.editing || !programState.currentLoc) return
-    if(
-      timeline.isPlaying() && 
-      !settings.main.autoNavigateWhenPlaying && 
-      $scope.editScript) return
-    var location = programState.currentLoc.split(',')
+  function updateLocation() {   
+
+    // Don't auto-navigate when editng or there's nowhere to navigate to.
+    // Don't auto-navigate when playing if we're showing a script.
+    // (If we're playing and not showing a script,
+    // we can autonavigate to initialize editScript.)
+    if($scope.editing || (timeline.isPlaying() && $scope.editScript)) return
+    
     $scope.editScript = programState.currentScript
-    $scope.currentLine = +location[2]
-    $scope.currentCh = +location[3]
+    
+    if(programState.currentLoc) {
+      var location = programState.currentLoc.split(',')
+      $scope.currentLine = +location[2]
+      $scope.currentCh = +location[3]
+    } else {
+      $scope.currentLine = 0
+      $scope.currentCh = 0
+    }
   }
 
   $scope.getBookmarks = function() {
@@ -139,6 +145,7 @@ angular.module('main').controller('MainCtrl', [
 
   $scope.$watch('getEditScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
+  $scope.$watch('getScriptCount()', updateLocation)
 
   ///////////
   // Mode. //
@@ -157,10 +164,6 @@ angular.module('main').controller('MainCtrl', [
   ////////////////
   
   $scope.editing = false
-  
-  var debouncedEdit = _.debounce(function(newVal) {
-    logClient.edit($scope.editScript, newVal)
-  })
   
   var debouncedValidate = _.debounce(function(newVal) {
 
@@ -208,15 +211,12 @@ angular.module('main').controller('MainCtrl', [
     
     debouncedValidate(newVal)
 
-    if(newVal !== getEditScript().body)
-      $scope.editing = true
-    else return
+    if(newVal === getEditScript().body) return
+    
+    $scope.editing = true
     
     timeline.pause()
     timeline.clear()
-
-    if(settings.main.autosave)    
-      debouncedEdit(newVal)
   })
 
   $scope.reset = function(script) {
@@ -225,7 +225,8 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.play = function() {
     timeline.clear()
-    debouncedEdit($scope.code)
+    getEditScript().body = $scope.code
+    logClient.edit($scope.editScript, $scope.code)
     timeline.play()
   }
 

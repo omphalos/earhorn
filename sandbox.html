@@ -3,8 +3,10 @@
 <head>
 </head>
 <body>
+  <!-- These scripts are bundled together by bundle.sh into earhorn.js. -->
+  <!-- We don't care about the bundle when we're using the sandbox. -->
   <script src="components/esprima/esprima.js"></script>
   <script src="components/umd-falafel/index.js"></script>
-  <script src="earhorn.js"></script>
+  <script src="instrumentor.js"></script>
   <script>earhorn$('sandbox', function() {})()</script>
 </body></html>

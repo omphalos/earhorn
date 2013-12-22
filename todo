@@ -1,5 +1,6 @@
 _ stuff required for release
   _ bugs
+    _ fix empty sandbox isnt editable because editScript is missing
     _ fix mouse update demo
       _ set bookmarks during timeline update event (?)
       _ consolidate 'current' detection
@@ -238,3 +239,5 @@ x set up esprima error notification
       x nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
       x change mouse to use just earhorn.js
     x fix small width styling
+
+  12-22-13 ~33

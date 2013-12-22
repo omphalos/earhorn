@@ -67,7 +67,7 @@ angular.module('main').directive('editor', [
       // Cursor.
       var oldCursor = editor.getCursor()
         , line = pending.line ? scope.$eval(attr.line) : oldCursor.line
-        , ch = pending.ch ? scope.$eval(attr.ch) : oldCursor.ch
+        , ch = pending.ch ? scope.$eval(attr.ch) || 0 : oldCursor.ch
         , cursorUpdating = line !== oldCursor.line || ch !== oldCursor.ch
         
       if(cursorUpdating) {
