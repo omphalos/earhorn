@@ -122,8 +122,7 @@ angular.module('main').controller('MainCtrl', [
       bookmarks[key] = {
         key: key,
         loc: log.loc,
-        caught: log.caught,
-        text: $scope.getLogText(log.val)
+        caught: log.caught
       }
     })
 
@@ -225,6 +224,7 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.play = function() {
     timeline.clear()
+    delete $scope.widgetKey
     getEditScript().body = $scope.code
     logClient.edit($scope.editScript, $scope.code)
     timeline.play()
@@ -383,7 +383,12 @@ angular.module('main').controller('MainCtrl', [
     })
   }
   
-  $scope.getLogText = function(log, key) {
+  $scope.getLogTextForKey = function(key) {
+    var log = getEditScript().logs[key]
+    return log ? $scope.getLogText(log.val) : null
+  }
+  
+  $scope.getLogText = function(log) {
 
     if(!log) return 'ERROR'
     

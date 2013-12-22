@@ -103,10 +103,11 @@
   <script type="text/ng-template" id="bookmarkTemplate">
     <span
       ng-cloak
+      ng-show="getLogTextForKey(key)"
       ng-mouseenter="hover(key,model.loc)"
       ng-mouseleave="unhover()"
       ng-class="{ bookmark: 1, current: key == programState.currentLoc, caught: model.caught }"
-      ng-bind="model.text"
+      ng-bind="getLogTextForKey(key)"
       ng-click="toggleWidget($event, key)"></span>
   </script>
 

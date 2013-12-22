@@ -202,7 +202,9 @@ angular.module('main').directive('editor', [
             if(existingBookmark) {
                   
               // Update bookark.
+              console.log('updating', key, newBookmarks[key].text)
               bookmarks[key].scope.model = newBookmarks[key]
+              bookmarks[key].scope.$digest()
               
             } else {
   

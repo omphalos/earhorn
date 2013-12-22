@@ -1,10 +1,6 @@
 _ stuff required for release
   _ bugs
-    _ fix empty sandbox isnt editable because editScript is missing
-    _ fix mouse update demo
-      _ set bookmarks during timeline update event (?)
-      _ consolidate 'current' detection
-      _ refactor viewport event to Ctrl (?)
+    _ fix widget flashing during open, click-away, open
     _ dropdown navigation should wait for ui refresh
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
@@ -241,3 +237,5 @@ x set up esprima error notification
     x fix small width styling
 
   12-22-13 ~33
+    x fix empty sandbox isnt editable because editScript is missing
+    x fix mouse update demo
