@@ -37,7 +37,7 @@ angular.module('main').directive('editor', [
     var pending = {}
       , template = $compile($templateCache.get(attr.widgetTemplate))
       , widgetElement = template(scope)[0]
-      , widgetObj
+      , widgetActiveElement
       , markers = {}
       , lineWidgets = {}     
       , bookmarks = {}
@@ -91,14 +91,22 @@ angular.module('main').directive('editor', [
 
         // Widget.
         if(pending.widget) {
-    
-          if(widgetObj) widgetObj.clear() // TODO check this
+
+          if(widgetActiveElement) {
+            widgetActiveElement.parentNode.removeChild(widgetActiveElement)
+            widgetActiveElement = null
+          }
   
-          var line = scope.$eval(attr.widgetLine) || 0
+          var widgetKey = scope.$eval(attr.widgetKey)
+            , line = scope.$eval(attr.widgetLine) || 0
             , ch = scope.$eval(attr.widgetCh) || 0
             , pos = { line: line, ch: ch }
-  
-          widgetObj = editor.addWidget(pos, widgetElement)
+            
+          if(widgetKey) {
+            editor.addWidget(pos, widgetElement)
+            widgetActiveElement = widgetElement
+          }
+
           delete pending.widget
         }
         
@@ -323,6 +331,7 @@ angular.module('main').directive('editor', [
 
     // Bind widget.
     if(attr.widgetTemplate) {
+      watch(attr.widgetKey, 'widget')
       watch(attr.widgetLine, 'widget')
       watch(attr.widgetCh, 'widget')
     }

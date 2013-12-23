@@ -199,8 +199,7 @@
         return
       }
         
-      if(node.type === 'Literal' ||
-        (node.type === 'UnaryExpression' && node.argument.type === 'Literal'))
+      if(node.type === 'Literal')
         return
       
       if(
@@ -289,10 +288,7 @@
       return { type: 'Function', name: obj.name }
       
     if(type === '[object Number]')
-      return {
-        type: 'Number',
-        value: isNaN(obj) || !isFinite(obj) ? obj.toString() : obj
-      }
+      return { type: 'Number', value: obj }
     
     if(type === '[object Boolean]')
       return { type: 'Boolean', value: obj }

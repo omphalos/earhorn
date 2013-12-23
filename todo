@@ -1,7 +1,6 @@
 _ stuff required for release
   _ bugs
     _ message loss should also show a warning that messages were lost
-    _ fix widget flashing during open, click-away, open
     _ clean up reset to handle multiple scripts
     _ keypress to open cmd+o
     _ reinstate interval
@@ -9,7 +8,6 @@ _ stuff required for release
     _ fix newlines
     _ verify all statement types are covered by errors
     _ test suite for instrumented javascript
-    _ better todomvc loading performance
   _ features
     _ better source map support
     _ error navigation
@@ -23,10 +21,12 @@ _ stuff required for release
     _ refactor
       _ move edit to timeline
       _ refactor programState monkey patching
-    _ navigate to current line quickly
+    _ todomvc navigate to current position quickly
     _ better key press messages
+    _ better message when iframe specified but script not loaded
 
 _ nice-to-haves
+  _ fix nested widget inspection
   _ (i) plugins
   _ (i) set current script in title
   _ enhance traversal
@@ -239,3 +239,4 @@ x set up esprima error notification
 
   12-23-13 ~23
     x organize examples, including jquery todomvc
+    x fix widget flashing during open, click-away, open

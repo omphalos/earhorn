@@ -85,6 +85,7 @@
       init-line-numbers="true"
       bookmarks="getBookmarks()"
       bookmark-template="bookmarkTemplate"
+      widget-key="widgetKey"
       widget-line="widgetLine"
       widget-ch="widgetCh"
       widget-template="widgetTemplate"
@@ -106,7 +107,7 @@
       ng-show="hasLogForKey(key)"
       ng-mouseenter="hover(key,model.loc)"
       ng-mouseleave="unhover()"
-      ng-class="{ bookmark: 1, current: key == programState.currentLoc, caught: model.caught }"
+      ng-class="{ bookmark: 1, current: isCurrent(key), caught: model.caught }"
       ng-bind="getLogTextForKey(key)"
       ng-click="toggleWidget($event, key)"></span>
   </script>
@@ -114,7 +115,7 @@
   <script type="text/ng-template" id="widgetTemplate">
     <span 
       ng-show="getWidgetLog() && widgetScript == editScript" 
-      ng-class="{ widget: 1, caught: getWidgetLog().caught }">
+      ng-class="{ widget: 1, current: isCurrent(widgetKey), caught: getWidgetLog().caught }">
 
       <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">
         <!-- TODO: use ng-switch -->

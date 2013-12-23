@@ -396,11 +396,18 @@ angular.module('main').controller('MainCtrl', [
 
     if(!log) return 'ERROR'
     
-    if(log.type === 'String')
-      return '"' + htmlEscape(log.value) + '"' + (log.clipped ? '...' : '')
+    if(log.type === 'String') {
+
+      var str = htmlEscape(log.value)
+      
+      if(str.indexOf('\n') >= 0)
+        return '"' + str.substring(0, str.indexOf('\n')) + '"...'
+
+      return '"' + str + '"' + (log.clipped ? '...' : '')
+    }
 
     if(log.type === 'Number') {
-      if(!log.value || !settings.display.formatDigits) return log.value
+      if(typeof log.value === 'string') return log.value
       return log.value.toFixed(settings.display.formatDigits)
     }
       
@@ -418,6 +425,12 @@ angular.module('main').controller('MainCtrl', [
             
     return log.type
   }  
+  
+  $scope.isCurrent = function(key) {
+    return (
+      $scope.editScript == programState.currentScript && 
+      key == programState.currentLoc)
+  }
 
   /////////////////////////////////////
   // Build an iframe when requested. //
