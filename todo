@@ -1,6 +1,9 @@
 _ stuff required for release
   _ bugs
     _ message loss should also show a warning that messages were lost
+      _ add message loss to program state records
+      _ forward/reverse message loss
+      _ message loss should be orange
     _ reinstate interval
     _ verify all statement types are covered by errors
     _ test suite for instrumented javascript

@@ -114,7 +114,6 @@
 
   <script type="text/ng-template" id="widgetTemplate">
     <span 
-      ng-show="getWidgetLog() && widgetScript == editScript" 
       ng-class="{ widget: 1, current: isCurrent(widgetKey), caught: getWidgetLog().caught }">
 
       <div ng-if="getWidgetLog()" class="widget-inner {{getWidgetLog().type}}">

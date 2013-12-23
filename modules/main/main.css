@@ -86,6 +86,13 @@ iframe {
 .main-container .bookmark, .main-container .widget-inner {
   padding: 0 0.5em;
 }
+.main-container .widget-inner {
+  margin: 0.5em 0em;
+  max-height: 25em;
+  overflow-y: auto;
+  overflow-x: hidden;  
+}
+
 .main-container .bookmark,
 .main-container .widget {  
   background-color: #eef;
@@ -98,18 +105,13 @@ iframe {
   -webkit-border-radius: 1em;
   -moz-border-radius: 1em;
   -ms-border-radius: 1em;
-  border-radius: 1em;
   border: 1px solid lightblue;
 }
 .main-container .widget {
   z-index: 2;
   margin-top : 0.25em;
-  max-height: 25em;
-  overflow-y: auto;
-  overflow-x: hidden;
   white-space: nowrap;
 }
-.main-container .widget-inner { padding: 1px 0.5em; }
 .main-container .widget-label.Function { color: green; }
 .main-container .widget-label.Object { color: brown; }
 .main-container .widget-label.Array { color: gray; }
@@ -121,6 +123,13 @@ iframe {
   font-weight: normal;
 }
 
+.main-container .bookmark.message-loss, .main-container .widget.message-loss {
+  border-color: orange;
+  background-color: lightyellow;
+  color: orange;
+  font-weight: normal;
+}
+
 .main-container .bookmark-loc { text-decoration: underline; }
 .main-container .current-loc { font-weight: bold; background-color: lightblue; }
 .main-container .current { font-weight: bold; }
@@ -128,5 +137,4 @@ iframe {
   border: 1px solid blue;
 }
 .main-container .bookmark:hover { text-decoration: underline; }
-
 
