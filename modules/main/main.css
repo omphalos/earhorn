@@ -52,13 +52,14 @@ iframe {
 }
 
 .main-container .buttons { cursor: default; }
-.main-container .pause.icon { background-image: url(../../glyphicons/glyphicons_174_pause.png); }
+/*.main-container .pause.icon { background-image: url(../../glyphicons/glyphicons_174_pause.png); }
 .main-container .play.icon { background-image: url(../../glyphicons/glyphicons_173_play.png); }
 .main-container .step-forward.icon { background-image: url(../../glyphicons/glyphicons_178_step_forward.png); }
 .main-container .step-backward.icon { background-image: url(../../glyphicons/glyphicons_170_step_backward.png); }
 .main-container .fast-backward.icon { background-image: url(../../glyphicons/glyphicons_171_fast_backward.png); }
 .main-container .fast-forward.icon { background-image: url(../../glyphicons/glyphicons_177_fast_forward.png); }
-.main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }
+.main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }*/
+
 .main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; }
 /* .main-container .error-alert {
   position: absolute; 

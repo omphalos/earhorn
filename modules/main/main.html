@@ -30,33 +30,33 @@
       <div class="buttons">
         <span 
           ng-show="settings.display.fastBackward" 
-          ng-class="{ 'fast-backward': 1, icon: 1, disabled: editing }" 
+          ng-class="{ 'fast-backward': 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 
           title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" 
           ng-click="timeline.fastBackward()"></span>
         <span 
           ng-show="settings.display.stepBackward" 
-          ng-class="{ 'step-backward': 1, icon: 1, disabled: editing }" 
+          ng-class="{ 'step-backward': 1, disabled: editing, fa: 1, 'fa-step-backward': 1 }" 
           title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}" 
           ng-click="timeline.stepBackward()"></span>
         <span 
           ng-show="settings.display.pause" 
-          ng-class="{ pause: 1, icon: 1, active: !timeline.isPlaying() }" 
+          ng-class="{ pause: 1, active: !timeline.isPlaying(), fa: 1, 'fa-pause': 1 }" 
           title="{{tooltipFor('Pause', 'timeline.pause()')}}" 
           ng-click="timeline.pause()"></span>
         <span 
           ng-show="settings.display.play" 
-          class="play icon" 
+          class="play fa fa-play" 
           ng-class="{ active: timeline.isPlaying() }" 
           title="{{tooltipFor('Play', 'play()')}}" 
           ng-click="play()"></span>
         <span 
           ng-show="settings.display.stepForward" 
-          ng-class="{ 'step-forward': 1, icon: 1, disabled: editing }" 
+          ng-class="{ 'step-forward': 1, fa: 1, 'fa-step-forward': 1, disabled: editing }" 
           title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" 
           ng-click="timeline.stepForward()"></span>
         <span 
           ng-show="settings.display.fastForward" 
-          ng-class="{ 'fast-forward': 1, icon: 1, disabled: editing }" 
+          ng-class="{ 'fast-forward': 1, fa: 1, 'fa-fast-forward': 1, disabled: editing }" 
           title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" 
           ng-click="timeline.fastForward()"></span>
       </div>
