@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="../components/normalize-css/normalize.css"/>
+  <style>
+    p { cursor: default; color: #555; text-align: center; }
+  </style>
+</head>
+<body>
+  <p><strong>Move your mouse</strong> in this panel to watch the code update in real-time.</p>
+  <script src="../earhorn.js"></script>
+  <script src="../components/jquery/jquery.js"></script>
+  <script>
+earhorn$('mouse.js', function() {var x, y
+
+$(document).on('mousemove', function(evt) {
+  
+  evt
+  
+  if(Math.random() < 0.5)
+    x = evt.clientX
+  else
+    y = evt.clientY
+})
+
+})()
+  </script>
+</body></html>

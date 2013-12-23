@@ -1,14 +1,14 @@
 _ stuff required for release
   _ bugs
-    _ fix widget flashing during open, click-away, open
     _ message loss should also show a warning that messages were lost
+    _ fix widget flashing during open, click-away, open
     _ clean up reset to handle multiple scripts
     _ keypress to open cmd+o
     _ reinstate interval
     _ fix html escaping
     _ fix newlines
     _ verify all statement types are covered by errors
-    _ (i) test suite for instrumented javascript
+    _ test suite for instrumented javascript
   _ features
     _ better source map support
     _ error navigation
@@ -19,13 +19,9 @@ _ stuff required for release
     _ editor focus after mouseclick icon
     _ editor focus after mouseup timeline
     _ update readme
-      _ review
-      _ (i) add links in readme: inventing on principle, lighttable, yinyang, tailspin
     _ refactor
-      _ consolidate add/remove logic in codemirror widget
+      _ move edit to timeline
       _ refactor programState monkey patching
-      _ programStateFactory -> programState
-      _ organize examples, including jquery todomvc
 
 _ nice-to-haves
   _ (i) plugins
@@ -239,4 +235,4 @@ x set up esprima error notification
     x fix mouse update demo
 
   12-23-13 ~23
-    
+    x organize examples, including jquery todomvc
