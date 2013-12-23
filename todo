@@ -1,11 +1,7 @@
 _ stuff required for release
   _ bugs
     _ message loss should also show a warning that messages were lost
-    _ clean up reset to handle multiple scripts
-    _ keypress to open cmd+o
     _ reinstate interval
-    _ fix html escaping
-    _ fix newlines
     _ verify all statement types are covered by errors
     _ test suite for instrumented javascript
   _ features
@@ -16,13 +12,9 @@ _ stuff required for release
     _ use colorized font awesome icons: play to green, pause to orange, error to red
     _ better focus style (border or something)
     _ editor focus after mouseclick icon
-    _ editor focus after mouseup timeline
     _ update readme
-    _ refactor
-      _ move edit to timeline
-      _ refactor programState monkey patching
     _ todomvc navigate to current position quickly
-    _ better key press messages
+    _ better key press hints
     _ better message when iframe specified but script not loaded
 
 _ nice-to-haves
@@ -51,6 +43,9 @@ _ nice-to-haves
     - node-http-proxy js url
       - fs.readfile -> res.write(...earhorn+)
     - node-http-proxy specified url
+  _ refactor programState monkey patching
+  _ refactor reset to handle multiple scripts
+  _ move edit to timeline
 
 x show widget
   x create attribute for widget template id
@@ -240,3 +235,8 @@ x set up esprima error notification
   12-23-13 ~23
     x organize examples, including jquery todomvc
     x fix widget flashing during open, click-away, open
+    x fix newlines
+    x fix html escaping
+    x keypress to open cmd+o
+      x focus directive
+    x editor focus after mouseup timeline

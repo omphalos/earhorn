@@ -41,10 +41,20 @@ angular.module('main').controller('MainCtrl', [
       'mod+m': 'timeline.fastBackward()',
       'mod+,': 'timeline.stepBackward()',
       'mod+.': 'timeline.stepForward()',
-      'mod+/': 'timeline.fastForward()'
+      'mod+/': 'timeline.fastForward()',
+      'mod+o': 'selectScript()'
     }
   })
+  
+  $scope.$watch('editScript', function() {
+    $scope.editorFocus = true
+  })
 
+  $scope.selectScript = function() {
+    $scope.editorFocus = false
+    $scope.$broadcast('selectScript')
+  }
+  
   ///////////////
   // Timeline. //
   ///////////////
@@ -56,6 +66,7 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('timelinePosition', function(newVal, oldVal) {
     timeline.setPosition(+newVal)
+    $scope.editorFocus = true
   })
   
   $scope.$watch('timeline.getPosition()', function(newVal, oldVal) {
@@ -371,18 +382,6 @@ angular.module('main').controller('MainCtrl', [
   // getLogText //
   ////////////////
   
-  var entityMap = {
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', 
-    '"': '&quot;', '\'': '&#39;', '/': '&#x2F;' 
-  }
-  
-  function htmlEscape(str) {
-    
-    return str.replace(/[&<>"'\/]/g, function (s) {
-      return entityMap[s];
-    })
-  }
-
   $scope.hasLogForKey = function(key) {
     return getEditScript().logs[key]
   }
@@ -398,7 +397,7 @@ angular.module('main').controller('MainCtrl', [
     
     if(log.type === 'String') {
 
-      var str = htmlEscape(log.value)
+      var str = log.value
       
       if(str.indexOf('\n') >= 0)
         return '"' + str.substring(0, str.indexOf('\n')) + '"...'
@@ -534,6 +533,7 @@ angular.module('main').controller('MainCtrl', [
     // Miscellaneous utilities.
     revertChanges: $scope.revertChanges,
     revertAllChanges: $scope.revertAllChanges,
+    selectScript: $scope.selectScript,
     
     // Expose the $scope for ease of development.
     timeline: timeline,

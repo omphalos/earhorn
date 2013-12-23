@@ -3,7 +3,7 @@
   <nav>
     <div class="top">
       <span ng-show="getScriptCount()">
-        <select ng-show="getScriptCount() > 1" ng-model="editScript">
+        <select ng-show="getScriptCount() > 1" ng-model="editScript" focus="selectScript">
           <option 
             ng-repeat="(script, log) in timeline.programState.scripts" 
             value="{{script}}">{{script}}</option>

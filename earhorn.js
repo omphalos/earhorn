@@ -199,8 +199,7 @@
         return
       }
         
-      if(node.type === 'Literal' ||
-        (node.type === 'UnaryExpression' && node.argument.type === 'Literal'))
+      if(node.type === 'Literal')
         return
       
       if(
