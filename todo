@@ -1,9 +1,9 @@
 _ stuff required for release
   _ bugs
     _ message loss should also show a warning that messages were lost
-      _ add message loss to program state records
       _ forward/reverse message loss
-      _ message loss should be orange
+      x message loss should be orange
+    _ todomvc navigate to current position quickly
     _ reinstate interval
     _ verify all statement types are covered by errors
     _ test suite for instrumented javascript
@@ -16,7 +16,6 @@ _ stuff required for release
     _ better focus style (border or something)
     _ editor focus after mouseclick icon
     _ update readme
-    _ todomvc navigate to current position quickly
     _ better key press hints
     _ better message when iframe specified but script not loaded
 
