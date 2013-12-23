@@ -9,6 +9,7 @@ _ stuff required for release
     _ fix newlines
     _ verify all statement types are covered by errors
     _ test suite for instrumented javascript
+    _ better todomvc loading performance
   _ features
     _ better source map support
     _ error navigation
@@ -22,6 +23,8 @@ _ stuff required for release
     _ refactor
       _ move edit to timeline
       _ refactor programState monkey patching
+    _ navigate to current line quickly
+    _ better key press messages
 
 _ nice-to-haves
   _ (i) plugins
