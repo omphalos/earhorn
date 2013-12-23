@@ -10,18 +10,18 @@ angular.module('main').controller('MainCtrl', [
    '$scope',
   '$location',
   'logClient',
-  'timeline',
+  'timelineFactory',
   'settingsService',
   'consoleInterface',
   '$compile', function(
   $scope,
   $location,
   logClient,
-  timeline,
+  timelineFactory,
   settingsService,
   consoleInterface,
   $compile) {
-    
+
   //////////////////////////
   // Set up our services. //
   //////////////////////////
@@ -49,7 +49,7 @@ angular.module('main').controller('MainCtrl', [
   // Timeline. //
   ///////////////
 
-  $scope.timeline = timeline
+  var timeline = $scope.timeline = timelineFactory()
   
   // Two-way binding for position.
   $scope.timelinePosition = timeline.getPosition()
@@ -382,9 +382,13 @@ angular.module('main').controller('MainCtrl', [
       return entityMap[s];
     })
   }
+
+  $scope.hasLogForKey = function(key) {
+    return getEditScript().logs[key]
+  }
   
   $scope.getLogTextForKey = function(key) {
-    var log = getEditScript().logs[key]
+    var log = $scope.hasLogForKey(key)
     return log ? $scope.getLogText(log.val) : null
   }
   

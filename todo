@@ -1,7 +1,6 @@
 _ stuff required for release
   _ bugs
     _ fix widget flashing during open, click-away, open
-    _ dropdown navigation should wait for ui refresh
     _ message loss should also show a warning that messages were lost
     _ clean up reset to handle multiple scripts
     _ keypress to open cmd+o
@@ -10,7 +9,6 @@ _ stuff required for release
     _ fix newlines
     _ verify all statement types are covered by errors
     _ (i) test suite for instrumented javascript
-    _ handle localstorage errors
   _ features
     _ better source map support
     _ error navigation
@@ -239,3 +237,6 @@ x set up esprima error notification
   12-22-13 ~33
     x fix empty sandbox isnt editable because editScript is missing
     x fix mouse update demo
+
+  12-23-13 ~23
+    

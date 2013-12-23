@@ -28,7 +28,7 @@
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
-  top: 95px;
+  top: 97px;
   bottom: 0;
   height: auto; 
 }
@@ -128,9 +128,5 @@ iframe {
   border: 1px solid blue;
 }
 .main-container .bookmark:hover { text-decoration: underline; }
-
-.main-container .CodeMirror-activeline-background {
-  xbackground: lightblue; 
-}
 
 
