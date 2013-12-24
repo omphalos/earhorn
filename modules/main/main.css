@@ -147,3 +147,9 @@ iframe {
 }
 .main-container .bookmark:hover { text-decoration: underline; }
 
+.main-container .no-scripts-message .not-loading { opacity: 0; }
+.main-container .no-scripts-message .not-loading.timer-elapsed {
+  opacity: 1;
+  transition: opacity 2s ease-in;
+}
+

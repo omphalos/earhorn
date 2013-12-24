@@ -13,14 +13,16 @@ angular.module('main').controller('MainCtrl', [
   'timelineFactory',
   'settingsService',
   'consoleInterface',
-  '$compile', function(
+  '$compile', 
+  '$timeout', function(
   $scope,
   $location,
   logClient,
   timelineFactory,
   settingsService,
   consoleInterface,
-  $compile) {
+  $compile,
+  $timeout) {
 
   //////////////////////////
   // Set up our services. //
@@ -526,5 +528,9 @@ angular.module('main').controller('MainCtrl', [
   }
   
   consoleInterface.expose($scope, 'consoleInterface')
+
+  $timeout(function() {
+    $scope.timerElapsed = true;
+  }, 2000)
 
 }])

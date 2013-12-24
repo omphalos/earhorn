@@ -1,14 +1,13 @@
 _ stuff required for release
   _ add refresh button, different than play button fa-refresh
+  _ play should be disabled when editing
   _ fix edit multiple scripts: use hashtable of editScripts
   _ fix multiple script edits
-  _ disallow buffering announcements
   _ message loss should also show a warning that messages were lost
     _ forward/reverse message loss
     x message loss should be orange
   _ better focus style (border or something)
   _ editor focus after mouseclick icon
-  _ better message when iframe specified but script not loaded
   _ esprima webworker
   _ test suite for instrumented javascript
   _ verify all statement types are covered by errors
@@ -243,3 +242,5 @@ x set up esprima error notification
   12-24-13 ~19
     x use colorized font awesome icons: play to green, pause to orange
     x parseerror navigation button appears when there is an error fa-minus-circle
+    x disallow buffering announcements
+    x better message when iframe specified but script not loaded

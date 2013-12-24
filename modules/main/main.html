@@ -22,10 +22,25 @@
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
     </div>
 
-    <p class="no-scripts-message" ng-show="!getScriptCount()">
+    <div class="no-scripts-message" ng-show="!getScriptCount() && !iframe">
       No scripts loaded.  You can visit the <a href="#/hideFrame=true,iframe=sandbox.html">sandbox</a>
       or run a script in the current domain using the earhorn$() function.
-    </p>
+    </div>
+
+    <div class="no-scripts-message" ng-show="!getScriptCount() && iframe">
+      <p>Loading url <a href="{{iframe}}">{{iframe}}</a>...</p>
+      <div ng-class="{ 'not-loading': 1, 'timer-elapsed': timerElapsed }">
+        <p>
+          Scripts may not load if the url is in a different domain,
+          if there is a mistake setting up the earhorn$ function,
+          or if the earhorn$ code just hasn't executed yet.
+        </p>
+        <p>
+          To see an example of a working page, you can take a look at <a href="examples/helloworld.html">the hello world example</a>.
+          Alternatively visit <a href="#/hideFrame=true,iframe=examples/helloworld.html">the hash</a> for running it in an earhorn iframe.
+        </p>
+      </div>
+    </div>
 
     <div class="timeline" ng-show="getScriptCount()">
       <div class="buttons">
