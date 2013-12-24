@@ -295,33 +295,16 @@ angular.module('main').controller('MainCtrl', [
   // Errors. //
   /////////////
 
-  function getParseErrorScripts() {
-    
-    var scripts = // Make sure editScript is first
-      concat(Object.keys(programState.scripts))
-      
-    return scripts.
-      filter(function(s) { return s && programState.scripts[s].parseError })
-  }
-
-  $scope.getParseErrors = function() {
-
-    return getParseErrorScripts().
-    
-      map(function(key) {
-        var parseError = programState.scripts[key].parseError
-        return key + ' (' + (parseError.line + 1) + '): ' + parseError.message + '.'
-      })
+  $scope.showParseError = function() {
+    if($scope.currentLine === void 0 || !$scope.parseError) return false
+    var diff = Math.abs($scope.currentLine - $scope.parseError.line)
+    return diff > 10
   }
 
   $scope.goToError = function() {
-    var script = getParseErrorScripts()[0]
-    timeline.pause()
-    // TODO handle different script than programState.currentScript
-    var error = programState.scripts[script].parseError
-    $scope.editScript = script
-    $scope.currentLine = error.line
-    $scope.currentCh = error.ch
+    if(!$scope.parseError) return
+    $scope.currentLine = $scope.parseError.line
+    $scope.currentCh = $scope.parseError.ch
     $scope.editorFocus = true
   }
   

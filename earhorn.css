@@ -11,20 +11,12 @@ main { height: 100%; }
 a { color: #555; }
 a:hover { color: black; }
 
-.icon {
-  height: 1em; width: 1em;  
-  background-size: 100% 100%;
-  display: inline-block;
-  opacity: 0.2;
-}
+.icon { height: 1em; width: 0.5em; opacity: 0.5; color: #333; }
 .icon:not(.active) { cursor: pointer; }
 .icon { margin: 5px }
-.icon:hover { opacity: 0.35; }
-.icon:active, .icon.active { opacity: 0.5; }
-.disabled.icon { opacity: 0.2; cursor: default; }
-
-.fade.out { opacity: 0; }
-.fade.in { opacity: 1; transition: opacity 1s ease-in-out; }
+.icon:hover { opacity: 0.7; }
+.icon:active, .icon.active { opacity: 1; }
+.disabled.icon { opacity: 0.4; cursor: default; }
 
 select, button {
   height: 1.5em;

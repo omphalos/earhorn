@@ -5,25 +5,25 @@
 .main-container .error-summary { color: red; font-style: italic; cursor: pointer; }
 
 .main-container .main-content { border-top: 1px solid; }
-.main-container editor.half .CodeMirror { border-right: 1px solid; }
+.main-container.half .CodeMirror { border-right: 1px solid; }
 
 /* Playing */
 .main-container.playing .main-content,
 .main-container.playing .status,
-.main-container.playing editor.half .CodeMirror { border-color: orange; }
+.main-container.playing.half .CodeMirror { border-color: green; }
 
 /* Paused */
 .main-container.paused .main-content,
 .main-container.paused .status,
-.main-container.paused editor.half .CodeMirror { border-color: #99f; }
+.main-container.paused.half .CodeMirror { border-color: orange; }
 
 /* Editing */
 .main-container.editing .main-content,
 .main-container.editing .status,
-.main-container.editing editor.half .CodeMirror { border-color: gray; }
+.main-container.editing.half .CodeMirror { border-color: gray; }
 
-.main-container editor.half .CodeMirror { left: 0; right: 50%; }
-.main-container editor.full .CodeMirror { left: 0; right: 0; } /* TODO */
+.main-container.half .CodeMirror { left: 0; right: 50%; }
+.main-container.full .CodeMirror { left: 0; right: 0; }
 
 .main-container .CodeMirror {  
   width: auto;
@@ -52,22 +52,30 @@ iframe {
 }
 
 .main-container .buttons { cursor: default; }
-/*.main-container .pause.icon { background-image: url(../../glyphicons/glyphicons_174_pause.png); }
-.main-container .play.icon { background-image: url(../../glyphicons/glyphicons_173_play.png); }
-.main-container .step-forward.icon { background-image: url(../../glyphicons/glyphicons_178_step_forward.png); }
-.main-container .step-backward.icon { background-image: url(../../glyphicons/glyphicons_170_step_backward.png); }
-.main-container .fast-backward.icon { background-image: url(../../glyphicons/glyphicons_171_fast_backward.png); }
-.main-container .fast-forward.icon { background-image: url(../../glyphicons/glyphicons_177_fast_forward.png); }
-.main-container .error.icon { background-image: url(../../glyphicons/glyphicons_196_circle_exclamation_mark.png); }*/
+.main-container .play.icon.active, .main-container .play.icon:hover { color: green; }
+.main-container .pause.icon.active, .main-container .pause.icon:hover { color: orange; }
 
 .main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; }
-/* .main-container .error-alert {
+.main-container .parse.error.alert {
   position: absolute; 
-  right: 50%;
   z-index: 1;
   margin-top: 0.25em;
-  margin-right: 1.75em;
-} */
+  margin-right: 1.25em;
+  color: red;
+  text-shadow: pink 0 0 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s;
+}
+.main-container .show.parse.error.alert {
+  opacity: 0.6;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 1s;
+}
+.main-container.half .parse.error.alert { right: 50%; }
+.main-container.full .parse.error.alert { right: 0%; }
+
 .main-container .top { min-height: 1.5em; }
 .main-container .parse.error { color: red; }
 .main-container .parse.error.message { margin-left: 0.25em; }

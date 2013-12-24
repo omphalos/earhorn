@@ -7,13 +7,12 @@ angular.module('main').directive('fade', [function() {
     scope.$watch(attr.fade, function(newVal) {
 
       if(newVal) {
-
-        element.addClass('in')
-        element.removeClass('out')
-      } else {
-
         element.addClass('out')
         element.removeClass('in')
+
+      } else {
+        element.addClass('in')
+        element.removeClass('out')
       }
     })
   }

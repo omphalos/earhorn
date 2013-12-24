@@ -1,4 +1,5 @@
-<div ng-class="{ 'main-container': 1, editing: getMode() == 'Editing', playing: getMode() == 'Playing', paused: getMode() == 'Paused' }">
+<div
+  ng-class="{ 'main-container': 1, editing: getMode() == 'Editing', playing: getMode() == 'Playing', paused: getMode() == 'Paused', full: hideFrame || !iframe, half: !hideFrame && iframe }">
 
   <nav>
     <div class="top">
@@ -30,33 +31,32 @@
       <div class="buttons">
         <span 
           ng-show="settings.display.fastBackward" 
-          ng-class="{ 'fast-backward': 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 
+          ng-class="{ 'fast-backward': 1, icon: 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 
           title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" 
           ng-click="timeline.fastBackward()"></span>
         <span 
           ng-show="settings.display.stepBackward" 
-          ng-class="{ 'step-backward': 1, disabled: editing, fa: 1, 'fa-step-backward': 1 }" 
+          ng-class="{ 'step-backward': 1, icon: 1, disabled: editing, fa: 1, 'fa-step-backward': 1 }" 
           title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}" 
           ng-click="timeline.stepBackward()"></span>
         <span 
           ng-show="settings.display.pause" 
-          ng-class="{ pause: 1, active: !timeline.isPlaying(), fa: 1, 'fa-pause': 1 }" 
+          ng-class="{ pause: 1, icon: 1, active: !timeline.isPlaying(), fa: 1, 'fa-pause': 1 }" 
           title="{{tooltipFor('Pause', 'timeline.pause()')}}" 
           ng-click="timeline.pause()"></span>
         <span 
           ng-show="settings.display.play" 
-          class="play fa fa-play" 
-          ng-class="{ active: timeline.isPlaying() }" 
+          ng-class="{ play: 1, fa: 1, 'fa-play': 1, icon: 1, active: timeline.isPlaying() }" 
           title="{{tooltipFor('Play', 'play()')}}" 
           ng-click="play()"></span>
         <span 
           ng-show="settings.display.stepForward" 
-          ng-class="{ 'step-forward': 1, fa: 1, 'fa-step-forward': 1, disabled: editing }" 
+          ng-class="{ 'step-forward': 1, icon: 1, fa: 1, 'fa-step-forward': 1, disabled: editing }" 
           title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" 
           ng-click="timeline.stepForward()"></span>
         <span 
           ng-show="settings.display.fastForward" 
-          ng-class="{ 'fast-forward': 1, fa: 1, 'fa-fast-forward': 1, disabled: editing }" 
+          ng-class="{ 'fast-forward': 1, icon: 1, fa: 1, 'fa-fast-forward': 1, disabled: editing }" 
           title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" 
           ng-click="timeline.fastForward()"></span>
       </div>
@@ -72,9 +72,16 @@
 
   </nav>
 
-  <div class="main-content" ng-click="widgetKey = null" ng-show="getScriptCount()">
+  <div
+    class="main-content"
+    ng-click="widgetKey = null"
+    ng-show="getScriptCount()">
+    <div
+      ng-click="goToError()"
+      title="{{parseError.message}}"
+      ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: showParseError() }">
+    </div>
     <editor
-      ng-class="{ full: hideFrame || !iframe, half: !hideFrame && iframe }"
       code="code"
       line="currentLine"
       ch="currentCh"

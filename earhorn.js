@@ -74,6 +74,8 @@
   var scripts = {}
 
   function announce(name) {
+    flush()
+    // Announcements are large and rare so it's ok to send as its own message.
     send({
       type: 'announcement',
       script: name,
@@ -81,6 +83,7 @@
       body: scripts[name].body,
       parseError: scripts[name].parseError
     })
+    flush()
   }
 
   function earhorn$(name, fn) {
@@ -166,7 +169,7 @@
       scripts[name].parseError = null
       announce(name)
     } catch(err) {
-      console.error(err, body)
+      console.error(name, err.toString(), body)
       
       var e = err.toString()
         , colon1 = e.indexOf(': ')

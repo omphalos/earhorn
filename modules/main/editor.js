@@ -3,20 +3,14 @@ angular.module('main').directive('editor', [
   '$parse', 
   '$templateCache', 
   '$compile', 
-  '$interval',
-  'settingsService', function(
+  '$interval', function(
   consoleInterface,
   $parse,
   $templateCache,
   $compile,
-  $interval,
-  settingsService) {  
+  $interval) {  
 
   function link(scope, element, attr) {      
-
-    var settings = settingsService.load({
-      editor: { maxOperations: 100 }
-    })
 
     ////////////////////////////////////////////
     // Create the CodeMirror editor instance. //
@@ -242,11 +236,6 @@ angular.module('main').directive('editor', [
                 }
                 
                 bookmarkScope.$digest()
-                    
-                if(operations++ > settings.editor.maxOperations) {
-                  rebuildEditorDebounced()
-                  return 
-                }
               }
             }
           }
@@ -261,6 +250,8 @@ angular.module('main').directive('editor', [
         editor.setCursor({ line: line, ch: ch + 1 })
         editor.setCursor({ line: line, ch: ch })
       }
+      
+      // scope.$digest() // TODO: necessary?
     }
 
     function rebuildEditorOperation() {
@@ -323,7 +314,7 @@ angular.module('main').directive('editor', [
       var cursor = editor.getCursor()
       if(attr.line) $parse(attr.line).assign(scope, cursor.line)
       if(attr.ch) $parse(attr.ch).assign(scope, cursor.ch)
-      if(!scope.$$phase) scope.$digest()
+      if((attr.line || attr.ch) && !scope.$$phase) scope.$digest()
     })
     
     if(attr.line) watch(attr.line, 'line')
@@ -355,6 +346,7 @@ angular.module('main').directive('editor', [
       
       watch(attr.bookmarks, 'bookmarks', true)
     }
+    
   }
   
   return { restrict: 'E', link: link }

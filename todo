@@ -1,23 +1,20 @@
 _ stuff required for release
-  _ bugs
-    _ message loss should also show a warning that messages were lost
-      _ forward/reverse message loss
-      x message loss should be orange
-    _ todomvc navigate to current position quickly
-    _ reinstate interval
-    _ verify all statement types are covered by errors
-    _ test suite for instrumented javascript
-  _ features
-    _ better source map support
-    _ error navigation
-      _ buttons appear when there is an error
-      _ should navigate parse errors, caught errors
-    _ use colorized font awesome icons: play to green, pause to orange, error to red
-    _ better focus style (border or something)
-    _ editor focus after mouseclick icon
-    _ update readme
-    _ better key press hints
-    _ better message when iframe specified but script not loaded
+  _ add refresh button, different than play button fa-refresh
+  _ fix edit multiple scripts: use hashtable of editScripts
+  _ fix multiple script edits
+  _ disallow buffering announcements
+  _ message loss should also show a warning that messages were lost
+    _ forward/reverse message loss
+    x message loss should be orange
+  _ better focus style (border or something)
+  _ editor focus after mouseclick icon
+  _ better message when iframe specified but script not loaded
+  _ esprima webworker
+  _ test suite for instrumented javascript
+  _ verify all statement types are covered by errors
+  _ reinstate interval
+  _ better source map support
+  _ update readme
 
 _ nice-to-haves
   _ fix nested widget inspection
@@ -242,3 +239,7 @@ x set up esprima error notification
     x keypress to open cmd+o
       x focus directive
     x editor focus after mouseup timeline
+
+  12-24-13 ~19
+    x use colorized font awesome icons: play to green, pause to orange
+    x parseerror navigation button appears when there is an error fa-minus-circle
