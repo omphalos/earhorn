@@ -192,13 +192,15 @@ angular.module('main').factory('timelineFactory', [
       }
   
       // Track message loss.
-      var lostMessages = Object.
+      var lostMessages = 0
+      
+      Object.
         keys(lostMessageCounts).
-        reduce(function(x, y) { return x + y }, 0)
+        forEach(function(x) { lostMessages += lostMessageCounts[x]})
         
       if(lostMessages) {
         if(settings.timeline.logLostMessages)
-          console.warn(lostMessages + ' messages dropped', lostMessageCounts)
+          console.warn(lostMessages, 'messages dropped', lostMessageCounts)
         record.lostMessageCounts = lostMessageCounts
         lostMessageCounts = {}
       }

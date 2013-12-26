@@ -1,14 +1,13 @@
 _ stuff required for release
-  _ message loss should also show a warning that messages were lost
   _ open focus style & key combo
   _ add session to script name
   _ fix edit multiple scripts: use hashtable of editScripts
-  _ esprima webworker
   _ test suite for instrumented javascript
   _ verify all statement types are covered by errors
   _ reinstate interval
   _ better source map support
   _ update readme
+  _ ie/firefox support
 
 _ nice-to-haves
   _ fix nested widget inspection
@@ -242,3 +241,5 @@ x set up esprima error notification
 
   12-26-13 ~12
     x save button
+    x esprima webworker
+    x message loss should also show a warning that messages were lost

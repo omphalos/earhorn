@@ -143,7 +143,8 @@ angular.module('main').controller('MainCtrl', [
       bookmarks[key] = {
         key: key,
         loc: log.loc,
-        caught: log.caught
+        caught: log.caught,
+        messageLoss: !!log.lostMessageCounts
       }
     })
 
@@ -178,32 +179,41 @@ angular.module('main').controller('MainCtrl', [
   ////////////////
   
   $scope.editing = false
-  
-  var debouncedValidate = _.debounce(function(newVal) {
 
-    try {
-      
-      esprima.parse(newVal)
-      $scope.parseError = null
-    } catch(err) {
+  var parseMessageID = 0
+    , parser
 
-      var message = err.toString()
-      message = message.substring(message.indexOf(': ') + 2)
-      message = message.substring(message.indexOf(': ') + 2)
-      
-      $scope.parseError = {
-        line: err.lineNumber - 1,
-        ch: err.column - 1,
-        message: message,
-        script: $scope.editScript,
-        key: err.toString()
-      }
-    }
+  if(typeof Worker === undefined) {
     
-    if(!$scope.$$phase) $scope.$digest()
+    console.warn('Web workers not supported.')
+    parser = { postMessage: function() { } }
+    
+  } else {
 
-  }, 250)
-  
+    parser = new Worker('/earhorn/modules/main/esprima-web-worker.js')
+    
+    parser.addEventListener('message', function (evt) {
+            
+      if(evt.data.id !== parseMessageID) return
+      
+      if(evt.data.type === 'error') {
+      
+        var err = evt.data
+              
+        $scope.parseError = {
+          line: err.line,
+          ch: err.ch,
+          message: err.message,
+          script: $scope.editScript,
+          key: err.toString()
+        }
+      } else delete $scope.parseError
+      
+      if(!$scope.$$phase) $scope.$digest()
+    })    
+    
+  }
+
   logClient.$on('main.logClient.edit', function(evt, record) {
     
     console.log('main.logClient.edit event received')
@@ -223,8 +233,8 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('code', function(newVal, oldVal) {
     
-    debouncedValidate(newVal)
-
+    parser.postMessage({ id: ++parseMessageID, code: newVal })
+    
     if(newVal === getEditScript().body) return
     
     $scope.editing = true
