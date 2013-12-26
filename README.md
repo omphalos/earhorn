@@ -13,35 +13,49 @@ Check out the [demo](http://omphalos.github.io/earhorn/index.html?iframe=mouse-i
 Use on your code
 ================
 
-It's possible to use earhorn outside of a sandbox, on your code, although theres a few set up steps required to do so.
+It's possible to use earhorn outside of a sandbox, on your code, after following a basic set up.
 
-First add earhorn to your website.  An easy way:
+Step 1
+------
+
+Add earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
+Step 2
+------
+
 Add a reference to earhorn.js to your page.
 
-Let's say you have a JavaScript file you want to instrument, and it looks like this:
+    <script src="/earhorn/earhorn.js"></script>
+
+Step 3
+------
+
+Wrap your code with a call to earhorn$.
+
+For example, to instrument this code:
 
     var x = 3
       , y = 4
       , sum = x + y
 
-    console.log(sum)
+Wrap it with a call to earhorn$:
 
-Just wrap it in a call to earhorn:
-
-    earhorn('my console log', function() {
+    earhorn$('some label for my script', function() {
 
       var x = 3
         , y = 4
         , sum = x + y
 
-      console.log(sum)
-
     })()
 
-Navigate to /earhorn/index.html.  Open your the html hosting your JavaScript in a separate tab.  Alteratively, you can tell earhorn to open your page in an iframe by appending #/iframe=your-iframe-url to /earhorn/index.html.
+The call to earhorn$ just returns an instrumented version of what you pass to it.  In this case, the extra parens invoke the instrumented function, but you could also just pass the function reference around if you wanted.
+
+Step 4
+------
+
+Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript in a separate tab.
 
 License
 =======
