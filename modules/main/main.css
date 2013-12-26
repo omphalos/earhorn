@@ -11,8 +11,9 @@
 .main-container.playing .main-content,
 .main-container.playing .status,
 .main-container.playing.half .CodeMirror { border-color: green; }
-.main-container .play.icon.active,
-.main-container .play.icon:hover { color: green; }
+.main-container.playing .play.icon,
+.main-container .play.icon:hover,
+.main-container .play.icon.active { color: darkgreen; }
 
 /* Paused */
 .main-container.paused .main-content,

@@ -109,7 +109,8 @@ angular.module('main').controller('MainCtrl', [
     // Don't auto-navigate when playing if we're showing a script.
     // (If we're playing and not showing a script,
     // we can autonavigate to initialize editScript.)
-    if($scope.editing || !timeline.isPlaying() || $scope.editScript) return
+    if($scope.editing || (timeline.isPlaying() && $scope.editScript))
+      return
     
     navigateToCurrentLocation()
   }
@@ -239,7 +240,10 @@ angular.module('main').controller('MainCtrl', [
   $scope.play = function() {
     if($scope.editing)
       $scope.saveAndReload()
-    else timeline.play()
+    else {
+      timeline.play()
+      navigateToCurrentLocation()
+    }
   }
   
   $scope.saveAndReload = function() {

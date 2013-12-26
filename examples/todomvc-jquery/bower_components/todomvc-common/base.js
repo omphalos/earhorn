@@ -206,4 +206,4 @@ earhorn$('base.js', function () {
 
 	redirect();
 	getFile('learn.json', Learn);
-}))();
+})();
