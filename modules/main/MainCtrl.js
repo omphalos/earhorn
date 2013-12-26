@@ -442,7 +442,7 @@ angular.module('main').controller('MainCtrl', [
       split(',').
       filter(function(x) { return x }).
       map(function(x) { return x.split('=') }).
-      forEach(function(x) { $scope[x[0]] = eval(x[1]) })
+      forEach(function(x) { $scope[x[0]] = x[1] })
   }
 
   //////////////////////

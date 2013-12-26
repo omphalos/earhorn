@@ -1,6 +1,5 @@
 <div
-  ng-class="{ 'main-container': 1, editing: getMode() == 'Editing', playing: getMode() == 'Playing', paused: getMode() == 'Paused', full: hideFrame || !iframe, half: !hideFrame && iframe }">
-
+  ng-class="{ 'main-container': 1, editing: getMode() == 'Editing', playing: getMode() == 'Playing', paused: getMode() == 'Paused', full: hideFrame == 'true' || !iframe, half: hideFrame != 'true' && iframe }">
   <nav>
     <div class="top">
       <span ng-show="getScriptCount()">

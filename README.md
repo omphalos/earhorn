@@ -5,15 +5,15 @@ JavaScript execution logs.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
+Earhorn instruments your JavaScript and shows you a detailed, reversible line-by-line log of JavaScript execution, sort of like console.log on steroids.
+
 Demo
 ====
 
 Check out the [demo](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html).
 
-Use on your code
-================
-
-It's possible to use earhorn outside of a sandbox, on your code, after following a basic set up.
+Quick Start
+===========
 
 Step 1
 ------
@@ -36,17 +36,15 @@ Wrap your code with a call to earhorn$.
 
 For example, to instrument this code:
 
-    var x = 3
-      , y = 4
-      , sum = x + y
+    var x = 3;
+    var square = x * x;
 
 Wrap it with a call to earhorn$:
 
-    earhorn$('some label for my script', function() {
+    earhorn$('a made-up label', function() {
 
-      var x = 3
-        , y = 4
-        , sum = x + y
+      var x = 3;
+      var square = x * x;
 
     })()
 
@@ -56,6 +54,8 @@ Step 4
 ------
 
 Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript in a separate tab.
+
+You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, /earhorn/index.html#iframe=sandbox.html.
 
 License
 =======
