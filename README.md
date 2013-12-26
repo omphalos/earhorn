@@ -50,12 +50,19 @@ Wrap it with a call to earhorn$:
 
 The call to earhorn$ just returns an instrumented version of what you pass to it.  In this case, the extra parens invoke the instrumented function, but you could also just pass the function reference around if you wanted.
 
+You can earhorn$ multiple scripts in a single page.  Just give them different labels.
+
 Step 4
 ------
 
 Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript in a separate tab.
 
-You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, /earhorn/index.html#iframe=sandbox.html.
+(You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, /earhorn/index.html#iframe=sandbox.html.)
+
+Caveats
+=======
+
+This thing is still in an experimental phase, and the code is in flux.  If you're just using earhorn on smaller portions of code, you'll generally be okay.
 
 License
 =======
