@@ -107,7 +107,12 @@ angular.module('main').controller('MainCtrl', [
     // Don't auto-navigate when playing if we're showing a script.
     // (If we're playing and not showing a script,
     // we can autonavigate to initialize editScript.)
-    if($scope.editing || (timeline.isPlaying() && $scope.editScript)) return
+    if($scope.editing || !timeline.isPlaying()) return
+    
+    navigateToCurrentLocation()
+  }
+  
+  function navigateToCurrentLocation() {
     
     $scope.editScript = programState.currentScript
     

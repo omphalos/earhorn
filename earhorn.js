@@ -63,7 +63,10 @@
       if(record.reload) // TODO: could do hot code-swapping instead ...
         location.reload(true)
 
-    } else if(record.type === 'reset') {
+    } else if(record.type === 'refresh')
+      location.reload(true)
+      
+    else if(record.type === 'reset') {
 
       localStorage.removeItem('earhorn-script-' + record.script)
       if(record.reload) // TODO: could do hot code-swapping instead ...
