@@ -4,26 +4,6 @@
   // earhorn$ //
   //////////////
   
-  // Generate sessionID
-  var sessionID =
-    sessionStorage.getItem('earhorn-session') ||
-    generateID()
-
-  console.log('sessionID', sessionID)
-
-  function generateID() {
-
-    var max = Math.pow(2, 16)
-      , id = ''
-
-    for(var i = 0; i < 4; i++)
-      id += String.fromCharCode(Math.floor(Math.random() * max))
-      
-    sessionStorage.setItem('earhorn-session', id)
-      
-    return id
-  }
-
   // Set up settings object.
   function applyDefaults(target) {
 
@@ -102,7 +82,6 @@
     // Announcements are large and rare so it's ok to send as its own message.
     send({
       type: 'announcement',
-      sessionID: sessionID,
       script: name,
       modified: scripts[name].modified,
       body: scripts[name].body,
