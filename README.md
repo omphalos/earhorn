@@ -5,12 +5,12 @@ JavaScript execution logs.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
-Earhorn instruments your JavaScript and shows you a detailed, reversible line-by-line log of JavaScript execution, sort of like console.log on steroids.
+Earhorn instruments your JavaScript and shows you a detailed, reversible, line-by-line log of JavaScript execution, sort of like a console.log on steroids.
 
 Demo
 ====
 
-Check out the [demo](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html).
+The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html) and explains earhorn much better than a README can.
 
 Quick Start
 ===========
@@ -48,9 +48,7 @@ Wrap it with a call to earhorn$:
 
     })()
 
-The call to earhorn$ just returns an instrumented version of what you pass to it.  In this case, the extra parens invoke the instrumented function, but you could also just pass the function reference around if you wanted.
-
-You can earhorn$ multiple scripts in a single page.  Just give them different labels.
+The call to earhorn$ just returns an instrumented version of what you pass to it.
 
 Step 4
 ------
@@ -62,7 +60,7 @@ Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript
 Caveats
 =======
 
-This thing is still in an experimental phase, and the code is in flux.  If you're just using earhorn on smaller portions of code, you'll generally be okay.
+This thing is still in an experimental phase, and the code is in flux.  There are some performance issues at the moment with larger codebases.  If you're just using earhorn on smaller portions of code, you'll generally be okay.
 
 License
 =======

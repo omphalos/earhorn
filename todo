@@ -5,8 +5,8 @@ _ stuff required for release
   _ verify all statement types are covered by errors
   _ reinstate interval
   _ better source map support
-  _ update readme
   _ ie/firefox support
+  _ tag release (including readme update)
 
 _ instant execution
   _ single line widgets
