@@ -1,6 +1,5 @@
 _ stuff required for release
   _ add session to script name
-  _ fix edit multiple scripts: use hashtable of editScripts
   _ test suite for instrumented javascript
   _ verify all statement types are covered by errors
   _ reinstate interval
@@ -15,13 +14,11 @@ _ instant execution
   _ navigate to function
   _ support hotswapped edits
 
-_ performance
-  _ programState, timeline web workers
-  _ node-falafel performance improvement
-
 _ future
+  _ performance
+    _ programState, timeline web workers
+    _ node-falafel performance improvement
   _ set current script in title
-  _ refactor reset to handle multiple scripts
   _ nested widget inspection
   _ plugins
   _ enhance navigation
@@ -169,73 +166,75 @@ x set up esprima error notification
     x add tooltips
 
   12-9-13 ~37
-    x create jquery todomvc
-    x try debouncing cursor
+  x create jquery todomvc
+  x try debouncing cursor
 
   12-16-13 ~39
-    x use focus, blur events instead o interval
-    x fix crash: maybe better error handling in eh$?
-    x debounced codemirror rebuild
-    x fix broken widget
-    x fix log binding performance
-      x windowed bookmarks
-      x fix bookmarks: deep $watch + dont return log object
-    x (try) session-stored parsing
+  x use focus, blur events instead o interval
+  x fix crash: maybe better error handling in eh$?
+  x debounced codemirror rebuild
+  x fix broken widget
+  x fix log binding performance
+    x windowed bookmarks
+    x fix bookmarks: deep $watch + dont return log object
+  x (try) session-stored parsing
 
   12-20-13 ~40
-    x fix focus on current line
-    x use edit script
-    x remove getCurrentScript
-    x in MainCtrl support editScript different from programState.currentScript
+  x fix focus on current line
+  x use edit script
+  x remove getCurrentScript
+  x in MainCtrl support editScript different from programState.currentScript
 
   12-21-13 ~39
-    x center cursor navigation
-    x execute templated scope
-    x fix errors
-    x fix selection
-    x readonly while sandbox is loading
-    x clean up url: just use iframe url without parameter
-    x fix script editing
-    x fix cursor behavior when editing
-    x add jquery todomvc example
-    x fix settings bugs
-    x only auto-navigate when paused
-    x fix iframe logic
-      x iframe url = firstIndexOf 'iframe='
-      x params = before 'iframe=' or entire path
-      x parse params (a=b,c=d)
-      x hideFrame param
-      x when no url
-        x hide editor
-        x message pointing to sandbox or run earhorn scripts in the same domain
-      x clean up settings
-    x javascript bundle
-      x mv earhorn.js earhorn-core.js
-      x nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
-      x change mouse to use just earhorn.js
-    x fix small width styling
+  x center cursor navigation
+  x execute templated scope
+  x fix errors
+  x fix selection
+  x readonly while sandbox is loading
+  x clean up url: just use iframe url without parameter
+  x fix script editing
+  x fix cursor behavior when editing
+  x add jquery todomvc example
+  x fix settings bugs
+  x only auto-navigate when paused
+  x fix iframe logic
+    x iframe url = firstIndexOf 'iframe='
+    x params = before 'iframe=' or entire path
+    x parse params (a=b,c=d)
+    x hideFrame param
+    x when no url
+      x hide editor
+      x message pointing to sandbox or run earhorn scripts in the same domain
+    x clean up settings
+  x javascript bundle
+    x mv earhorn.js earhorn-core.js
+    x nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
+    x change mouse to use just earhorn.js
+  x fix small width styling
 
   12-22-13 ~33
-    x fix empty sandbox isnt editable because editScript is missing
-    x fix mouse update demo
+  x fix empty sandbox isnt editable because editScript is missing
+  x fix mouse update demo
 
   12-23-13 ~23
-    x organize examples, including jquery todomvc
-    x fix widget flashing during open, click-away, open
-    x fix newlines
-    x fix html escaping
-    x keypress to open cmd+o
-      x focus directive
-    x editor focus after mouseup timeline
+  x organize examples, including jquery todomvc
+  x fix widget flashing during open, click-away, open
+  x fix newlines
+  x fix html escaping
+  x keypress to open cmd+o
+    x focus directive
+  x editor focus after mouseup timeline
 
   12-24-13 ~19
-    x use colorized font awesome icons: play to green, pause to orange
-    x parseerror navigation button appears when there is an error fa-minus-circle
-    x disallow buffering announcements
-    x better message when iframe specified but script not loaded
+  x use colorized font awesome icons: play to green, pause to orange
+  x parseerror navigation button appears when there is an error fa-minus-circle
+  x disallow buffering announcements
+  x better message when iframe specified but script not loaded
 
   12-26-13 ~12
-    x save button
-    x esprima webworker
-    x message loss should also show a warning that messages were lost
-    x fix button style
+  x save button
+  x esprima webworker
+  x message loss should also show a warning that messages were lost
+  x fix button style
+  x refactor reset to handle multiple scripts
+  x fix edit multiple scripts: use hashtable of editScripts

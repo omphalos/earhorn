@@ -5,7 +5,7 @@
       <span ng-show="getScriptCount()">
         <select ng-show="getScriptCount() > 1" ng-model="editScript" focus="open">
           <option 
-            ng-repeat="(script, log) in timeline.programState.scripts" 
+            ng-repeat="(script, log) in programState.scripts" 
             value="{{script}}">{{script}}</option>
         </select>
       </span>
@@ -48,18 +48,18 @@
         <span 
           ng-show="settings.display.fastBackward" 
           ng-class="{ 'fast-backward': 1, icon: 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 
-          title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" 
-          ng-click="timeline.fastBackward()"></span>
+          title="{{tooltipFor('Fast Backward', 'fastBackward()')}}" 
+          ng-click="fastBackward()"></span>
         <span 
           ng-show="settings.display.stepBackward" 
           ng-class="{ 'step-backward': 1, icon: 1, disabled: editing, fa: 1, 'fa-step-backward': 1 }" 
-          title="{{tooltipFor('Step Backward', 'timeline.stepBackward()')}}" 
-          ng-click="timeline.stepBackward()"></span>
+          title="{{tooltipFor('Step Backward', 'stepBackward()')}}" 
+          ng-click="stepBackward()"></span>
         <span 
           ng-show="settings.display.pause" 
           ng-class="{ pause: 1, icon: 1, active: getMode() == 'Paused', fa: 1, 'fa-pause': 1 }" 
-          title="{{tooltipFor('Pause', 'timeline.pause()')}}" 
-          ng-click="timeline.pause()"></span>
+          title="{{tooltipFor('Pause', 'pause()')}}" 
+          ng-click="pause()"></span>
         <span 
           ng-show="settings.display.play" 
           ng-class="{ play: 1, fa: 1, 'fa-play': 1, icon: 1 }" 
@@ -68,13 +68,13 @@
         <span 
           ng-show="settings.display.stepForward" 
           ng-class="{ 'step-forward': 1, icon: 1, fa: 1, 'fa-step-forward': 1, disabled: editing }" 
-          title="{{tooltipFor('Step Forward', 'timeline.stepForward()')}}" 
-          ng-click="timeline.stepForward()"></span>
+          title="{{tooltipFor('Step Forward', 'stepForward()')}}" 
+          ng-click="stepForward()"></span>
         <span 
           ng-show="settings.display.fastForward" 
           ng-class="{ 'fast-forward': 1, icon: 1, fa: 1, 'fa-fast-forward': 1, disabled: editing }" 
-          title="{{tooltipFor('Fast Forward', 'timeline.fastForward()')}}" 
-          ng-click="timeline.fastForward()"></span>
+          title="{{tooltipFor('Fast Forward', '.fastForward()')}}" 
+          ng-click="fastForward()"></span>
       </div>
       <div class="input-container">
         <input 
@@ -98,7 +98,9 @@
       ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: showParseError() }">
     </div>
     <editor
-      code="code"
+      ng-show="editScript"
+      code="getEditScript().body"
+      user-code-edit="userCodeEdit"
       line="currentLine"
       ch="currentCh"
       ng-class="{ focused: editorFocus }"

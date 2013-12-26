@@ -83,7 +83,8 @@ angular.module('main').factory('logClient', [
 
   logClient.edit = function(script, code) {
 
-    if(!script) throw 'no script'
+    if(!script)
+      throw 'no script'
 
     localStorage.removeItem('earhorn-listener')
     localStorage.setItem('earhorn-listener', JSON.stringify({
@@ -93,13 +94,13 @@ angular.module('main').factory('logClient', [
       reload: true
     }))
   }
-
-  logClient.reset = function(script) {
+ 
+  logClient.reset = function(scripts) {
 
     localStorage.removeItem('earhorn-listener')
     localStorage.setItem('earhorn-listener', JSON.stringify({
       type: 'reset',
-      script: script,
+      scripts: scripts,
       reload: true
     }))
   }

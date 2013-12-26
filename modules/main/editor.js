@@ -301,7 +301,8 @@ angular.module('main').directive('editor', [
 
       editor.on('change', function() {
         if(isRebuildingEditor) return
-        scope[attr.code] = editor.getValue()
+        $parse(attr.code).assign(scope, editor.getValue())
+        if(attr.userCodeEdit) scope.$broadcast(attr.userCodeEdit)
         if(!scope.$$phase) scope.$digest()
       })
 

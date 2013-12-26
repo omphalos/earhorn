@@ -3,6 +3,26 @@
   //////////////
   // earhorn$ //
   //////////////
+  
+  // Generate sessionID
+  var sessionID =
+    sessionStorage.getItem('earhorn-session') ||
+    generateID()
+
+  console.log('sessionID', sessionID)
+
+  function generateID() {
+
+    var max = Math.pow(2, 16)
+      , id = ''
+
+    for(var i = 0; i < 4; i++)
+      id += String.fromCharCode(Math.floor(Math.random() * max))
+      
+    sessionStorage.setItem('earhorn-session', id)
+      
+    return id
+  }
 
   // Set up settings object.
   function applyDefaults(target) {
@@ -50,28 +70,29 @@
 
     var record = JSON.parse(evt.newValue)
 
-    if(!scripts.hasOwnProperty(record.script)) 
-      return
+    if(record.type === 'reset') {
+
+      record.scripts.forEach(function(script) {
+        localStorage.removeItem('earhorn-script-' + script)
+      })
+      
+      if(record.reload) // TODO: could do hot code-swapping instead ...
+        location.reload(true)
+    }
+
+    if(!scripts.hasOwnProperty(record.script)) return
 
     if(record.type === 'announcement-request')
       announce(record.script)      
-
+    
     else if(record.type === 'edit') {
-
       localStorage.setItem('earhorn-script-' + record.script, record.body)
       
       if(record.reload) // TODO: could do hot code-swapping instead ...
         location.reload(true)
 
     } else if(record.type === 'refresh')
-      location.reload(true)
-      
-    else if(record.type === 'reset') {
-
-      localStorage.removeItem('earhorn-script-' + record.script)
-      if(record.reload) // TODO: could do hot code-swapping instead ...
-        location.reload(true)
-    }
+       location.reload(true)
   }
 
   var scripts = {}
@@ -81,6 +102,7 @@
     // Announcements are large and rare so it's ok to send as its own message.
     send({
       type: 'announcement',
+      sessionID: sessionID,
       script: name,
       modified: scripts[name].modified,
       body: scripts[name].body,

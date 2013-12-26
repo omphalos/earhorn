@@ -43,15 +43,15 @@ angular.module('main').controller('MainCtrl', [
     keys: {
       'mod+s': 'saveAndReload()',
       'mod+p': 'play()',
-      'mod+m': 'timeline.fastBackward()',
-      'mod+,': 'timeline.stepBackward()',
-      'mod+.': 'timeline.stepForward()',
-      'mod+/': 'timeline.fastForward()',
+      'mod+m': 'fastBackward()',
+      'mod+,': 'stepBackward()',
+      'mod+.': 'stepForward()',
+      'mod+/': 'fastForward()',
       'mod+o': 'open()'
     }
   })
   
-  $scope.$watch('editScript', function() {
+  $scope.$watch('editScript', function(newValue) {
     $scope.editorFocus = true
   })
 
@@ -72,7 +72,6 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('timelinePosition', function(newVal, oldVal) {
     timeline.setPosition(+newVal)
-    $scope.editorFocus = true
   })
   
   $scope.$watch('timeline.getPosition()', function(newVal, oldVal) {
@@ -97,14 +96,7 @@ angular.module('main').controller('MainCtrl', [
   var getEditScript = $scope.getEditScript = function() {
     return programState.scripts[$scope.editScript] || {}
   }
-  
-  function updateCode() {
-
-    if($scope.editing) return
-
-    $scope.code = getEditScript().body
-  }
-  
+ 
   function updateLocation() {   
 
     // Don't auto-navigate when editng or there's nowhere to navigate to.
@@ -156,13 +148,13 @@ angular.module('main').controller('MainCtrl', [
   $scope.$watch('timeline.isPlaying()', function(newVal) {
     if(!newVal) return
     $scope.editing = false
-    updateCode()
     updateLocation()
   })
 
-  $scope.$watch('getEditScript().body', updateCode)
   $scope.$watch('programState.currentLoc', updateLocation)
-  $scope.$watch('getScriptCount()', updateLocation)
+  $scope.$watch('getScriptCount()', function() {
+    updateLocation()
+  })
 
   ///////////
   // Mode. //
@@ -226,21 +218,16 @@ angular.module('main').controller('MainCtrl', [
     if(!target) return
     
     target.body = record.body
-
-    if($scope.editing && record.script === $scope.editScript)
-      $scope.code = record.body
       
     if(!$scope.$$phase) $scope.$digest() // necessary?
   })
   
-  $scope.$watch('code', function(newVal, oldVal) {
+  $scope.$on('userCodeEdit', function() {
     
-    parser.postMessage({ id: ++parseMessageID, code: newVal })
+    var code = $scope.getEditScript().body
     
-    if(newVal === getEditScript().body) return
-    
+    parser.postMessage({ id: ++parseMessageID, code: code })
     $scope.editing = true
-    
     timeline.pause()
     timeline.clear()
   })
@@ -256,14 +243,28 @@ angular.module('main').controller('MainCtrl', [
       timeline.play()
       navigateToCurrentLocation()
     }
+    $scope.editorFocus = true
   }
   
+  ;['pause',
+    'stepBackward',
+    'stepForward',
+    'fastBackward',
+    'fastForward'
+  ].forEach(function(action) {
+    $scope[action] = function() {
+      timeline[action]()
+      ;$scope.editorFocus = true
+    }
+  })
+  
   $scope.saveAndReload = function() {
+    if(!$scope.editScript) return
     timeline.clear()
     delete $scope.widgetKey
-    getEditScript().body = $scope.code
-    logClient.edit($scope.editScript, $scope.code)
+    logClient.edit($scope.editScript, $scope.getEditScript().body)
     timeline.play()
+    $scope.editorFocus = true
   }
 
   ///////////////////
@@ -469,20 +470,15 @@ angular.module('main').controller('MainCtrl', [
     if(!$scope.editScript) return
     if(confirm('Are you sure you want to revert changes to ' + $scope.editScript + '?')) {
       $scope.editing = false
-      logClient.reset($scope.editScript)
+      logClient.reset([$scope.editScript])
       timeline.play()
     }
     $scope.editorFocus = 1
   }
 
   $scope.revertAllChanges = function() {
-    
     $scope.editing = false
-    
-    Object.keys(programState.scripts).forEach(function(script) {
-      logClient.reset(script)
-    })
-    
+    logClient.reset(Object.keys(programState.scripts))
     timeline.play()
   }
   
@@ -535,11 +531,11 @@ angular.module('main').controller('MainCtrl', [
     settings: $scope.settings,
     
     // Timeline functions.
-    stepBackward: timeline.stepBackward,
-    fastBackward: timeline.fastBackward,
-    pause: timeline.pause,
-    stepForward: timeline.stepForward,
-    fastForward: timeline.fastForward,   
+    stepBackward: $scope.stepBackward,
+    fastBackward: $scope.fastBackward,
+    pause: $scope.pause,
+    stepForward: $scope.stepForward,
+    fastForward: $scope.fastForward,   
     play: $scope.play, // TODO: can this be a $watch instead?
 
     // Miscellaneous utilities.
