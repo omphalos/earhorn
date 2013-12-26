@@ -30,6 +30,7 @@ angular.module('main').controller('MainCtrl', [
   
   settingsService.loadAnd$watch($scope, 'settings', {
     display: {
+      revert: true,
       saveAndReload: true,
       stepForward: true,
       stepBackward: true,
@@ -46,7 +47,7 @@ angular.module('main').controller('MainCtrl', [
       'mod+,': 'timeline.stepBackward()',
       'mod+.': 'timeline.stepForward()',
       'mod+/': 'timeline.fastForward()',
-      'mod+o': 'selectScript()'
+      'mod+o': 'open()'
     }
   })
   
@@ -54,9 +55,9 @@ angular.module('main').controller('MainCtrl', [
     $scope.editorFocus = true
   })
 
-  $scope.selectScript = function() {
+  $scope.open = function() {
     $scope.editorFocus = false
-    $scope.$broadcast('selectScript')
+    $scope.$broadcast('open')
   }
   
   ///////////////
@@ -463,10 +464,14 @@ angular.module('main').controller('MainCtrl', [
   // Revert changes. //
   //////////////////////
 
-  $scope.revertChanges = function() {
-    $scope.editing = false
-    logClient.reset($scope.editScript)
-    timeline.play()
+  $scope.revert = function() {
+    if(!$scope.editScript) return
+    if(confirm('Are you sure you want to revert changes to ' + $scope.editScript + '?')) {
+      $scope.editing = false
+      logClient.reset($scope.editScript)
+      timeline.play()
+    }
+    $scope.editorFocus = 1
   }
 
   $scope.revertAllChanges = function() {
@@ -539,7 +544,7 @@ angular.module('main').controller('MainCtrl', [
     // Miscellaneous utilities.
     revertChanges: $scope.revertChanges,
     revertAllChanges: $scope.revertAllChanges,
-    selectScript: $scope.selectScript,
+    open: $scope.open,
     saveAndReload: $scope.saveAndReload,
     
     // Expose the $scope for ease of development.

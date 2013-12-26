@@ -3,19 +3,11 @@
   <nav>
     <div class="top">
       <span ng-show="getScriptCount()">
-        <select ng-show="getScriptCount() > 1" ng-model="editScript" focus="selectScript">
+        <select ng-show="getScriptCount() > 1" ng-model="editScript" focus="open">
           <option 
             ng-repeat="(script, log) in timeline.programState.scripts" 
             value="{{script}}">{{script}}</option>
         </select>
-        <button 
-          ng-show="getEditScript().modified && getScriptCount() > 1" 
-          ng-click="revertChanges()" 
-          title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">X</button>
-        <button 
-          ng-show="getEditScript().modified && getScriptCount() == 1" 
-          ng-click="revertChanges()" 
-          title="{{tooltipFor('Revert Changes', 'revertChanges()')}}.">Revert</button>
       </span>
 
       <a class="github" href="https://github.com/omphalos/earhorn" title="View the source at github.com.">GitHub</a>
@@ -48,6 +40,11 @@
           ng-class="{ 'save-and-reload': 1, icon: 1, fa: 1, 'fa-save': 1 }" 
           title="{{tooltipFor('Save &amp; Reload', 'saveAndReload()')}}" 
           ng-click="saveAndReload()"></span>
+        <span 
+          ng-show="settings.display.revert && getEditScript().modified" 
+          ng-class="{ 'revert': 1, icon: 1, fa: 1, 'fa-undo': 1 }" 
+          title="{{tooltipFor('Revert temporary changes.', 'revert()')}}" 
+          ng-click="revert()"></span>
         <span 
           ng-show="settings.display.fastBackward" 
           ng-class="{ 'fast-backward': 1, icon: 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 

@@ -9,35 +9,31 @@ _ stuff required for release
   _ update readme
   _ ie/firefox support
 
-_ nice-to-haves
-  _ fix nested widget inspection
-  _ (i) plugins
-  _ (i) set current script in title
-  _ enhance traversal
-    _ traverse line logs
-      _ bookmark should support traversal (prev goto next <- (.) -> )
+_ instant execution
+  _ single line widgets
+  _ highlight + mod + enter to execute
+  _ instrumentation-based autocomplete
+  _ navigate to function
+  _ support hotswapped edits
+
+_ performance
+  _ programState, timeline web workers
+  _ node-falafel performance improvement
+
+_ future
+  _ set current script in title
+  _ refactor reset to handle multiple scripts
+  _ nested widget inspection
+  _ plugins
+  _ enhance navigation
+    _ single interface for open files, search, commands
+    _ bookmark location on navigation, timer
+    _ traverse line logs (bookmark should support traversal: prev goto next <- (.) ->)
     _ go to log
     _ traverse errors
     _ step over, step out
-  _ (i) harp-style js server
-  _ (i) autocomplete
-    _ instrumentation-based autocomplete
-    _ tern-based autocomplete
-  _ basic hotswapping
-    _ support settings overrides?
-  _ (i) sophisticated hotswapping
-  _ node-falafel performance improvement
-  _ support logs + editing together
-  _ instant execution
-  _ message loss should just incorporate dropped messages into the tail snapshot
-  _ search
-  - (i) earhorn server
-    - node-http-proxy js url
-      - fs.readfile -> res.write(...earhorn+)
-    - node-http-proxy specified url
-  _ refactor programState monkey patching
-  _ refactor reset to handle multiple scripts
-  _ move edit to timeline
+    _ find function references
+  _ earhorn server
 
 x show widget
   x create attribute for widget template id
