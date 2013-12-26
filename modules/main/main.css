@@ -11,16 +11,23 @@
 .main-container.playing .main-content,
 .main-container.playing .status,
 .main-container.playing.half .CodeMirror { border-color: green; }
+.main-container .play.icon.active,
+.main-container .play.icon:hover { color: green; }
 
 /* Paused */
 .main-container.paused .main-content,
 .main-container.paused .status,
 .main-container.paused.half .CodeMirror { border-color: orange; }
+.main-container .pause.icon.active,
+.main-container .pause.icon:hover { color: orange; }
 
 /* Editing */
 .main-container.editing .main-content,
 .main-container.editing .status,
-.main-container.editing.half .CodeMirror { border-color: gray; }
+.main-container.editing.half .CodeMirror { border-color: blue; }
+.main-container.editing .save-and-reload.icon { color: blue; }
+.main-container.editing .save-and-reload.icon:hover { color: darkblue; }
+.main-container .save-and-reload.icon:hover { color: darkblue; }
 
 .main-container.half .CodeMirror { left: 0; right: 50%; }
 .main-container.full .CodeMirror { left: 0; right: 0; }
@@ -52,8 +59,6 @@ iframe {
 }
 
 .main-container .buttons { cursor: default; }
-.main-container .play.icon.active, .main-container .play.icon:hover { color: green; }
-.main-container .pause.icon.active, .main-container .pause.icon:hover { color: orange; }
 
 .main-container .error-inline { background-color: #fee; color: red; padding-left: 0.5em; }
 .main-container .parse.error.alert {

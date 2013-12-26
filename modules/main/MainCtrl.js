@@ -30,6 +30,7 @@ angular.module('main').controller('MainCtrl', [
   
   settingsService.loadAnd$watch($scope, 'settings', {
     display: {
+      saveAndReload: true,
       stepForward: true,
       stepBackward: true,
       fastForward: false,
@@ -39,6 +40,7 @@ angular.module('main').controller('MainCtrl', [
       formatDigits: 2
     },
     keys: {
+      'mod+s': 'saveAndReload()',
       'mod+p': 'play()',
       'mod+m': 'timeline.fastBackward()',
       'mod+,': 'timeline.stepBackward()',
@@ -107,7 +109,7 @@ angular.module('main').controller('MainCtrl', [
     // Don't auto-navigate when playing if we're showing a script.
     // (If we're playing and not showing a script,
     // we can autonavigate to initialize editScript.)
-    if($scope.editing || !timeline.isPlaying()) return
+    if($scope.editing || !timeline.isPlaying() || $scope.editScript) return
     
     navigateToCurrentLocation()
   }
@@ -144,12 +146,6 @@ angular.module('main').controller('MainCtrl', [
       }
     })
 
-    /*
-    var newKeys = Object.keys(bookmarks).join(' ')
-    if($scope.bookmarkLog !== newKeys)
-      console.log('bookmarks', $scope.bookmarkLog = newKeys)
-    */
-    
     return bookmarks
   }
   
@@ -241,6 +237,12 @@ angular.module('main').controller('MainCtrl', [
   }
   
   $scope.play = function() {
+    if($scope.editing)
+      $scope.saveAndReload()
+    else timeline.play()
+  }
+  
+  $scope.saveAndReload = function() {
     timeline.clear()
     delete $scope.widgetKey
     getEditScript().body = $scope.code
@@ -524,6 +526,7 @@ angular.module('main').controller('MainCtrl', [
     revertChanges: $scope.revertChanges,
     revertAllChanges: $scope.revertAllChanges,
     selectScript: $scope.selectScript,
+    saveAndReload: $scope.saveAndReload,
     
     // Expose the $scope for ease of development.
     timeline: timeline,

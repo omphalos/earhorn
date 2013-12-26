@@ -42,7 +42,17 @@ angular.module('main').factory('settingsService', [
           console.log('settings saved')
         }
       })
-    
+      
+    if(!settings.reset)
+      Object.defineProperty(settings, 'reset', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function() { 
+          localStorage.removeItem('earhorn-settings')
+          location.reload(true)
+        }
+      })
   }
 
   // Get reference to settings, applying defaults.

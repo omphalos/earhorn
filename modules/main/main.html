@@ -45,6 +45,11 @@
     <div class="timeline" ng-show="getScriptCount()">
       <div class="buttons">
         <span 
+          ng-show="settings.display.saveAndReload" 
+          ng-class="{ 'save-and-reload': 1, icon: 1, fa: 1, 'fa-save': 1 }" 
+          title="{{tooltipFor('Save &amp; Reload', 'saveAndReload()')}}" 
+          ng-click="saveAndReload()"></span>
+        <span 
           ng-show="settings.display.fastBackward" 
           ng-class="{ 'fast-backward': 1, icon: 1, fa: 1, 'fa-fast-backward': 1, disabled: editing }" 
           title="{{tooltipFor('Fast Backward', 'timeline.fastBackward()')}}" 
@@ -56,7 +61,7 @@
           ng-click="timeline.stepBackward()"></span>
         <span 
           ng-show="settings.display.pause" 
-          ng-class="{ pause: 1, icon: 1, active: !timeline.isPlaying(), fa: 1, 'fa-pause': 1 }" 
+          ng-class="{ pause: 1, icon: 1, active: getMode() == 'Paused', fa: 1, 'fa-pause': 1 }" 
           title="{{tooltipFor('Pause', 'timeline.pause()')}}" 
           ng-click="timeline.pause()"></span>
         <span 

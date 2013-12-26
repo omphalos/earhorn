@@ -1,0 +1,244 @@
+_ stuff required for release
+  _ message loss should also show a warning that messages were lost
+  _ open focus style & key combo
+  _ add session to script name
+  _ fix edit multiple scripts: use hashtable of editScripts
+  _ esprima webworker
+  _ test suite for instrumented javascript
+  _ verify all statement types are covered by errors
+  _ reinstate interval
+  _ better source map support
+  _ update readme
+
+_ nice-to-haves
+  _ fix nested widget inspection
+  _ (i) plugins
+  _ (i) set current script in title
+  _ enhance traversal
+    _ traverse line logs
+      _ bookmark should support traversal (prev goto next <- (.) -> )
+    _ go to log
+    _ traverse errors
+    _ step over, step out
+  _ (i) harp-style js server
+  _ (i) autocomplete
+    _ instrumentation-based autocomplete
+    _ tern-based autocomplete
+  _ basic hotswapping
+    _ support settings overrides?
+  _ (i) sophisticated hotswapping
+  _ node-falafel performance improvement
+  _ support logs + editing together
+  _ instant execution
+  _ message loss should just incorporate dropped messages into the tail snapshot
+  _ search
+  - (i) earhorn server
+    - node-http-proxy js url
+      - fs.readfile -> res.write(...earhorn+)
+    - node-http-proxy specified url
+  _ refactor programState monkey patching
+  _ refactor reset to handle multiple scripts
+  _ move edit to timeline
+
+x show widget
+  x create attribute for widget template id
+  x create a template from the id
+  x compile it against the scope
+  x get the element
+  x create attributes for widget-line, widget-ch
+  x watch the attributes
+  x on watch, update the widget
+  x load template from $templateCache
+  x watch widget location
+  x look at add widget api: editor.addWidget({ line: endLine - 1, ch: endColumn }, widget.el[0])
+  x have template variable for widget html
+  x support widget in directive
+  x bind widget to real model
+  x get it working
+  x widget controls its own visibility
+  x build real widget template
+x show current code underline
+  x add currentStartCh
+  x add currentStartLine
+  x resolve cursorch, cursorline vs currentch currentline
+  x marker: editor.markText(
+x show current bookmark underline
+x show hover bold
+x setup hotswap
+x fix code swap loss
+  x look for message before current message without reverse 
+  x dont reset state during message loss
+  x on announcement, remove the script from the timeline
+  x fix position $watch
+    x add getPosition, setPosition
+x fix widgets during edit
+x fix timeline
+  x dont reset on message loss
+  x on message loss mark suspicious messages
+  x identify other bugs
+x fix cursor moving during edit
+x fix default script selection when script is empty
+x consolidate programState logic such that IT (not timeline) handles script rebuilding during announcement
+x fix script dropdown display
+x remove script contents
+x clean up abandonAllChanges
+  x for each script, reset it
+  x fix: edit script, then call abandonAll
+x remove .logs indirection in programState (cancel)
+x support abandoning changes (x next to dropdown)
+  x announcement should state when the script is altered
+x swap underline and bold
+x review/fix extra code change messages
+x set up esprima error notification
+  x figure out how i want to present these errors
+  x earhorn should publish parse errors
+  x show red exclamation mark by script box when any script has a parse error
+  x improve dropdown and button styling
+    x gray dropdown border
+    x gray dropdown text
+    x fixed button width
+    x gray button text
+    x rounded button corners
+  x remove colons from error
+  x they should appear at the top (for ease of development)
+  x add floating error icon in codemirror top right
+    x title shows script (line): error
+  x show error as line widget
+    x editor should support linewidgets
+    x bind line widget to the error
+  x clicking on it should navigate the user to the error
+
+  11-23-13 ~58
+  x fix reliance on $interval
+    x create input range directive
+    x re-enable $interval
+  x settings
+    x support settings swap
+    x make button visibility dependent on settings
+  x remove play notification message & css
+  x change border to orange when paused
+  x better script display
+    x change abandon to revert
+    x show revert button when only a single script is present
+    x remove earhorn non-throttling rate
+  x show REVERT in button
+  x fix traverse from error edit: move mouse, edit, move timeline, check state
+  x tie autosave to settings
+
+  11-29-13 ~50
+  x fix layout
+    x show play/paused/editing message at the top center
+    x disable traversal during edit
+    x disable icons with css
+  x fix play behavior
+    x fix add a line to addition program
+    x fix code flashing - old code being added
+  x refactor to use fade directive instead of two css classes
+    x create fade directive file
+    x add to index.html
+    x copy+paste directive boilerplate
+    x watch attr -> set fade in / fade out
+  x refactor to use disabled icons (share disabled class)
+  x error touch ups
+    x use local parse errors
+      x watch code to run a debounced esprima
+      x bind to local error not log error
+    x show error in header
+    x remove error icon
+  x fix editor focus on error navigation
+  x listen to other-window edits
+    x logClient: support on-other-window-edit event
+    x when event fires, if in edit mode, update code
+  x use earhorn subdirectory
+  x add README for adding to a site
+  x earhorn should return same function
+
+  12-3-13
+  x rewrite fn body to: var eh$loc; try { ... } catch(err) { eh$(eh$loc,err) }
+  x change eh$ instrumenation to: $eh(eh$loc='loc',val)
+
+  12-5-13 ~39
+  x errors should be red
+
+  12-7-13 ~41
+  x set up error logging
+    x show caught error strings
+  x fix timeline resetting to 0
+  x fix revert (shouldnt occur when editing)
+  x (i) support sandbox when no script is selected
+    x open without iframe specified
+    x verify sandbox shows up
+  x setup keybindings in settings
+    x play/pause cmd+p
+    x step cmd+, cmd+.
+    x fast cmd-m, cmd-/
+    x add tooltips
+
+  12-9-13 ~37
+    x create jquery todomvc
+    x try debouncing cursor
+
+  12-16-13 ~39
+    x use focus, blur events instead o interval
+    x fix crash: maybe better error handling in eh$?
+    x debounced codemirror rebuild
+    x fix broken widget
+    x fix log binding performance
+      x windowed bookmarks
+      x fix bookmarks: deep $watch + dont return log object
+    x (try) session-stored parsing
+
+  12-20-13 ~40
+    x fix focus on current line
+    x use edit script
+    x remove getCurrentScript
+    x in MainCtrl support editScript different from programState.currentScript
+
+  12-21-13 ~39
+    x center cursor navigation
+    x execute templated scope
+    x fix errors
+    x fix selection
+    x readonly while sandbox is loading
+    x clean up url: just use iframe url without parameter
+    x fix script editing
+    x fix cursor behavior when editing
+    x add jquery todomvc example
+    x fix settings bugs
+    x only auto-navigate when paused
+    x fix iframe logic
+      x iframe url = firstIndexOf 'iframe='
+      x params = before 'iframe=' or entire path
+      x parse params (a=b,c=d)
+      x hideFrame param
+      x when no url
+        x hide editor
+        x message pointing to sandbox or run earhorn scripts in the same domain
+      x clean up settings
+    x javascript bundle
+      x mv earhorn.js earhorn-core.js
+      x nodemon cat earhorn-core.js umd-falafel esprima > esprima.js
+      x change mouse to use just earhorn.js
+    x fix small width styling
+
+  12-22-13 ~33
+    x fix empty sandbox isnt editable because editScript is missing
+    x fix mouse update demo
+
+  12-23-13 ~23
+    x organize examples, including jquery todomvc
+    x fix widget flashing during open, click-away, open
+    x fix newlines
+    x fix html escaping
+    x keypress to open cmd+o
+      x focus directive
+    x editor focus after mouseup timeline
+
+  12-24-13 ~19
+    x use colorized font awesome icons: play to green, pause to orange
+    x parseerror navigation button appears when there is an error fa-minus-circle
+    x disallow buffering announcements
+    x better message when iframe specified but script not loaded
+
+  12-26-13 ~12
+    x save button
