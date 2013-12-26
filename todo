@@ -243,3 +243,4 @@ x set up esprima error notification
     x save button
     x esprima webworker
     x message loss should also show a warning that messages were lost
+    x fix button style

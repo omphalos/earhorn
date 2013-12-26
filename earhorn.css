@@ -22,11 +22,14 @@ select, button {
   height: 1.5em;
   border-radius: 7.5px;
   color: #555;
-  border-color: #555;
+  border: 1px solid #555;
   background-color: #eee;
   -webkit-appearance: none;
   padding: 0em 0.5em; 
 }
+
+button:hover { }
+button:active { border: 2px solid #555; }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
