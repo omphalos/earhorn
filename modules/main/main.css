@@ -166,3 +166,10 @@ iframe {
   transition: opacity 2s ease-in;
 }
 
+.main-container editor .CodeMirror-activeline-background {
+  transition: box-shadow 0.5s;
+}
+
+.main-container editor.focused .CodeMirror-activeline-background {
+  box-shadow: 0px 0px 3px 0px blue;
+}

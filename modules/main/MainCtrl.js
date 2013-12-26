@@ -56,6 +56,7 @@ angular.module('main').controller('MainCtrl', [
   })
 
   $scope.open = function() {
+    if($scope.getScriptCount() <= 1) return
     $scope.editorFocus = false
     $scope.$broadcast('open')
   }

@@ -1,5 +1,4 @@
 _ stuff required for release
-  _ open focus style & key combo
   _ add session to script name
   _ fix edit multiple scripts: use hashtable of editScripts
   _ test suite for instrumented javascript
