@@ -41,6 +41,8 @@ angular.module('main').factory('logClient', [
 
   function onStorage(evt) {
 
+    if(!evt.newValue) return
+
     switch(evt.key) {
       
       case 'earhorn-log':
@@ -54,6 +56,9 @@ angular.module('main').factory('logClient', [
         return
         
       case 'earhorn-listener':
+      
+        // Not currently used.
+        // Maybe this can go away.
 
         var record = JSON.parse(evt.newValue)
             
