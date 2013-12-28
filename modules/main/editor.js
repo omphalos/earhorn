@@ -226,12 +226,12 @@ angular.module('main').directive('editor', [
       
                 bookmarks[key] = {
                   scope: bookmarkScope,
-                  bookmark: editor.setBookmark(pos, options),
+                  textMarker: editor.setBookmark(pos, options),
                   widget: widget,
                   destroy: function() {
                     delete bookmarks[this.scope.key];
                     this.scope.$destroy()
-                    this.bookmark.clear() // TODO rename bookmark to textMarker (?)
+                    this.textMarker.clear()
                   }
                 }
                 
@@ -250,8 +250,6 @@ angular.module('main').directive('editor', [
         editor.setCursor({ line: line, ch: ch + 1 })
         editor.setCursor({ line: line, ch: ch })
       }
-      
-      // scope.$digest() // TODO: necessary?
     }
 
     function rebuildEditorOperation() {
@@ -282,7 +280,6 @@ angular.module('main').directive('editor', [
     // Bind focus.     
     if(attr.focus) {
 
-      // TODO: make this an event instead
       editor.on('focus', function() {
         $parse(attr.focus).assign(scope, true)
         if(!scope.$$phase) scope.$digest()

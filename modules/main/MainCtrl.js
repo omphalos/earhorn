@@ -199,7 +199,7 @@ angular.module('main').controller('MainCtrl', [
           ch: err.ch,
           message: err.message,
           script: $scope.editScript,
-          key: err.toString()
+          key: err.line + ': ' + err.message
         }
       } else delete $scope.parseError
       
@@ -221,12 +221,12 @@ angular.module('main').controller('MainCtrl', [
       
     if(!$scope.$$phase) $scope.$digest() // necessary?
   })
-  
-  $scope.$on('userCodeEdit', function() {
-    
-    var code = $scope.getEditScript().body
-    
+
+  $scope.$watch('getEditScript().body', function(code) {
     parser.postMessage({ id: ++parseMessageID, code: code })
+  })
+
+  $scope.$on('userCodeEdit', function() {
     $scope.editing = true
     timeline.pause()
     timeline.clear()
@@ -302,14 +302,16 @@ angular.module('main').controller('MainCtrl', [
 
     delete $scope.markers[currentMarkerKey]
     
-    if(!programState.currentLoc) return
+    if(
+      !programState.currentLoc ||
+      programState.currentScript !== $scope.editScript) return
     
     var location = programState.currentLoc.split(',') // TODO use a loc object
-      , from = { line: +location[0], ch: +location[1] }
-      , to = { line: +location[2], ch: +location[3] }
-      
+    , from = { line: +location[0], ch: +location[1] }
+    , to = { line: +location[2], ch: +location[3] }
+    
     currentMarkerKey = 'current:' + programState.currentLoc
-
+    
     $scope.markers[currentMarkerKey] = {
       from: from,
       to: to,
@@ -321,35 +323,11 @@ angular.module('main').controller('MainCtrl', [
   // Errors. //
   /////////////
 
-  $scope.showParseError = function() {
-    if($scope.currentLine === undefined || !$scope.parseError) return false
-    return $scope.currentLine !== $scope.parseError.line
-  }
-
   $scope.goToError = function() {
     if(!$scope.parseError) return
     $scope.currentLine = $scope.parseError.line
     $scope.currentCh = $scope.parseError.ch
     $scope.editorFocus = true
-  }
-  
-  $scope.getLineWidgets = function() {
-
-    var lineWidgets = {}
-      
-    if(!$scope.parseError) return lineWidgets
-    
-    var indent = ''
-    for(var i = 1; i < $scope.parseError.ch; i++)
-      indent += ' '
-    
-    lineWidgets[$scope.parseError.key] = {
-      template: 'errorLineWidgetTemplate',
-      line: $scope.parseError.line,
-      model: indent + '* ' + $scope.parseError.message
-    }
-    
-    return lineWidgets
   }
   
   ////////////////////////////////
@@ -535,7 +513,7 @@ angular.module('main').controller('MainCtrl', [
     pause: $scope.pause,
     stepForward: $scope.stepForward,
     fastForward: $scope.fastForward,   
-    play: $scope.play, // TODO: can this be a $watch instead?
+    play: $scope.play,
 
     // Miscellaneous utilities.
     revertChanges: $scope.revertChanges,
@@ -546,7 +524,7 @@ angular.module('main').controller('MainCtrl', [
     // Expose the $scope for ease of development.
     timeline: timeline,
     programState: programState,
-    MainCtrl: $scope,
+    Main: $scope,
     getEditScript: $scope.getEditScript
   }
   

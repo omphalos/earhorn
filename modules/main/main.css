@@ -65,7 +65,7 @@ iframe {
 .main-container .parse.error.alert {
   position: absolute; 
   z-index: 1;
-  margin-top: 0.25em;
+  margin-top: 0.75em;
   margin-right: 1.25em;
   color: red;
   text-shadow: pink 0 0 2px;

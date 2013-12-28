@@ -1,14 +1,8 @@
 _ stuff required for release
-  _ verify all statement types are covered by errors
-    _ add semicolons before expressionstatement
-    _ do better callexpression
-    _ fix parens
-  _ fix current line error
   _ better source map support
   _ add dynamic instrumentation to readme
   _ ie support
   _ interval should be settings based
-  _ review TODOs in code
   _ tag release (including readme update)
 
 _ instant execution
@@ -246,3 +240,12 @@ x set up esprima error notification
   x firefox support
 
   12/27-13 ~6
+
+  12/28 ~12
+  x verify all statement types are covered by errors
+    x add semicolons before expressionstatement
+    x do better callexpression
+    x fix parens
+  x fix current line
+  x review TODOs in code
+  x fix current line error

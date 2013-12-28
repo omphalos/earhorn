@@ -95,7 +95,7 @@
     <div
       ng-click="goToError()"
       title="{{parseError.message}}"
-      ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: showParseError() }">
+      ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: parseError }">
     </div>
     <editor
       ng-show="editScript"
@@ -116,7 +116,6 @@
       widget-ch="widgetCh"
       widget-template="widgetTemplate"
       markers="getMarkers()"
-      line-widgets="getLineWidgets()"
       focus="editorFocus"
       element="editor" >
     </editor>
