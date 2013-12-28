@@ -11,7 +11,7 @@ angular.module('main').factory('settingsService', [
   // Apply changes from other windows.
   function onStorage(evt) {
     if(evt.key !== 'earhorn-settings') return
-    settings = JSON.parse(evt.newValue || '{}')
+    angular.copy(JSON.parse(evt.newValue || '{}'), settings)
     applyDefaults()
     if(!$rootScope.$$phase) $rootScope.$digest()
   }

@@ -519,5 +519,4 @@ angular.module('main').controller('MainCtrl', [
   $timeout(function() {
     $scope.timerElapsed = true;
   }, 2000)
-
 }])

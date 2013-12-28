@@ -1,16 +1,17 @@
 _ stuff required for release
+  _ fix cursor scrolling
   _ better source map support
   _ add dynamic instrumentation to readme
   _ ie support
-  _ interval should be settings based
   _ tag release (including readme update)
 
 _ instant execution
-  _ single line widgets
-  _ highlight + mod + enter to execute
+  _ log widget per line
+  _ mod + enter to execute current ast node or selection
   _ instrumentation-based autocomplete
   _ navigate to function
   _ support hotswapped edits
+  _ keypress to open/close/traverse the inspection widget
 
 _ future
   _ performance
@@ -40,3 +41,4 @@ _ future
   x fix current line
   x review TODOs in code
   x fix current line error
+  x interval should be settings based
