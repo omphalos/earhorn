@@ -1,7 +1,5 @@
 _ stuff required for release
-  _ fix cursor scrolling
   _ better source map support
-  _ add dynamic instrumentation to readme
   _ ie support
   _ tag release (including readme update)
 
@@ -17,6 +15,7 @@ _ future
   _ performance
     _ programState, timeline web workers
     _ node-falafel performance improvement
+    _ fix cursor scrolling
   _ instrument catch, arguments
   _ set current script in title
   _ nested widget inspection
@@ -42,3 +41,5 @@ _ future
   x review TODOs in code
   x fix current line error
   x interval should be settings based
+  x add dynamic instrumentation to readme
+

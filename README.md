@@ -1,4 +1,4 @@
-earhorn
+Earhorn
 =======
 
 JavaScript execution logs.
@@ -10,7 +10,7 @@ Earhorn instruments your JavaScript and shows you a detailed, reversible, line-b
 Demo
 ====
 
-The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html) and explains earhorn much better than a README can.
+The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html) and explains Earhorn much better than a README can.
 
 Quick Start
 ===========
@@ -18,7 +18,7 @@ Quick Start
 Step 1
 ------
 
-Add earhorn to your website.  An easy way:
+Add Earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
@@ -32,7 +32,7 @@ Add a reference to earhorn.js to your page.
 Step 3
 ------
 
-Wrap your code with a call to earhorn$.
+Wrap your code with a call to Earhorn$.
 
 For example, to instrument this code:
 
@@ -60,7 +60,17 @@ Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript
 Caveats
 =======
 
-This thing is still in an experimental phase, and the code is in flux.  There are some performance issues at the moment with larger codebases.  If you're just using earhorn on smaller portions of code, you'll generally be okay.
+This thing is still at the prototype stage, and the code is in flux.  There are some performance issues at the moment with larger codebases.  If you're just using Earhorn on less than 1000 LOC, you'll generally be okay.
+
+Possibilities
+=============
+
+Right now, Earhorn gives you a detailed view of code execution.  It should be possible to integrate code instrumentation deeper into the editing experience.  Some possibilities:
+
+1. Instrumentation-based autocomplete for autocomplete that side-steps many of the issues that static JavaScript analysis runs into.
+2. Function navigation.  It should be straight-forward to navigate to a function's definition, as well to all of its invokations.
+3. Code hot-swapping.  This is something that V8 supports natively, but should be possible with an instrumentation library as well, as instrumented functions can hold references to their uninstrumented code and re-instrument new code at runtime.
+4. Remote execution of code.  During instrumentation it should be possible to save references to eval inside instrumented functions.  These eval references could be used to remotely invoke code in the proper scope, letting you talk to and edit functions as you're writing them.  I think this would be a nice addition to the REPLs and breakpoints that coders are already familiar with.
 
 License
 =======
