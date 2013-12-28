@@ -322,9 +322,8 @@ angular.module('main').controller('MainCtrl', [
   /////////////
 
   $scope.showParseError = function() {
-    if($scope.currentLine === void 0 || !$scope.parseError) return false
-    var diff = Math.abs($scope.currentLine - $scope.parseError.line)
-    return diff > 10
+    if($scope.currentLine === undefined || !$scope.parseError) return false
+    return $scope.currentLine !== $scope.parseError.line
   }
 
   $scope.goToError = function() {

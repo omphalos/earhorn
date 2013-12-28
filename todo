@@ -1,10 +1,14 @@
 _ stuff required for release
-  _ add session to script name
-  _ test suite for instrumented javascript
   _ verify all statement types are covered by errors
-  _ reinstate interval
+    _ add semicolons before expressionstatement
+    _ do better callexpression
+    _ fix parens
+  _ fix current line error
   _ better source map support
-  _ ie/firefox support
+  _ add dynamic instrumentation to readme
+  _ ie support
+  _ interval should be settings based
+  _ review TODOs in code
   _ tag release (including readme update)
 
 _ instant execution
@@ -18,6 +22,7 @@ _ future
   _ performance
     _ programState, timeline web workers
     _ node-falafel performance improvement
+  _ instrument catch, arguments
   _ set current script in title
   _ nested widget inspection
   _ plugins
@@ -238,3 +243,6 @@ x set up esprima error notification
   x fix button style
   x refactor reset to handle multiple scripts
   x fix edit multiple scripts: use hashtable of editScripts
+  x firefox support
+
+  12/27-13 ~6

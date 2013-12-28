@@ -138,6 +138,12 @@ iframe {
   font-weight: normal;
 }
 
+.main-container .current.bookmark.caught,
+.main-container .current.widget.caught { 
+  border-color: #d00;
+  color: #d00;
+}
+
 .main-container .bookmark.message-loss,
 .main-container .widget.message-loss {
   border-color: orange;

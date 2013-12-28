@@ -5,7 +5,7 @@ JavaScript execution logs.
 
 ![earhorn](https://raw.github.com/omphalos/earhorn/master/logo.jpg)
 
-Earhorn instruments your JavaScript and shows you a detailed, reversible, line-by-line log of JavaScript execution, sort of like a console.log on steroids.
+Earhorn instruments your JavaScript and shows you a detailed, reversible, line-by-line log of JavaScript execution, sort of like console.log's crazy uncle.
 
 Demo
 ====

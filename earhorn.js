@@ -17,7 +17,7 @@
       bufferSize: 100,
       flushInterval: 25,
       handleErrors: true,
-      logModifiedCode: true,
+      verbose: false,
       quiet: true
     }
     
@@ -118,6 +118,21 @@
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
     }
     
+    // Wrap Identifiers with calls to our logger, eh$(...)
+    
+    scripts[name] = {
+      body: body,
+      modified: modified
+    }
+
+    function getLocationUpdate(node) {
+      return 'eh$loc="' +
+        (node.loc.start.line - 1) + ',' +
+        node.loc.start.column + ',' +
+        (node.loc.end.line - 1) + ',' +
+        node.loc.end.column + '"'
+    }
+    
     var instrumentedExpressions = [
       'NewExpression',
       'CallExpression',
@@ -142,22 +157,97 @@
       'BinaryExpression',
       'ThrowStatement'
     ]
-    
-    var skippedMemberExpressionParents = [
-      'AssignmentExpression',
-      'UnaryExpression',
-      'UpdateExpression',
-      'CallExpression', /*
-      'NewExpression' */
-    ]
-    
-    // Wrap Identifiers with calls to our logger, eh$(...)
-    
-    scripts[name] = {
-      body: body,
-      modified: modified
-    }
 
+    function visitNode(node) {
+     
+      if(!node.parent) return
+      
+      if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
+        node.update(getLocationUpdate(node) + ',' + node.source())
+        return
+      }
+        
+      if(node.type === 'Literal')
+        return
+      
+      if( 
+        node.parent.type === 'BlockStatement' && node.parent.parent && (
+        node.parent.parent.type === 'FunctionDeclaration' || 
+        node.parent.parent.type === 'FunctionExpression')) {
+        
+        // Add try/catch inside function bodies.
+        
+        if(node.parent.body[0] === node) {
+          node.update(tryPrefix + node.source())
+        }
+        
+        if(node.parent.body[node.parent.body.length - 1] === node) {
+          node.update(node.source() + catchSuffix)
+        }
+        
+        return
+      }
+
+      if(
+        (node.parent.type === 'IfStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'WhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'DoWhileStatement' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchCase' && 
+          node === node.parent.test) ||
+        (node.parent.type === 'SwitchStatement' && 
+          node === node.parent.discriminant) ||
+        (node.parent.type === 'MemberExpression' && 
+          node === node.parent.object) ||
+          
+        instrumentedExpressions.indexOf(node.type) >= 0 ||
+        (instrumentedParentTypes.indexOf(node.parent.type) >= 0) ||
+        
+        (node.type === 'MemberExpression' &&
+        
+          // Disallow eh$(eh$(a).b) = 123;
+          // Allow    eh$(a).b = 123;
+          node.parent.type !== 'AssignmentExpression' &&
+          
+          // Disallow eh$(eh$(a).b)++;
+          // Allow    eh$(a).b++;
+          node.parent.type !== 'UpdateExpression' &&
+          
+          /* Example explaining why we can't wrap CallExpression:
+               
+          // This works.
+          [].forEach(function() { })
+               
+          // This fails.
+          function returnArg(arg) { return arg }
+          returnArg([].forEach)(function() { })
+               
+          In the instrumented code we would have a call to eh$,
+          which is basically a fancy version of returnArg. */
+          node.parent.type !== 'CallExpression')) {
+
+        /* Add parens to fix NewExpression:        
+        new eh$(X)()   // Broken, without parens.
+        new (eh$(X)()) // Fixed, with parens. */
+          
+        var parenStart
+          , parenEnd
+        
+        if(node.parent.type === 'NewExpression') {  
+          parenStart = '('
+          parenEnd = ')'
+        } else parenStart = parenEnd = ''
+        
+        node.update(parenStart + 'eh$("' +
+          name + '",' + 
+          getLocationUpdate(node) + ',' +
+          node.source() +
+        ')' + parenEnd)
+      }
+    }
+    
     var handleErrors = settings.instrumentation.handleErrors
       , tryPrefix = handleErrors ? 'var eh$log; try {' : ''
       , catchSuffix = handleErrors ?
@@ -187,79 +277,6 @@
       }
       announce(name)
       throw err
-    }
-
-    function getLocationUpdate(node) {
-      return 'eh$loc="' +
-        (node.loc.start.line - 1) + ',' +
-        node.loc.start.column + ',' +
-        (node.loc.end.line - 1) + ',' +
-        node.loc.end.column + '"'
-    }
-
-    function visitNode(node) {
-     
-      if(!node.parent) return
-      
-      if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
-        node.update(getLocationUpdate(node) + ',' + node.source())
-        return
-      }
-        
-      if(node.type === 'Literal')
-        return
-      
-      if(
-        node.parent.type === 'BlockStatement' && node.parent.parent && (
-        node.parent.parent.type === 'FunctionDeclaration' || 
-        node.parent.parent.type === 'FunctionExpression')) {
-        
-        if(node.parent.body[0] === node) {
-          node.update(tryPrefix + node.source())
-        }
-        
-        if(node.parent.body[node.parent.body.length - 1] === node) {
-          node.update(node.source() + catchSuffix)
-        }
-        
-        return
-      }
-
-      if(
-        (node.parent.type === 'CallExpression' && 
-          node !== node.parent.callee) ||
-        (node.parent.type === 'IfStatement' && 
-          node === node.parent.test) ||
-        (node.parent.type === 'WhileStatement' && 
-          node === node.parent.test) ||
-        (node.parent.type === 'DoWhileStatement' && 
-          node === node.parent.test) ||
-        (node.parent.type === 'SwitchCase' && 
-          node === node.parent.test) ||
-        (node.parent.type === 'SwitchStatement' && 
-          node === node.parent.discriminant) ||
-        (node.parent.type === 'MemberExpression' && 
-          node === node.parent.object) ||
-        instrumentedExpressions.indexOf(node.type) >= 0 ||
-        (instrumentedParentTypes.
-          indexOf(node.parent.type) >= 0) ||
-        (node.type === 'MemberExpression' && 
-          skippedMemberExpressionParents.indexOf(node.parent.type) < 0)) {
-
-        var parenStart
-          , parenEnd
-          
-        if(node.parent.type === 'NewExpression') {
-          parenStart = '('
-          parenEnd = ')'
-        } else parenStart = parenEnd = ''
-        
-        node.update(parenStart + 'eh$("' +
-          name + '",' + 
-          getLocationUpdate(node) + ',' +
-          node.source() +
-        ')' + parenEnd)
-      }
     }
 
     instrumentedCode =

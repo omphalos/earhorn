@@ -1,4 +1,4 @@
-earhorn$('app.js', /*global jquery, Handlebars */
+earhorn$('app.js', function() {/*global jquery, Handlebars */
 jQuery(function ($) {
 	'use strict';
 
@@ -181,4 +181,4 @@ jQuery(function ($) {
 	};
 
 	App.init();
-}));
+})})();
