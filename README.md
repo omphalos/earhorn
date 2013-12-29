@@ -19,7 +19,7 @@ Quick Start
 
 Add Earhorn to your website.  An easy way:
 
-    git clone https://github.com/omphalos/earhorn --depth 1
+    git clone https://github.com/omphalos/earhorn
 
 *Step 2*
 
