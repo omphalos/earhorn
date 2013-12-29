@@ -66,7 +66,9 @@ Right now, Earhorn gives you a detailed view of code execution.  It should be po
 1. Instrumentation-based autocomplete for autocomplete that side-steps many of the issues that static JavaScript analysis runs into.
 2. Function navigation.  It should be straight-forward to navigate to a function's definition, as well to all of its invokations.
 3. Code hot-swapping.  This is something that V8 supports natively, but should be possible with an instrumentation library as well, as instrumented functions can hold references to their uninstrumented code and re-instrument new code at runtime.
-4. Remote execution of code.  During instrumentation it should be possible to save references to eval inside instrumented functions.  These eval references could be used to remotely invoke code in the proper scope, letting you talk to and edit functions as you're writing them.  I think this would be a nice addition to the REPLs and breakpoints that coders are already familiar with.
+4. Remote execution of code.  During instrumentation it's possible to save references to eval inside instrumented functions.  These eval references could be used to remotely invoke code in the proper scope, letting you talk to and edit live functions without setting up breakpoints.  I think this would be a nice addition to the REPLs and breakpoints that coders are already familiar with.
+
+Additionally, custom object visualization should be straightforward to implement.  Currently the object visualization widget is a fixed angular html template.  But it should be straightforward to support user-injected angular templates that vary by object type.
 
 License
 =======
