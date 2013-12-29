@@ -10,29 +10,26 @@ Earhorn instruments your JavaScript and shows you a detailed, reversible, line-b
 Demo
 ====
 
-The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=mouse-iframe-demo.html) and explains Earhorn much better than a README can.
+The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=examples/mouse.html).  Check it out!
 
 Quick Start
 ===========
 
-Step 1
-------
+*Step 1*
 
 Add Earhorn to your website.  An easy way:
 
     git clone https://github.com/omphalos/earhorn --depth 1
 
-Step 2
-------
+*Step 2*
 
 Add a reference to earhorn.js to your page.
 
     <script src="/earhorn/earhorn.js"></script>
 
-Step 3
-------
+*Step 3*
 
-Wrap your code with a call to Earhorn$.
+Wrap your code with a call to earhorn$.
 
 For example, to instrument this code:
 
@@ -50,12 +47,11 @@ Wrap it with a call to earhorn$:
 
 The call to earhorn$ just returns an instrumented version of what you pass to it.
 
-Step 4
-------
+*Step 4*
 
 Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript in a separate tab.
 
-(You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, /earhorn/index.html#iframe=sandbox.html.)
+(You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, [/earhorn/index.html#iframe=sandbox.html](http://omphalos.github.io/earhorn/index.html#iframe=sandbox.html).)
 
 Caveats
 =======
