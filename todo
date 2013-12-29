@@ -1,5 +1,9 @@
 _ stuff required for release
   _ better source map support
+    _ umd-falafel
+    _ merge from source map branch
+    _ add source map repo thru bower
+    _ add source map repo thru umd
   _ ie support
   _ tag release (including readme update)
 
@@ -43,3 +47,5 @@ _ future
   x interval should be settings based
   x add dynamic instrumentation to readme
 
+  12/29 ~9
+  x ga change

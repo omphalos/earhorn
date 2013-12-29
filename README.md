@@ -62,8 +62,8 @@ Caveats
 
 This thing is still at the prototype stage, and the code is in flux.  There are some performance issues at the moment with larger codebases.  If you're just using Earhorn on less than 1000 LOC, you'll generally be okay.
 
-Possibilities
-=============
+Possible Enhancements
+=====================
 
 Right now, Earhorn gives you a detailed view of code execution.  It should be possible to integrate code instrumentation deeper into the editing experience.  Some possibilities:
 
