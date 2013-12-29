@@ -279,9 +279,6 @@
       throw err
     }
 
-    var dataUri = 'data:text/javascript;base64,' + btoa(body)
-    console.log(dataUri)
-
     instrumentedCode =
       tryPrefix +
       instrumentedCode +

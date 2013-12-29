@@ -1,11 +1,4 @@
-_ stuff required for release
-  _ better source map support
-    _ umd-falafel
-    _ merge from source map branch
-    _ add source map repo thru bower
-    _ add source map repo thru umd
-  _ ie support
-  _ tag release (including readme update)
+_ ie support & tag
 
 _ instant execution
   _ log widget per line
@@ -33,8 +26,7 @@ _ future
     _ step over, step out
     _ find function references
   _ earhorn server
-
-  12/27-13 ~6
+  _ better source map support
 
   12/28 ~12
   x verify all statement types are covered by errors
