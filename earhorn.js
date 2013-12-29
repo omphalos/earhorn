@@ -279,11 +279,14 @@
       throw err
     }
 
+    var dataUri = 'data:text/javascript;base64,' + btoa(body)
+    console.log(dataUri)
+
     instrumentedCode =
       tryPrefix +
       instrumentedCode +
       catchSuffix +
-      '//@ sourceURL=' + name // Source mapping.
+      '//@ sourceURL=' + name
 
     if(settings.instrumentation.verbose)
       console.log(instrumentedCode)

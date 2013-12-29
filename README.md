@@ -10,7 +10,7 @@ Earhorn instruments your JavaScript and shows you a detailed, reversible, line-b
 Demo
 ====
 
-The demo is [here](http://omphalos.github.io/earhorn/index.html?iframe=examples/mouse.html).  Check it out!
+The demo is [here](http://omphalos.github.io/earhorn/index.html#iframe=examples/mouse.html).  Check it out!
 
 Quick Start
 ===========
@@ -51,7 +51,7 @@ The call to earhorn$ just returns an instrumented version of what you pass to it
 
 Navigate to /earhorn/index.html.  Then open the web page hosting your JavaScript in a separate tab.
 
-(You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, [/earhorn/index.html#iframe=sandbox.html](http://omphalos.github.io/earhorn/index.html#iframe=sandbox.html).)
+(You can also open your web page in an iframe, by adding iframe=your-web-page-url after the hash.  For example, [/earhorn/index.html#iframe=examples/mouse.html](http://omphalos.github.io/earhorn/index.html#iframe=examples/mouse.html).)
 
 Caveats
 =======
