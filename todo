@@ -1,5 +1,5 @@
-_ fix rounded corners in ie, firefox
-_ fix ie object
+_ fix ie object as 0
+_ fix ie not redirecting
 _ make top px consistent
 _ use getOwnPropertyNames instead of keys
 _ test safari
@@ -36,3 +36,5 @@ _ future
 
   12/29 ~9
   x ga change
+  x fix rounded corners in ie, firefox
+  x fix gh-pages

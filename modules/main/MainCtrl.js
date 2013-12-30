@@ -392,7 +392,7 @@ angular.module('main').controller('MainCtrl', [
       return 'Array(' + log.length + ')'
           
     if(log.type === 'Object')        
-      return log.constructor || log.type
+      return log.constructorName || log.type
             
     return log.type
   }  

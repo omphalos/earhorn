@@ -345,7 +345,7 @@
     // Object
     var result = {
       type: 'Object',
-      constructor: obj.constructor ? obj.constructor.name : null,
+      constructorName: obj.constructor ? obj.constructor.name : null,
       complete: true,
       properties: { }
     }
