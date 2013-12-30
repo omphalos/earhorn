@@ -52,10 +52,14 @@
 }
 
 iframe {
-  float: right;
+  position: fixed;
+  top: 6.5em;
+  right: 0;
   width: 50%;
-  min-height: 100%;  
+  height: auto;
+  min-height: 100%;
   border: 0;
+  bottom: 10;
   border-top:  1px solid;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
