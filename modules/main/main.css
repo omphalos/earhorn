@@ -46,14 +46,14 @@
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
-  top: 8em;
+  top: 105px;
   bottom: 0;
   height: auto; 
 }
 
 iframe {
   position: fixed;
-  top: 6.5em;
+  top: 105px;
   right: 0;
   width: 50%;
   height: auto;
