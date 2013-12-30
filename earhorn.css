@@ -35,6 +35,8 @@ select:focus {
   box-shadow: 0px 0px 1px 1px #555;
 }
 
+input[type=range]::-ms-tooltip { display: none; }
+
 button:hover { }
 button:active { border: 2px solid #555; }
 

@@ -103,7 +103,7 @@ iframe {
   margin: 0;
   height: 21px;
 }
-.main-container input[type=range]::-ms-tooltip { display: none; }
+
 .main-container .timeline { margin: 1em 0; }
 .main-container .timeline .buttons { margin: 0 1em 0 0; float: left; }
 .main-container .timeline .input-container { overflow: hidden; padding-top: 2.5px;}
