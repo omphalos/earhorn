@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="../components/normalize-css/normalize.css"/>
   <style>
+    body { margin: 1em; }
     p { cursor: default; color: #555; text-align: center; }
   </style>
 </head>
@@ -14,13 +15,11 @@
 earhorn$('mouse.js', function() {var x, y
 
 $(document).on('mousemove', function(evt) {
+
+  x = evt.clientX
+  y = evt.clientY
   
   evt
-  
-  if(Math.random() < 0.5)
-    x = evt.clientX
-  else
-    y = evt.clientY
 })
 
 })()
