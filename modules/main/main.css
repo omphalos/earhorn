@@ -1,15 +1,22 @@
 .main-container { height: 100%; }
-.main-container nav { padding: 1em 1em 0em; }
+.main-container nav {
+  padding: 1em 1em 0em;
+  height: 6.5em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
 
 .main-container .status { height: 1.25em; padding: 0 1.25em 0.25em; }
 .main-container .error-summary { color: red; font-style: italic; cursor: pointer; }
 
-.main-container .main-content { border-top: 1px solid; }
-.main-container.half .CodeMirror { border-right: 1px solid; }
+/* .main-container .main-content { border-top: 1px solid; } */
+.main-container.half .CodeMirror { border-right: 1px solid; border-top:  1px solid;}
+.main-container.half iframe { border-top:  1px solid;}
 
 /* Playing */
 .main-container.playing .main-content,
 .main-container.playing .status,
+.main-container.playing.half iframe,
 .main-container.playing.half .CodeMirror { border-color: green; }
 .main-container.playing .play.icon,
 .main-container .play.icon:hover,
@@ -18,6 +25,7 @@
 /* Paused */
 .main-container.paused .main-content,
 .main-container.paused .status,
+.main-container.paused.half iframe,
 .main-container.paused.half .CodeMirror { border-color: orange; }
 .main-container .pause.icon.active,
 .main-container .pause.icon:hover { color: orange; }
@@ -25,6 +33,7 @@
 /* Editing */
 .main-container.editing .main-content,
 .main-container.editing .status,
+.main-container.editing.half iframe,
 .main-container.editing.half .CodeMirror { border-color: blue; }
 .main-container.editing .save-and-reload.icon { color: blue; }
 .main-container.editing .save-and-reload.icon:hover { color: darkblue; }
@@ -36,12 +45,14 @@
 .main-container .CodeMirror {  
   width: auto;
   position: fixed; 
-  top: 105px;
+  top:8em;
   bottom: 0;
   height: auto; 
 }
 
 iframe {
+  position: fixed;
+  right: 0;
   width:  50%;
   min-height: 100%;
   border: 0px;

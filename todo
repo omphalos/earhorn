@@ -1,8 +1,5 @@
-_ fix ie object as 0
-_ fix ie not redirecting
 _ make top px consistent
-_ use getOwnPropertyNames instead of keys
-_ test safari
+_ fill iframe height
 
 _ instant execution
   _ log widget per line
@@ -38,3 +35,8 @@ _ future
   x ga change
   x fix rounded corners in ie, firefox
   x fix gh-pages
+  x fix ie object as 0
+  x use getOwnPropertyNames instead of keys
+
+  12/30 ~3
+_ fix ie not redirecting

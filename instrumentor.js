@@ -357,7 +357,10 @@
 
       var keys = settings.instrumentation.maxKeys
 
-      for(var key in obj) {
+      var propertyNames = Object.getOwnPropertyNames(obj)
+      for(var k = 0; k < propertyNames.length; k++) {
+
+        var key = propertyNames[k];
 
         if(keys --> 0) {
           try {
