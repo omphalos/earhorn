@@ -97,10 +97,15 @@ iframe {
 .main-container .parse.error { color: red; }
 .main-container .parse.error.message { margin-left: 0.25em; }
 
-.main-container input[type=range] { width: 100%; }
+.main-container input[type=range] {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  height: 21px;
+}
 .main-container .timeline { margin: 1em 0; }
 .main-container .timeline .buttons { margin: 0 1em 0 0; float: left; }
-.main-container .timeline .input-container { overflow: hidden; padding-top: 5px;}
+.main-container .timeline .input-container { overflow: hidden; padding-top: 2.5px;}
 
 .main-container .CodeMirror { line-height: normal;}
 .main-container .script-view { display: none; }
