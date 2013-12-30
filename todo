@@ -1,6 +1,8 @@
-_ fix gh-pages
-_ svg visualization
-_ test ie tag
+_ fix rounded corners in ie, firefox
+_ fix ie object
+_ make top px consistent
+_ use getOwnPropertyNames instead of keys
+_ test safari
 
 _ instant execution
   _ log widget per line
@@ -15,6 +17,7 @@ _ future
     _ programState, timeline web workers
     _ node-falafel performance improvement
     _ fix cursor scrolling
+  _ svg visualization
   _ 1st line source map
   _ instrument catch, arguments
   _ set current script in title

@@ -117,6 +117,7 @@ iframe {
   -webkit-user-select: none;
   color: blue;
   font-size: 0.75em;
+  border-radius: 1em;
   -webkit-border-radius: 1em;
   -moz-border-radius: 1em;
   -ms-border-radius: 1em;

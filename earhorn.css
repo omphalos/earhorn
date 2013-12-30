@@ -20,6 +20,9 @@ a:hover { color: black; }
 select, button {
   height: 1.5em;
   border-radius: 7.5px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  -ms-border-radius: 7.5px;
   color: #555;
   border: 1px solid #555;
   background-color: #eee;
