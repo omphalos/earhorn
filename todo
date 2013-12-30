@@ -1,4 +1,6 @@
-_ ie support & tag
+_ fix gh-pages
+_ svg visualization
+_ test ie tag
 
 _ instant execution
   _ log widget per line
@@ -13,6 +15,7 @@ _ future
     _ programState, timeline web workers
     _ node-falafel performance improvement
     _ fix cursor scrolling
+  _ 1st line source map
   _ instrument catch, arguments
   _ set current script in title
   _ nested widget inspection
@@ -27,17 +30,6 @@ _ future
     _ find function references
   _ earhorn server
   _ better source map support
-
-  12/28 ~12
-  x verify all statement types are covered by errors
-    x add semicolons before expressionstatement
-    x do better callexpression
-    x fix parens
-  x fix current line
-  x review TODOs in code
-  x fix current line error
-  x interval should be settings based
-  x add dynamic instrumentation to readme
 
   12/29 ~9
   x ga change
