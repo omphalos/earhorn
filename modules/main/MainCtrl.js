@@ -320,6 +320,13 @@ angular.module('main').controller('MainCtrl', [
   // Support inspection widget. //
   ////////////////////////////////
 
+  function hideWidget() {
+    delete $scope.widgetKey
+  }
+
+  $scope.$watch('currentLine', hideWidget)
+  $scope.$watch('currentCh', hideWidget)
+
   $scope.toggleWidget = function($event, key) {
 
     $event.stopPropagation()
