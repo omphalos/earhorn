@@ -152,6 +152,7 @@ iframe {
 
 .main-container .current.bookmark.caught,
 .main-container .current.widget.caught { 
+  font-weight: bold;
   border-color: #d00;
   color: #d00;
 }
@@ -161,18 +162,17 @@ iframe {
   border-color: orange;
   background-color: lightyellow;
   color: orange;
-  font-weight: normal;
 }
 
 .main-container .current.bookmark.message-loss,
 .main-container .current.widget.message-loss {
+  font-weight: bold;
   border-color: darkorange;
   color: darkorange;
 }
 
 .main-container .bookmark-loc { text-decoration: underline; }
 .main-container .current-loc { font-weight: bold; background-color: lightblue; }
-.main-container .current { font-weight: bold; }
 .main-container .current.bookmark, .main-container .current.widget {
   border: 1px solid blue;
 }
