@@ -97,7 +97,8 @@
       title="{{parseError.message}}"
       ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: parseError }">
     </span>
-    <editor
+    <div
+      editor
       ng-show="editScript"
       code="getEditScript().body"
       user-code-edit="userCodeEdit"
@@ -118,7 +119,7 @@
       markers="getMarkers()"
       focus="editorFocus"
       element="editor" >
-    </editor>
+    </div>
     <iframe ng-if="iframe" src="{{iframe}}"></iframe>
   </div>
 

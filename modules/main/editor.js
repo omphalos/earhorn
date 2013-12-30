@@ -347,5 +347,5 @@ angular.module('main').directive('editor', [
     
   }
   
-  return { restrict: 'E', link: link }
+  return { link: link }
 }])
