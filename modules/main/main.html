@@ -92,11 +92,11 @@
     class="main-content"
     ng-click="widgetKey = null"
     ng-show="getScriptCount()">
-    <div
+    <span
       ng-click="goToError()"
       title="{{parseError.message}}"
       ng-class="{ parse: 1, error: 1, alert: 1, fa: 1, 'fa-exclamation-circle': 1, show: parseError }">
-    </div>
+    </span>
     <editor
       ng-show="editScript"
       code="getEditScript().body"

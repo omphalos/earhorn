@@ -10,8 +10,10 @@
 .main-container .error-summary { color: red; font-style: italic; cursor: pointer; }
 
 /* .main-container .main-content { border-top: 1px solid; } */
-.main-container.half .CodeMirror { border-right: 1px solid; border-top:  1px solid;}
-.main-container.half iframe { border-top:  1px solid;}
+.main-container.half .CodeMirror {
+  border-right: 1px solid; 
+  border-top:  1px solid;
+}
 
 /* Playing */
 .main-container.playing .main-content,
@@ -53,9 +55,11 @@
 iframe {
   position: fixed;
   right: 0;
+  top: 6.5em;
   width:  50%;
   min-height: 100%;
   border: 0px;
+  border-top:  1px solid;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   float: right;
