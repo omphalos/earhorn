@@ -14,27 +14,37 @@ var http = require('http')
   , optimist = require('optimist')
 
 var argv = optimist.
-  usage('Serve earhorn over http.\nUsage: $0').
-  describe('port', 'Port to run on.').demand('port').
+  usage(
+    'This server providers a utility to wrap JavaScript\n' + 
+    'with calls to earhorn$.\n\n' +
+    'Example:\n\n' +
+    '  ./server.js --port 8001 --pattern "/**/*.js"\n\n' +
+    '  This would add earhorn$ to every JavaScript file\n' +
+    '  running from the current directory.').
+  describe('port', 'Port to run on.').
   describe('pattern', 'Url pattern add earhorn$ calls to').
   describe('patternFile', 'File with newline-delimited url patterns').
-  describe('verbose', 'Whether to enable verbose logging').boolean('verbose').
-  describe('folder', 'Folder to add earhorn$ calls to, during pattern match').
-  describe('runProxy', 'Whether to reverse proxy').boolean('runProxy').
+  describe('verbose', 'Whether to enable verbose logging').
+  describe('folder', 'Folder to add earhorn$ calls to').
+  describe('runProxy', 'Whether to reverse proxy').
   describe('proxyPort', 'Port of site to reverse proxy').
   describe('proxyHost', 'Host of site to reverse proxy').
+  demand('port').
+  boolean('runProxy').
+  boolean('verbose').
+  default('folder', '.').
+  default('proxyHost', 'localhost').
   argv
 
 var patternFile = argv.patternFile
   , pattern = argv.pattern
   , port = +argv.port
-  , folder = argv.folder || '.'
+  , folder = argv.folder
   , verbose = argv.verbose || false
   , runProxy = argv.runProxy
-  , proxyHost = argv.proxyHost || 'localhost'
+  , proxyHost = argv.proxyHost
   , proxyPort = +argv.proxyPort
-
-var proxy = new httpProxy.RoutingProxy()
+  , proxy = new httpProxy.RoutingProxy()
   , patterns
   , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html", "/earhorn" ]
   , indexFilePath = __dirname + '/index.html'
