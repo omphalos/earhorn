@@ -10,13 +10,27 @@ var http = require('http')
   , util = require('util')
   , minimatch = require('minimatch')
   , httpProxy = require('http-proxy')
-  , argv = require('optimist').argv
+  , path = require('path')
+  , optimist = require('optimist')
+
+var argv = optimist.
+  usage('Serve earhorn over http.\nUsage: $0').
+  describe('port', 'Port to run on.').demand('port').
+  describe('pattern', 'Url pattern add earhorn$ calls to').
+  describe('patternFile', 'File with newline-delimited url patterns').
+  describe('verbose', 'Whether to enable verbose logging').boolean('verbose').
+  describe('folder', 'Folder to add earhorn$ calls to, during pattern match').
+  describe('runProxy', 'Whether to reverse proxy').boolean('runProxy').
+  describe('proxyPort', 'Port of site to reverse proxy').
+  describe('proxyHost', 'Host of site to reverse proxy').
+  argv
 
 var patternFile = argv.patternFile
   , pattern = argv.pattern
   , port = +argv.port
-  , jsDir = argv.jsDir || '.'
+  , folder = argv.folder || '.'
   , verbose = argv.verbose || false
+  , runProxy = argv.runProxy
   , proxyHost = argv.proxyHost || 'localhost'
   , proxyPort = +argv.proxyPort
 
@@ -25,11 +39,12 @@ var proxy = new httpProxy.RoutingProxy()
   , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html", "/earhorn" ]
   , indexFilePath = __dirname + '/index.html'
 
-if(!port) throw '--port required'
 if(patternFile && pattern) throw '--pattern and --patternFile both specified'
 if(patternFile) patterns = fs.readFileSync(patternFile).split('\n')
 else if(pattern) patterns = [pattern]
 if(!patterns) throw '--pattern or --patternFile required'
+if(runProxy && !proxyPort) throw '--runProxy specified but no --proxyPort'
+if(runProxy && !proxyHost) throw '--runProxy specified but no --proxyHost'
 if(verbose) console.log(argv)
 
 function handleError(err, res, code) {
@@ -47,24 +62,24 @@ var server = http.createServer(function (req, res) {
     , isEarhornDir = !pathname.indexOf('/earhorn/')
     , isIndex = earhornIndexAliases.indexOf(pathname) >= 0
 
-  var filePath =
+  var filePath = path.resolve(
     isIndex ? indexFilePath :
     isEarhornDir ? __dirname + '/..' + pathname :
-    jsDir + pathname
+    folder + pathname)
 
   var type = mime.lookup(filePath)
     , isJs = type === 'application/javascript'
 
   var matches = patterns.filter(function(p) {
-    return !isJs && minimatch(filePath, p)
+    return !isJs && minimatch(pathname, p)
   })
 
   if(verbose) {
-    console.log('filePath', filePath)
+    console.log('pathname', pathname)
     console.log('patterns', patterns)
   }
 
-  if(proxyPort && !matches.length && !isIndex && !isEarhornDir) {
+  if(runProxy && !matches.length && !isIndex && !isEarhornDir) {
     console.log(req.method, req.url, '=>', proxyHost + ':' + proxyPort)
     return proxy.proxyRequest(req, res, { host: proxyHost, port: proxyPort })
   }
