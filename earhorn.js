@@ -56,20 +56,30 @@
         localStorage.removeItem('earhorn-script-' + script)
       })
       
-      if(record.reload) // TODO: could do hot code-swapping instead ...
-        location.reload(true)
+      record.reload && location.reload(true)
     }
 
     if(!scripts.hasOwnProperty(record.script)) return
 
     if(record.type === 'announcement-request')
-      announce(record.script)      
+      announce(record.script)
     
     else if(record.type === 'edit') {
-      localStorage.setItem('earhorn-script-' + record.script, record.body)
-      
-      if(record.reload) // TODO: could do hot code-swapping instead ...
-        location.reload(true)
+
+      if(record[script].puts) {
+
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+          if(xhr.readyState == 4) console.log(xhr) // TODO
+          record.reload && location.reload(true)
+        }
+        xhr.open('PUT', script, record.body)
+        xhr.send()
+
+      } else {
+        localStorage.setItem('earhorn-script-' + record.script, record.body)
+        record.reload && location.reload(true)
+      }
 
     } else if(record.type === 'refresh')
        location.reload(true)
@@ -90,8 +100,15 @@
     flush()
   }
 
-  function earhorn$(name, fn) {
-  
+  function earhorn$(name, puts, fn) {
+
+    // "puts" is an optional argument that signifies
+    // whether the url supports PUT for write operations.
+    if(arguments.length === 2) {
+      fn = puts
+      puts = false
+    }
+
     // Get the function body.
     var fnKey = 'earhorn-script-' + name
       , fnStr = fn.toString()
@@ -103,7 +120,7 @@
       
     while(body[0] === '\n') body = body.slice(1)
     
-    if(localStorage.hasOwnProperty(fnKey)) {
+    if(!puts && localStorage.hasOwnProperty(fnKey)) {
       
       var storedVersion = localStorage.getItem(fnKey)
       if(storedVersion !== body) {
@@ -117,11 +134,12 @@
     function isExpression(type) {
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
     }
-    
+
     // Wrap Identifiers with calls to our logger, eh$(...)
-    
+
     scripts[name] = {
       body: body,
+      puts: puts,
       modified: modified
     }
 
@@ -159,24 +177,24 @@
     ]
 
     function visitNode(node) {
-     
+
       if(!node.parent) return
-      
+
       if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
         node.update(getLocationUpdate(node) + ',' + node.source())
         return
       }
-        
+
       if(node.type === 'Literal')
         return
-      
-      if( 
+
+      if(
         node.parent.type === 'BlockStatement' && node.parent.parent && (
         node.parent.parent.type === 'FunctionDeclaration' || 
         node.parent.parent.type === 'FunctionExpression')) {
-        
+
         // Add try/catch inside function bodies.
-        
+
         if(node.parent.body[0] === node) {
           node.update(tryPrefix + node.source())
         }
@@ -216,7 +234,7 @@
           node.parent.type !== 'UpdateExpression' &&
           
           /* Example explaining why we can't wrap CallExpression:
-               
+
           // This works.
           [].forEach(function() { })
                
@@ -288,12 +306,17 @@
     if(settings.instrumentation.verbose)
       console.log(instrumentedCode)
   
+    var result
     try {
-      return new Function(instrumentedCode)
+      result = new Function(instrumentedCode)
     } catch(e) {
       console.error(instrumentedCode)
-      return new Function(instrumentedCode)
+      result = new Function(instrumentedCode)
     }
+
+    result.toString = function() { return fnStr }
+    
+    return result
   }
   
   earhorn$.settings = settings
@@ -345,7 +368,7 @@
     // Object
     var result = {
       type: 'Object',
-      constructor: obj.constructor ? obj.constructor.name : null,
+      constructorName: obj.constructor ? obj.constructor.name : null,
       complete: true,
       properties: { }
     }
@@ -357,7 +380,10 @@
 
       var keys = settings.instrumentation.maxKeys
 
-      for(var key in obj) {
+      var propertyNames = Object.getOwnPropertyNames(obj)
+      for(var k = 0; k < propertyNames.length; k++) {
+
+        var key = propertyNames[k];
 
         if(keys --> 0) {
           try {

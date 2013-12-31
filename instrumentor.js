@@ -66,15 +66,15 @@
     
     else if(record.type === 'edit') {
 
-      if(record[script].puts) {
+      if(scripts[record.script].puts) {
 
         var xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function() {
           if(xhr.readyState == 4) console.log(xhr) // TODO
           record.reload && location.reload(true)
         }
-        xhr.open('PUT', script, record.body)
-        xhr.send()
+        xhr.open('PUT', record.script)
+        xhr.send(record.body)
 
       } else {
         localStorage.setItem('earhorn-script-' + record.script, record.body)
@@ -315,6 +315,8 @@
     }
 
     result.toString = function() { return fnStr }
+    
+    return result
   }
   
   earhorn$.settings = settings

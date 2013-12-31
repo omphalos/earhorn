@@ -50,13 +50,14 @@ var patternFile = argv.patternFile
   , proxyPort = +argv.proxyPort
   , proxy = new httpProxy.RoutingProxy()
   , patterns
-  , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html", "/earhorn" ]
+  , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html" ]
   , indexFilePath = __dirname + '/index.html'
 
 if(patternFile && pattern) throw '--pattern and --patternFile both specified'
 if(patternFile) patterns = fs.readFileSync(patternFile).split('\n')
 else if(pattern) patterns = [pattern]
 if(!patterns) throw '--pattern or --patternFile required'
+if(proxyPort && !runProxy) throw '--proxyPort specified but no --runProxy'
 if(runProxy && !proxyPort) throw '--runProxy specified but no --proxyPort'
 if(runProxy && !proxyHost) throw '--runProxy specified but no --proxyHost'
 if(verbose) console.log(argv)
@@ -69,6 +70,12 @@ function handleError(err, res, code) {
 }
 
 var server = http.createServer(function (req, res) {
+
+  if(req.url === '/earhorn') {
+    res.statusCode = 302
+    res.setHeader('Location', '/earhorn/')
+    return res.end()
+  }
 
   var parsedUrl = url.parse(req.url)
     , query = querystring.parse(parsedUrl.query)
@@ -101,14 +108,19 @@ var server = http.createServer(function (req, res) {
   if(pathname.indexOf('..') >= 0)
     return handleError('ellipses in path are invalid', res)
 
-  if(req.method === 'PUT') {
+  if(req.method === 'PUT' && !isIndex && !isEarhornDir) {
 
-    var writeOk = true
-      , stream = fs.createWriteStream(relativePath)
-    stream.on('close', function() { if(writeOk) res.end() })
+    var pendingError = null
+      , stream = fs.createWriteStream(filePath)
+
+    stream.on('close', function() {
+      if(pendingError)
+        writeError(pendingError)
+      else res.end()
+    })
+
     stream.on('error', function(err) {
-      writeOk = false
-      writeError(err)
+      pendingError = err
     })
 
     req.pipe(stream)
