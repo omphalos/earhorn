@@ -487,7 +487,7 @@ angular.module('main').controller('MainCtrl', [
   $scope.tooltipFor = function(label, command) {
     var key = commandToKey[command]
     if(!key) return label
-    return label + ' ( ' + key + ' )'
+    return label + ': ' + key
   }
   
   /////////////////////////////////

@@ -1,14 +1,5 @@
 #!/usr/bin/env node
 
-/*
- * cd ..
- * ./earhorn/server/server.js
- *    --jsDir .
- *    --pattern "MINIMATCH PATTERN HERE"
- *    --port 8001
- *    --proxyPort 8000
- */
-
 'use strict'
 
 var http = require('http')
@@ -19,16 +10,20 @@ var http = require('http')
   , util = require('util')
   , minimatch = require('minimatch')
   , httpProxy = require('http-proxy')
-  , proxy = new httpProxy.RoutingProxy()
   , argv = require('optimist').argv
-  , patternFile = argv.patternFile
+
+var patternFile = argv.patternFile
   , pattern = argv.pattern
   , port = +argv.port
   , jsDir = argv.jsDir || '.'
   , verbose = argv.verbose || false
   , proxyHost = argv.proxyHost || 'localhost'
   , proxyPort = +argv.proxyPort
+
+var proxy = new httpProxy.RoutingProxy()
   , patterns
+  , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html", "/earhorn" ]
+  , indexFilePath = __dirname + '/index.html'
 
 if(!port) throw '--port required'
 if(patternFile && pattern) throw '--pattern and --patternFile both specified'
@@ -37,28 +32,38 @@ else if(pattern) patterns = [pattern]
 if(!patterns) throw '--pattern or --patternFile required'
 if(verbose) console.log(argv)
 
-function handleError(err, res) {
+function handleError(err, res, code) {
   console.error(err)
-  res.statusCode = 500
+  res.statusCode = code || 500
   res.setHeader('Content-Type', 'application/json')
   res.end(JSON.stringify(err))
 }
 
 var server = http.createServer(function (req, res) {
 
-  // Make sure path ends with a slash.
   var parsedUrl = url.parse(req.url)
     , query = querystring.parse(parsedUrl.query)
     , pathname = parsedUrl.pathname
-    , filePath = jsDir + pathname
-    , matches = patterns.filter(function(p) { return minimatch(filePath, p) })
+    , type = mime.lookup(filePath)
+    , isJs = type === 'application/javascript'
+    , isEarhornDir = !pathname.indexOf('/earhorn/')
+    , isIndex = earhornIndexAliases.indexOf(pathname) >= 0
+
+  var filePath =
+    isIndex ? indexFilePath :
+    isEarhornDir ? __dirname + '/../' + pathname :
+    jsDir + pathname
+
+  var matches = patterns.filter(function(p) {
+    return !isJs && minimatch(filePath, p)
+  })
 
   if(verbose) {
     console.log('filePath', filePath)
     console.log('patterns', patterns)
   }
 
-  if(proxyPort && !matches.length) {
+  if(proxyPort && !matches.length && !isIndex && !isEarhornDir) {
     console.log(req.method, req.url, '=>', proxyHost + ':' + proxyPort)
     return proxy.proxyRequest(req, res, { host: proxyHost, port: proxyPort })
   }
@@ -68,37 +73,50 @@ var server = http.createServer(function (req, res) {
   if(pathname.indexOf('..') >= 0)
     return handleError('ellipses in path are invalid', res)
 
-  fs.stat(filePath, function(err, stats) { 
+  if(req.method === 'PUT') {
 
-    if(err) return handleError(err, res)
+    var writeOk = true
+      , stream = fs.createWriteStream(relativePath)
+    stream.on('close', function() { if(writeOk) res.end() })
+    stream.on('error', function(err) {
+      writeOk = false
+      writeError(err)
+    })
 
-    res.setHeader('Last-Modified', stats.mtime)
-    res.setHeader("Expires", "Sat, 01 Jan 2000 00:00:00 GMT")
-    res.setHeader("Cache-Control",
-        "no-store, no-cache, must-revalidate, max-age=0")
-    res.setHeader("Cache-Control", "post-check=0, pre-check=0")
-    res.setHeader("Pragma", "no-cache")
+    req.pipe(stream)
 
-    var type = mime.lookup(filePath)
-    res.setHeader('Content-Type', type)
+  } else if(req.method === 'HEAD' || req.method === 'GET')
 
-    if(req.method === 'HEAD') {
-      res.setHeader('Content-Length', stats.size)
-      return res.end()
-    }
-
-    fs.readFile(filePath, function(err, data) { 
+    fs.stat(filePath, function(err, stats) { 
 
       if(err) return handleError(err, res)
 
-      if(matches.length)
-        data = 'earhorn$("' + req.url + '", function() {' + data + '})()'
+      res.setHeader('Last-Modified', stats.mtime)
+      res.setHeader("Expires", "Sat, 01 Jan 2000 00:00:00 GMT")
+      res.setHeader("Cache-Control",
+          "no-store, no-cache, must-revalidate, max-age=0")
+      res.setHeader("Cache-Control", "post-check=0, pre-check=0")
+      res.setHeader("Pragma", "no-cache")
+      res.setHeader('Content-Type', type)
 
-      res.setHeader('Content-Length', data.length)
-      res.end(data)
+      if(req.method === 'HEAD') {
+        res.setHeader('Content-Length', stats.size)
+        return res.end()
+      }
+
+      fs.readFile(filePath, function(err, data) { 
+
+        if(err) return handleError(err, res)
+
+        if(matches.length && !isIndex && !isEarhornDir)
+          data = 'earhorn$("' + req.url + '", function() {' + data + '})()'
+
+        res.setHeader('Content-Length', data.length)
+        res.end(data)
+      })
     })
-  })
 
+  else writeError(req.method, res, 405) // Method not allowed.
 })
 
 server.listen(port)
