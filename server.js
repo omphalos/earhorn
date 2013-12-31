@@ -44,15 +44,16 @@ var server = http.createServer(function (req, res) {
   var parsedUrl = url.parse(req.url)
     , query = querystring.parse(parsedUrl.query)
     , pathname = parsedUrl.pathname
-    , type = mime.lookup(filePath)
-    , isJs = type === 'application/javascript'
     , isEarhornDir = !pathname.indexOf('/earhorn/')
     , isIndex = earhornIndexAliases.indexOf(pathname) >= 0
 
   var filePath =
     isIndex ? indexFilePath :
-    isEarhornDir ? __dirname + '/../' + pathname :
+    isEarhornDir ? __dirname + '/..' + pathname :
     jsDir + pathname
+
+  var type = mime.lookup(filePath)
+    , isJs = type === 'application/javascript'
 
   var matches = patterns.filter(function(p) {
     return !isJs && minimatch(filePath, p)
