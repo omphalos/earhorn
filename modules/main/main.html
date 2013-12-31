@@ -19,7 +19,7 @@
     </div>
 
     <div class="no-scripts-message" ng-show="!getScriptCount() && iframe">
-      <p>Loading url <a href="{{iframe}}">{{iframe}}</a>...</p>
+      <p>Loading url <a href="{{iframe}}">{{iframe}}</a> ...</p>
       <div ng-class="{ 'not-loading': 1, 'timer-elapsed': timerElapsed }">
         <p>
           Scripts may not load if the url is in a different domain,
@@ -28,7 +28,6 @@
         </p>
         <p>
           To see an example of a working page, you can take a look at <a href="examples/helloworld.html">the hello world example</a>.
-          Alternatively visit <a href="#/hideFrame=true,iframe=examples/helloworld.html">the hash</a> for running it in an earhorn iframe.
         </p>
       </div>
     </div>
@@ -120,7 +119,7 @@
       focus="editorFocus"
       element="editor" >
     </div>
-    <iframe ng-if="iframe" ng-attr-src="{{iframe}}"></iframe>
+    <iframe ng-show="hideFrame != 'true'" ng-if="iframe" ng-attr-src="{{iframe}}"></iframe>
   </div>
 
   <script type="text/ng-template" id="errorLineWidgetTemplate">

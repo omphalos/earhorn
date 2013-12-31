@@ -49,14 +49,13 @@ var patternFile = argv.patternFile
   , proxyHost = argv.proxyHost
   , proxyPort = +argv.proxyPort
   , proxy = new httpProxy.RoutingProxy()
-  , patterns
+  , patterns = []
   , earhornIndexAliases = [ "/earhorn/", "/earhorn/index.html" ]
   , indexFilePath = __dirname + '/index.html'
 
 if(patternFile && pattern) throw '--pattern and --patternFile both specified'
 if(patternFile) patterns = fs.readFileSync(patternFile).split('\n')
 else if(pattern) patterns = [pattern]
-if(!patterns) throw '--pattern or --patternFile required'
 if(proxyPort && !runProxy) throw '--proxyPort specified but no --runProxy'
 if(runProxy && !proxyPort) throw '--runProxy specified but no --proxyPort'
 if(runProxy && !proxyHost) throw '--runProxy specified but no --proxyHost'
