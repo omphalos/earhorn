@@ -22,6 +22,7 @@ var argv = optimist.
     '  This would add earhorn$ to every JavaScript file\n' +
     '  running from the current directory.').
   describe('port', 'Port to run on.').
+  describe('cors', 'Access-Controll-Allow-Origin header, if specified').
   describe('pattern', 'Url pattern add earhorn$ calls to').
   describe('patternFile', 'File with newline-delimited url patterns').
   describe('verbose', 'Whether to enable verbose logging').
@@ -38,6 +39,7 @@ var argv = optimist.
 
 var patternFile = argv.patternFile
   , pattern = argv.pattern
+  , cors = argv.cors
   , port = +argv.port
   , folder = argv.folder
   , verbose = argv.verbose || false
@@ -124,6 +126,8 @@ var server = http.createServer(function (req, res) {
       res.setHeader("Cache-Control", "post-check=0, pre-check=0")
       res.setHeader("Pragma", "no-cache")
       res.setHeader('Content-Type', type)
+
+      if(cors) res.setHeader('Access-Controll-Allow-Origin', cors)
 
       if(req.method === 'HEAD') {
         res.setHeader('Content-Length', stats.size)

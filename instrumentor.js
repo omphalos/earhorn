@@ -90,8 +90,14 @@
     flush()
   }
 
-  function earhorn$(name, fn) {
+  function earhorn$(name, url, fn) {
   
+    // Url is an optional argument.
+    if(!fn) {
+      fn = url
+      url = null
+    }
+
     // Get the function body.
     var fnKey = 'earhorn-script-' + name
       , fnStr = fn.toString()
@@ -117,11 +123,12 @@
     function isExpression(type) {
       return type.indexOf('Expression', type.length - 'Expression'.length) >= 0
     }
-    
+
     // Wrap Identifiers with calls to our logger, eh$(...)
-    
+
     scripts[name] = {
       body: body,
+      url: url,
       modified: modified
     }
 
@@ -159,24 +166,24 @@
     ]
 
     function visitNode(node) {
-     
+
       if(!node.parent) return
-      
+
       if(node.type === 'Literal' && node.parent.type === 'ThrowStatement') {
         node.update(getLocationUpdate(node) + ',' + node.source())
         return
       }
-        
+
       if(node.type === 'Literal')
         return
-      
-      if( 
+
+      if(
         node.parent.type === 'BlockStatement' && node.parent.parent && (
         node.parent.parent.type === 'FunctionDeclaration' || 
         node.parent.parent.type === 'FunctionExpression')) {
-        
+
         // Add try/catch inside function bodies.
-        
+
         if(node.parent.body[0] === node) {
           node.update(tryPrefix + node.source())
         }
@@ -216,7 +223,7 @@
           node.parent.type !== 'UpdateExpression' &&
           
           /* Example explaining why we can't wrap CallExpression:
-               
+
           // This works.
           [].forEach(function() { })
                
@@ -288,12 +295,15 @@
     if(settings.instrumentation.verbose)
       console.log(instrumentedCode)
   
+    var result
     try {
-      return new Function(instrumentedCode)
+      result = new Function(instrumentedCode)
     } catch(e) {
       console.error(instrumentedCode)
-      return new Function(instrumentedCode)
+      result = new Function(instrumentedCode)
     }
+
+    result.toString = function() { return fnStr }
   }
   
   earhorn$.settings = settings
