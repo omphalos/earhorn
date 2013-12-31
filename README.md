@@ -58,6 +58,13 @@ Caveats
 
 This thing is still at the prototype stage, and the code is in flux.  There are some performance issues at the moment with larger codebases.  If you're just using Earhorn on less than 1000 LOC, you'll generally be okay.
 
+Persistence
+===========
+
+Earhorn will save your changes in localStorage by default.  This gives you the chance to quickly inspect, edit, and re-run your program.
+
+Instead of localStorage, it's possible to save changes to the file system with the server.js script.  You can give server.js url patterns that it will try to [minimatch](https://github.com/isaacs/minimatch).  Any matched JavaScript url will be wrapped in an $earhorn call as part of the http response, and Earhorn will save changes made through the Earhorn editor to disk.  Run `npm install` then `node server.js` to see command line usage detail.
+
 Possible Enhancements
 =====================
 
