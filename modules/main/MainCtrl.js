@@ -14,7 +14,8 @@ angular.module('main').controller('MainCtrl', [
   'settingsService',
   'consoleInterface',
   '$compile', 
-  '$timeout', function(
+  '$timeout', 
+  '$window', function(
   $scope,
   $location,
   logClient,
@@ -22,7 +23,8 @@ angular.module('main').controller('MainCtrl', [
   settingsService,
   consoleInterface,
   $compile,
-  $timeout) {
+  $timeout,
+  $window) {
 
   //////////////////////////
   // Set up our services. //
@@ -53,6 +55,7 @@ angular.module('main').controller('MainCtrl', [
   
   $scope.$watch('editScript', function(newValue) {
     $scope.editorFocus = true
+    $window.document.title = newValue
   })
 
   $scope.open = function() {
