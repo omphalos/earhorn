@@ -16,9 +16,10 @@ var http = require('http')
 var argv = optimist.
   usage(
     'This server providers a utility to wrap JavaScript\n' + 
-    'with calls to earhorn$.\n\n' +
+    'with calls to earhorn$. Additionally, it lets earhorn$\n' + 
+    'write changes to the file system.\n\n' +
     'Example:\n\n' +
-    '  ./server.js --port 8001 --pattern "/**/*.js"\n\n' +
+    '  ./server.js --port 8001 --pattern "**/*.js"\n\n' +
     '  This would add earhorn$ to every JavaScript file\n' +
     '  running from the current directory.').
   describe('port', 'Port to run on.').
@@ -83,13 +84,11 @@ var server = http.createServer(function (req, res) {
     , isJs = type === 'application/javascript'
 
   var matches = patterns.filter(function(p) {
-    return !isJs && minimatch(pathname, p)
+    if(!isJs) return false
+    var match = minimatch(pathname, p)
+    if(verbose) console.log('testing match', pathname, p, ':', match)
+    return match
   })
-
-  if(verbose) {
-    console.log('pathname', pathname)
-    console.log('patterns', patterns)
-  }
 
   if(runProxy && !matches.length && !isIndex && !isEarhornDir) {
     console.log(req.method, req.url, '=>', proxyHost + ':' + proxyPort)
@@ -138,8 +137,14 @@ var server = http.createServer(function (req, res) {
 
         if(err) return handleError(err, res)
 
-        if(matches.length && !isIndex && !isEarhornDir)
-          data = 'earhorn$("' + req.url + '", function() {' + data + '})()'
+        if(matches.length && !isIndex && !isEarhornDir) {
+
+          var slashIndex = req.url.lastIndexOf('/')
+            , name = req.url.substring(slashIndex + 1)
+            , url = req.headers.host + req.url
+
+          data = 'earhorn$("' + url + '", true, function() {' + data + '})()'
+        }
 
         res.setHeader('Content-Length', data.length)
         res.end(data)

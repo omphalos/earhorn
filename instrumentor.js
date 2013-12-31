@@ -56,20 +56,30 @@
         localStorage.removeItem('earhorn-script-' + script)
       })
       
-      if(record.reload) // TODO: could do hot code-swapping instead ...
-        location.reload(true)
+      record.reload && location.reload(true)
     }
 
     if(!scripts.hasOwnProperty(record.script)) return
 
     if(record.type === 'announcement-request')
-      announce(record.script)      
+      announce(record.script)
     
     else if(record.type === 'edit') {
-      localStorage.setItem('earhorn-script-' + record.script, record.body)
-      
-      if(record.reload) // TODO: could do hot code-swapping instead ...
-        location.reload(true)
+
+      if(record[script].puts) {
+
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function() {
+          if(xhr.readyState == 4) console.log(xhr) // TODO
+          record.reload && location.reload(true)
+        }
+        xhr.open('PUT', script, record.body)
+        xhr.send()
+
+      } else {
+        localStorage.setItem('earhorn-script-' + record.script, record.body)
+        record.reload && location.reload(true)
+      }
 
     } else if(record.type === 'refresh')
        location.reload(true)
@@ -90,12 +100,13 @@
     flush()
   }
 
-  function earhorn$(name, url, fn) {
-  
-    // Url is an optional argument.
-    if(!fn) {
-      fn = url
-      url = null
+  function earhorn$(name, puts, fn) {
+
+    // "puts" is an optional argument that signifies
+    // whether the url supports PUT for write operations.
+    if(arguments.length === 2) {
+      fn = puts
+      puts = false
     }
 
     // Get the function body.
@@ -109,7 +120,7 @@
       
     while(body[0] === '\n') body = body.slice(1)
     
-    if(localStorage.hasOwnProperty(fnKey)) {
+    if(!puts && localStorage.hasOwnProperty(fnKey)) {
       
       var storedVersion = localStorage.getItem(fnKey)
       if(storedVersion !== body) {
@@ -128,7 +139,7 @@
 
     scripts[name] = {
       body: body,
-      url: url,
+      puts: puts,
       modified: modified
     }
 
