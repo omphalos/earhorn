@@ -21,9 +21,10 @@ var argv = optimist.
     'Example:\n\n' +
     '  ./server.js --port 8001 --pattern "**/*.js"\n\n' +
     '  This would add earhorn$ to every JavaScript file\n' +
-    '  running from the current directory.').
+    '  running from the current directory (not recommended\n' +
+    '  on large codebases).').
   describe('port', 'Port to run on.').
-  describe('cors', 'Access-Controll-Allow-Origin header, if specified').
+  describe('cors', 'Access-Control-Allow-Origin header, if specified').
   describe('pattern', 'Url pattern add earhorn$ calls to').
   describe('patternFile', 'File with newline-delimited url patterns').
   describe('verbose', 'Whether to enable verbose logging').
@@ -126,7 +127,7 @@ var server = http.createServer(function (req, res) {
       res.setHeader("Pragma", "no-cache")
       res.setHeader('Content-Type', type)
 
-      if(cors) res.setHeader('Access-Controll-Allow-Origin', cors)
+      if(cors) res.setHeader('Access-Control-Allow-Origin', cors)
 
       if(req.method === 'HEAD') {
         res.setHeader('Content-Length', stats.size)
@@ -141,9 +142,9 @@ var server = http.createServer(function (req, res) {
 
           var slashIndex = req.url.lastIndexOf('/')
             , name = req.url.substring(slashIndex + 1)
-            , url = req.headers.host + req.url
+            , ref = 'http://' + req.headers.host + req.url
 
-          data = 'earhorn$("' + url + '", true, function() {' + data + '})()'
+          data = 'earhorn$("' + ref + '", true, function() {' + data + '})()'
         }
 
         res.setHeader('Content-Length', data.length)
