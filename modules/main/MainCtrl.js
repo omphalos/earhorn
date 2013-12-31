@@ -53,17 +53,6 @@ angular.module('main').controller('MainCtrl', [
     }
   })
   
-  $scope.$watch('editScript', function(newValue) {
-    $scope.editorFocus = true
-    $window.document.title = newValue
-  })
-
-  $scope.open = function() {
-    if($scope.getScriptCount() <= 1) return
-    $scope.editorFocus = false
-    $scope.$broadcast('open')
-  }
-  
   ///////////////
   // Timeline. //
   ///////////////
@@ -99,7 +88,22 @@ angular.module('main').controller('MainCtrl', [
   var getEditScript = $scope.getEditScript = function() {
     return programState.scripts[$scope.editScript] || {}
   }
+  
+  $scope.getFriendlyNameForScript = function(script) {
+    return script ? script.substring(script.lastIndexOf('/') + 1) : ''
+  } 
  
+  $scope.$watch('editScript', function(newValue) {
+    $scope.editorFocus = true
+    $window.document.title = $scope.getFriendlyNameForScript(newValue)
+  })
+
+  $scope.open = function() {
+    if($scope.getScriptCount() <= 1) return
+    $scope.editorFocus = false
+    $scope.$broadcast('open')
+  }
+
   function updateLocation() {   
 
     // Don't auto-navigate when editng or there's nowhere to navigate to.

@@ -6,7 +6,7 @@
         <select ng-show="getScriptCount() > 1" ng-model="editScript" focus="open">
           <option 
             ng-repeat="(script, log) in programState.scripts" 
-            value="{{script}}">{{script}}</option>
+            value="{{script}}">{{getFriendlyNameForScript(script)}}</option>
         </select>
       </span>
 
