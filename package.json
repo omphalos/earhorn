@@ -1,0 +1,29 @@
+{
+  "name": "earhorn",
+  "version": "0.1.2",
+  "description": "JavaScript Execution Logs",
+  "bin": { "earhorn": "./server.js" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omphalos/earhorn.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "log", "logs",
+    "execution", "instrumentation",
+    "esprima", "ast", "editor"
+  ],
+  "dependencies": {
+    "optimist": "0.6.0",
+    "url": "0.7.9",
+    "util": "0.10.2",
+    "minimatch": "0.2.14",
+    "http-proxy": "0.10.3",
+    "querystring": "0.2.0",
+    "path": "0.4.9",
+    "mime": "1.2.11"
+  },
+  "license": "MIT",
+  "engine": { "node": ">=0.10.19" },
+  "author": "omphalos"
+}
