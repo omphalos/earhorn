@@ -140,11 +140,6 @@ var server = http.createServer(function (req, res) {
 
       if(cors) res.setHeader('Access-Control-Allow-Origin', cors)
 
-      if(req.method === 'HEAD') {
-        res.setHeader('Content-Length', stats.size)
-        return res.end()
-      }
-
       fs.readFile(filePath, function(err, data) { 
 
         if(err) return handleError(err, res)
@@ -158,8 +153,9 @@ var server = http.createServer(function (req, res) {
           data = 'earhorn$("' + ref + '", true, function() {' + data + '})()'
         }
 
-        res.setHeader('Content-Length', data.length)
-        res.end(data)
+        res.setHeader('Content-Length', Buffer.byteLength(data))
+
+        return req.method === 'HEAD' ? return res.end() : res.end(data)
       })
     })
 
