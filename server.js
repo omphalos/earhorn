@@ -155,7 +155,7 @@ var server = http.createServer(function (req, res) {
 
         res.setHeader('Content-Length', Buffer.byteLength(data))
 
-        return req.method === 'HEAD' ? return res.end() : res.end(data)
+        return req.method === 'HEAD' ? res.end() : res.end(data)
       })
     })
 
