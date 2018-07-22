@@ -87,7 +87,7 @@ var server = http.createServer(function (req, res) {
     isEarhornDir ? __dirname + '/..' + pathname :
     folder + pathname)
 
-  var type = mime.lookup(filePath)
+  var type = mime.getType(filePath)
     , isJs = type === 'application/javascript'
 
   var matches = patterns.filter(function(p) {
@@ -153,7 +153,7 @@ var server = http.createServer(function (req, res) {
           data = 'earhorn$("' + ref + '", true, function() {' + data + '})()'
         }
 
-        res.setHeader('Content-Length', Buffer.byteLength(data))
+        res.setHeader('Content-Length', stats.size)
 
         return req.method === 'HEAD' ? res.end() : res.end(data)
       })
